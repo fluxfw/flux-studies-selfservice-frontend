@@ -30,7 +30,7 @@ server {\
         alias /flux-studies-selfservice-frontend;\
     }\
 \
-    location / {\
+    location = / {\
         return 302 flux-studies-selfservice-frontend/src;\
     }\
 }" > /etc/nginx/conf.d/flux-studies-selfservice-frontend.conf
