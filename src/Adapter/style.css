@@ -1,0 +1,20 @@
+:root {
+    --active-color: #e3003d;
+    --form-border-color: #000000;
+    --form-border-size: 2px;
+    --form-button-color: #63788e;
+    --form-button-text-color: #ffffff;
+    --form-buttons-color: #eaeaea;
+    --form-color: #f7f7f7;
+    --input-border-color: #e6e6e6;
+    --input-border-size: 2px;
+    --input-color: #ffffff;
+    --input-text-color: #000000;
+    --mandatory-color: #c12c2c;
+}
+
+body {
+    font-family: sans-serif;
+    font-size: 16px;
+    margin: 0;
+}
