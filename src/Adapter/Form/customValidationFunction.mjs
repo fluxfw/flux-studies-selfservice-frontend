@@ -1,0 +1,3 @@
+/**
+ * @typedef {() => boolean} customValidationFunction
+ */

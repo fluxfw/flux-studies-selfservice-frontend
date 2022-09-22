@@ -1,0 +1,19 @@
+:host {
+    background-color: var(--form-buttons-color);
+    border: var(--form-border-size) solid var(--form-border-color);
+    border-top: none;
+    display: block;
+    min-height: 35px;
+    padding: 10px 30px;
+}
+
+button {
+    all: initial;
+    background-color: var(--form-button-color);
+    color: var(--form-button-text-color);
+    cursor: pointer;
+    display: block;
+    font-family: inherit;
+    margin-left: auto;
+    padding: 10px;
+}

@@ -1,0 +1,9 @@
+:host {
+    display: block;
+    margin-top: 30px;
+}
+
+:host:before {
+    color: var(--mandatory-color);
+    content: "* ";
+}

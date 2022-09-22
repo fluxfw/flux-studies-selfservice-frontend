@@ -1,0 +1,50 @@
+:host {
+    display: block;
+    margin-top: 30px;
+}
+
+form {
+    background-color: var(--form-color);
+    border: var(--form-border-size) solid var(--form-border-color);
+    padding: 30px 40px;
+}
+
+label {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 5px 0;
+}
+
+.input {
+    all: initial;
+    background-color: var(--input-color);
+    border: var(--input-border-size) solid var(--input-border-color);
+    border-radius: 3px;
+    color: var(--input-text-color);
+    font-family: inherit;
+    min-height: 20px;
+    order: 2;
+    padding: 5px;
+    width: calc(60% - 14px);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.input:required + .text::after {
+    color: var(--mandatory-color);
+    content: " *";
+}
+
+.input:invalid {
+    --input-border-color: var(--mandatory-color)
+}
+
+.text {
+    order: 1;
+    width: 40%;
+}
