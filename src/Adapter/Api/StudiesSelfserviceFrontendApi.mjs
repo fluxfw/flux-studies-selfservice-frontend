@@ -1,9 +1,11 @@
+import { ChoiceSubjectElement } from "../Subject/ChoiceSubjectElement.mjs";
 import { CssApi } from "../../../../flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { FetchApi } from "../../../../flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
 import { MainElement } from "../Main/MainElement.mjs";
 import { StartElement } from "../Start/StartElement.mjs";
-import { ELEMENT_CREATE, ELEMENT_RESUME, ELEMENT_ROOT, ELEMENT_START } from "../Element/ELEMENT.mjs";
+import { ELEMENT_CHOICE_SUBJECT, ELEMENT_CREATE, ELEMENT_RESUME, ELEMENT_ROOT, ELEMENT_START } from "../Element/ELEMENT.mjs";
 
+/** @typedef {import("../Subject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
@@ -86,6 +88,30 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
+     * @param {postFunction} post_function
+     * @param {ChoiceSubject} choice_subject
+     * @returns {ChoiceSubjectElement}
+     */
+    #getChoiceSubjectElement(post_function, choice_subject) {
+        return ChoiceSubjectElement.new(
+            choice_subject,
+            this.#css_api,
+            async chosen_subject => {
+                const post_result = await post_function(
+                    {
+                        data: chosen_subject,
+                        element: ELEMENT_CHOICE_SUBJECT
+                    }
+                );
+
+                if (post_result.ok) {
+                    return;
+                }
+            }
+        );
+    }
+
+    /**
      * @returns {Promise<CssApi>}
      */
     async #getCssApi() {
@@ -116,6 +142,12 @@ export class StudiesSelfserviceFrontendApi {
      */
     #getNextElement(get_result, post_function) {
         switch (get_result.element) {
+            case ELEMENT_CHOICE_SUBJECT:
+                return this.#getChoiceSubjectElement(
+                    post_function,
+                    get_result.data
+                );
+
             case ELEMENT_CREATE:
             case ELEMENT_RESUME:
             case ELEMENT_ROOT:
