@@ -6,6 +6,13 @@ Changes:
 
 \-
 
+## v2022-09-22-3-alpha
+
+Changes:
+
+- Working nginx frontend
+- TODO error page
+
 ## v2022-09-22-2-alpha
 
 Changes:
