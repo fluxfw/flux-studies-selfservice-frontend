@@ -130,7 +130,7 @@ export class CreateElement extends HTMLElement {
         }
 
         this.#form_element.addSubtitle(
-            "Enter a password with at least 8 characters which will allow you to access your data at a later stage."
+            `Enter a password with at least ${this.#start.minPasswordLength} characters which will allow you to access your data at a later stage.`
         );
 
         const password_element = this.#form_element.addInput(
@@ -138,7 +138,7 @@ export class CreateElement extends HTMLElement {
             "password",
             "password"
         );
-        password_element.minLength = 8;
+        password_element.minLength = this.#start.minPasswordLength;
         password_element.required = true;
 
         const confirm_password_element = this.#form_element.addInput(
@@ -146,7 +146,7 @@ export class CreateElement extends HTMLElement {
             "confirm_password",
             "password"
         );
-        confirm_password_element.minLength = 8;
+        confirm_password_element.minLength = this.#start.minPasswordLength;
         confirm_password_element.required = true;
 
         this.#shadow.appendChild(this.#form_element);
