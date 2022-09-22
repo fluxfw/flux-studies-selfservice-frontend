@@ -78,7 +78,10 @@ export class StudiesSelfserviceFrontendApi {
         } catch (error) {
             console.error("GET", error);
 
-            return {};
+            return {
+                data: {},
+                element: null
+            };
         }
     }
 
@@ -167,24 +170,32 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<void>}
      */
     async #next() {
-        this.#main_element.replaceContent(
-            this.#getNextElement(
-                await this.#get(),
-                async post => {
-                    const post_result = await this.#post(
-                        post
-                    );
+        try {
+            this.#main_element.replaceContent(
+                this.#getNextElement(
+                    await this.#get(),
+                    async post => {
+                        const post_result = await this.#post(
+                            post
+                        );
 
-                    if (!post_result.ok) {
+                        if (!post_result.ok) {
+                            return post_result;
+                        }
+
+                        this.#next();
+
                         return post_result;
                     }
+                )
+            );
+        } catch (error) {
+            console.error(error);
 
-                    this.#next();
-
-                    return post_result;
-                }
-            )
-        );
+            this.#main_element.replaceContent(
+                "TODO"
+            );
+        }
     }
 
     /**
