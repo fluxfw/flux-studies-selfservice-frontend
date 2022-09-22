@@ -97,7 +97,8 @@ export class StartElement extends HTMLElement {
 
         this.#shadow.appendChild(ResumeElement.new(
             this.#css_api,
-            this.#resume_function
+            this.#resume_function,
+            this.#start
         ));
 
         this.#shadow.appendChild(MandatoryElement.new(

@@ -1,5 +1,5 @@
 /** @typedef {import("../Semester/Semester.mjs").Semester} Semester */
 
 /**
- * @typedef {{semesters: Semester[]}} Start
+ * @typedef {{minPasswordLength: number, semesters: Semester[]}} Start
  */

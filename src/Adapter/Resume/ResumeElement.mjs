@@ -4,6 +4,7 @@ import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs"
 import { FormElement } from "../Form/FormElement.mjs";
 
 /** @typedef {import("./resumeFunction.mjs").resumeFunction} resumeFunction */
+/** @typedef {import("../Start/Start.mjs").Start} Start */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -24,29 +25,37 @@ export class ResumeElement extends HTMLElement {
      * @type {ShadowRoot}
      */
     #shadow;
+    /**
+     * @type {Start}
+     */
+    #start;
 
     /**
      * @param {CssApi} css_api
      * @param {resumeFunction} resume_function
+     * @param {Start} start
      * @returns {ResumeElement}
      */
-    static new(css_api, resume_function) {
+    static new(css_api, resume_function, start) {
         return new this(
             css_api,
-            resume_function
+            resume_function,
+            start
         );
     }
 
     /**
      * @param {CssApi} css_api
      * @param {resumeFunction} resume_function
+     * @param {Start} start
      * @private
      */
-    constructor(css_api, resume_function) {
+    constructor(css_api, resume_function, start) {
         super();
 
         this.#css_api = css_api;
         this.#resume_function = resume_function;
+        this.#start = start;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -90,7 +99,7 @@ export class ResumeElement extends HTMLElement {
             "password",
             "password"
         );
-        password_element.minLength = 8;
+        password_element.minLength = this.#start.minPasswordLength;
         password_element.required = true;
 
         this.#shadow.appendChild(this.#form_element);
