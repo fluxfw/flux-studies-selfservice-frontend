@@ -7,6 +7,8 @@ COPY . /build/flux-studies-selfservice-frontend
 
 FROM nginx:mainline-alpine
 
+RUN rm -rf /usr/share/nginx/html
+
 RUN sed -i "s/}/\n    application\/javascript mjs;\n}/" /etc/nginx/mime.types
 
 COPY --from=build /build /usr/share/nginx/html
