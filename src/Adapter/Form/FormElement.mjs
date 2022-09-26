@@ -12,7 +12,7 @@ const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))
 
 export class FormElement extends HTMLElement {
     /**
-     * @type {FormButton[]}
+     * @type {FormButton[] | null}
      */
     #buttons;
     /**
@@ -41,34 +41,34 @@ export class FormElement extends HTMLElement {
     #title;
 
     /**
-     * @param {FormButton[]} buttons
      * @param {CssApi} css_api
      * @param {string} title
+     * @param {FormButton[] | null} buttons
      * @param {customValidationFunction | null} custom_validation_function
      * @returns {FormElement}
      */
-    static new(buttons, css_api, title, custom_validation_function = null) {
+    static new(css_api, title, buttons = null, custom_validation_function = null) {
         return new this(
-            buttons,
             css_api,
             title,
+            buttons,
             custom_validation_function
         );
     }
 
     /**
-     * @param {FormButton[]} buttons
      * @param {CssApi} css_api
      * @param {string} title
+     * @param {FormButton[] | null} buttons
      * @param {customValidationFunction | null} custom_validation_function
      * @private
      */
-    constructor(buttons, css_api, title, custom_validation_function) {
+    constructor(css_api, title, buttons, custom_validation_function) {
         super();
 
-        this.#buttons = buttons;
         this.#css_api = css_api;
         this.#title = title;
+        this.#buttons = buttons;
         this.#custom_validation_function = custom_validation_function;
         this.#has_custom_validation_messages = false;
 
@@ -120,6 +120,15 @@ export class FormElement extends HTMLElement {
             this.#css_api,
             subtitle
         ));
+    }
+
+    /**
+     * @returns {void}
+     */
+    clearInputs() {
+        this.#form_element.querySelectorAll("label").forEach(element => {
+            element.remove();
+        });
     }
 
     /**
@@ -188,10 +197,12 @@ export class FormElement extends HTMLElement {
             this.#removeCustomValidationMessages();
         });
 
-        this.#shadow.appendChild(FormButtonsElement.new(
-            this.#buttons,
-            this.#css_api
-        ));
+        if (this.#buttons !== null) {
+            this.#shadow.appendChild(FormButtonsElement.new(
+                this.#buttons,
+                this.#css_api
+            ));
+        }
     }
 }
 

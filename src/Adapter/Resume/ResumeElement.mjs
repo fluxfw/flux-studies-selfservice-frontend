@@ -71,6 +71,8 @@ export class ResumeElement extends HTMLElement {
      */
     #render() {
         this.#form_element = FormElement.new(
+            this.#css_api,
+            "Resume the application process",
             [
                 {
                     action: () => {
@@ -78,9 +80,7 @@ export class ResumeElement extends HTMLElement {
                     },
                     label: "Continue"
                 }
-            ],
-            this.#css_api,
-            "Resume the application process"
+            ]
         );
 
         this.#form_element.addSubtitle(
