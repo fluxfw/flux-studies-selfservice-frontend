@@ -1,6 +1,6 @@
 import { ChoiceSubjectElement } from "../Subject/ChoiceSubjectElement.mjs";
-import { CssApi } from "../../../../flux-css-api/src/Adapter/Api/CssApi.mjs";
-import { FetchApi } from "../../../../flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
+import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
+import { FetchApi } from "../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
 import { MainElement } from "../Main/MainElement.mjs";
 import { StartElement } from "../Start/StartElement.mjs";
 import { ELEMENT_CHOICE_SUBJECT, ELEMENT_CREATE, ELEMENT_RESUME, ELEMENT_ROOT, ELEMENT_START } from "../Element/ELEMENT.mjs";

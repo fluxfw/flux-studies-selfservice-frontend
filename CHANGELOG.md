@@ -6,6 +6,13 @@ Changes:
 
 \-
 
+## v2022-09-26-1-alpha
+
+Changes:
+
+- Make root url work without redirect
+- Fix permissions
+
 ## v2022-09-22-4-alpha
 
 Changes:

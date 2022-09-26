@@ -1,4 +1,4 @@
-import { CssApi } from "../../../../flux-css-api/src/Adapter/Api/CssApi.mjs";
+import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 
 /** @typedef {import("./FormButton.mjs").FormButton} FormButton */
