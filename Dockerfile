@@ -5,34 +5,24 @@ RUN (cd /build/flux-studies-selfservice-frontend && npm ci --omit=dev)
 
 COPY . /build/flux-studies-selfservice-frontend
 
+RUN mkdir -p /build/flux-studies-selfservice-frontend/node_modules/flux-studies-selfservice-frontend && mv /build/flux-studies-selfservice-frontend/src /build/flux-studies-selfservice-frontend/node_modules/flux-studies-selfservice-frontend/src
+
 FROM nginx:mainline-alpine
 
 RUN unlink /etc/nginx/conf.d/default.conf
 
 RUN sed -i "s/}/\n    application\/javascript mjs;\n}/" /etc/nginx/mime.types
 
-RUN echo "server_tokens off;\
-\
-server {\
-	listen 80;\
-\
-	index index.html;\
-\
-    location /flux-css-api {\
-        alias /flux-studies-selfservice-frontend/node_modules/flux-css-api;\
-    }\
-\
-    location /flux-fetch-api {\
-        alias /flux-studies-selfservice-frontend/node_modules/flux-fetch-api;\
-    }\
-\
-    location /flux-studies-selfservice-frontend {\
-        alias /flux-studies-selfservice-frontend;\
-    }\
-\
-    location = / {\
-        return 302 flux-studies-selfservice-frontend/src;\
-    }\
+RUN echo -e "server_tokens off;\n\
+\n\
+server {\n\
+	listen 80;\n\
+\n\
+	index index.html;\n\
+\n\
+    location / {\n\
+        root /flux-studies-selfservice-frontend/node_modules/flux-studies-selfservice-frontend/src;\n\
+    }\n\
 }" > /etc/nginx/conf.d/flux-studies-selfservice-frontend.conf
 
 COPY --from=build /build /
