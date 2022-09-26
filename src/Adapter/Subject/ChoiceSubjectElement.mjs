@@ -1,8 +1,6 @@
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
-import { FormButtonsElement } from "../FormButtons/FormButtonsElement.mjs";
-import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
-import { FormTitleElement } from "../FormTitle/FormTitleElement.mjs";
+import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
@@ -22,25 +20,21 @@ export class ChoiceSubjectElement extends HTMLElement {
      */
     #css_api;
     /**
-     * @type {HTMLFormElement}
-     */
-    #form_element;
-    /**
      * @type {nextFunction}
      */
     #next_function;
     /**
-     * @type {HTMLDivElement}
+     * @type {FormElement}
      */
-    #qualifications_list_element;
+    #qualifications_form_element;
     /**
      * @type {ShadowRoot}
      */
     #shadow;
     /**
-     * @type {HTMLDivElement}
+     * @type {FormElement}
      */
-    #subject_list_element;
+    #subject_form_element;
 
     /**
      * @param {ChoiceSubject} choice_subject
@@ -74,10 +68,6 @@ export class ChoiceSubjectElement extends HTMLElement {
             this.#shadow,
             `${__dirname}/${this.constructor.name}.css`
         );
-        this.#css_api.importCssToRoot(
-            this.#shadow,
-            `${__dirname}/../Form/FormElement.css`
-        );
 
         this.#render();
     }
@@ -86,22 +76,21 @@ export class ChoiceSubjectElement extends HTMLElement {
      * @returns {void}
      */
     #next() {
-        if (!this.#form_element.checkValidity()) {
-            this.#form_element.reportValidity();
+        if (!this.#subject_form_element.validate() || !this.#qualifications_form_element.validate()) {
             return;
         }
 
         this.#next_function(
             {
-                qualifications: Object.fromEntries(("qualification" in this.#form_element.elements ? (this.#form_element.elements.qualification instanceof RadioNodeList ? [
-                    ...this.#form_element.elements.qualification
+                qualifications: Object.fromEntries(("qualification" in this.#qualifications_form_element.inputs ? (this.#qualifications_form_element.inputs.qualification instanceof RadioNodeList ? [
+                    ...this.#qualifications_form_element.inputs.qualification
                 ] : [
-                    this.#form_element.elements.qualification
+                    this.#qualifications_form_element.inputs.qualification
                 ]) : []).map(input_element => [
                     input_element.value,
                     input_element.checked
                 ])),
-                subject: this.#form_element.elements.subject.value
+                subject: this.#subject_form_element.inputs.subject.value
             }
         );
     }
@@ -115,60 +104,27 @@ export class ChoiceSubjectElement extends HTMLElement {
             "Choice of subject"
         ));
 
-        this.#shadow.appendChild(FormTitleElement.new(
+        this.#subject_form_element = FormElement.new(
             this.#css_api,
             "Choose your degree program"
-        ));
-
-        this.#form_element = document.createElement("form");
-
-        const subjects_section_element = document.createElement("div");
-
-        this.#subject_list_element = document.createElement("div");
+        );
 
         for (const subject of this.#choice_subject.subjects) {
-            const label_element = document.createElement("label");
-
-            const input_element = document.createElement("input");
-            input_element.classList.add("input");
-            input_element.name = "subject";
+            const input_element = this.#subject_form_element.addInput(subject.label, "subject", "radio");
             input_element.required = true;
-            input_element.type = "radio";
             input_element.value = subject.id;
             input_element.addEventListener("input", () => {
                 this.#renderQualifications(
                     subject
                 );
             });
-            label_element.appendChild(input_element);
-
-            const text_element = document.createElement("div");
-            text_element.classList.add("text");
-            text_element.innerText = subject.label;
-            label_element.appendChild(text_element);
-
-            this.#subject_list_element.appendChild(label_element);
         }
 
-        subjects_section_element.appendChild(this.#subject_list_element);
+        this.#shadow.appendChild(this.#subject_form_element);
 
-        this.#form_element.appendChild(subjects_section_element);
-
-        this.#form_element.appendChild(FormSubtitleElement.new(
+        this.#qualifications_form_element = FormElement.new(
             this.#css_api,
-            "Qualifications for admission"
-        ));
-
-        const qualifications_section_element = document.createElement("div");
-
-        this.#qualifications_list_element = document.createElement("div");
-        qualifications_section_element.appendChild(this.#qualifications_list_element);
-
-        this.#form_element.appendChild(qualifications_section_element);
-
-        this.#shadow.appendChild(this.#form_element);
-
-        this.#shadow.appendChild(FormButtonsElement.new(
+            "Qualifications for admission",
             [
                 {
                     action: () => {
@@ -176,9 +132,10 @@ export class ChoiceSubjectElement extends HTMLElement {
                     },
                     label: "Continue"
                 }
-            ],
-            this.#css_api
-        ));
+            ]
+        );
+
+        this.#shadow.appendChild(this.#qualifications_form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
             this.#css_api
@@ -190,25 +147,12 @@ export class ChoiceSubjectElement extends HTMLElement {
      * @returns {void}
      */
     #renderQualifications(subject) {
-        this.#qualifications_list_element.innerHTML = "";
+        this.#qualifications_form_element.clearInputs();
 
         for (const qualification of subject.qualifications) {
-            const label_element = document.createElement("label");
-
-            const input_element = document.createElement("input");
-            input_element.classList.add("input");
-            input_element.name = "qualification";
+            const input_element = this.#qualifications_form_element.addInput(qualification.label, "qualification", "checkbox");
             input_element.required = qualification.required ?? false;
-            input_element.type = "checkbox";
             input_element.value = qualification.id;
-            label_element.appendChild(input_element);
-
-            const text_element = document.createElement("div");
-            text_element.classList.add("text");
-            text_element.innerText = qualification.label;
-            label_element.appendChild(text_element);
-
-            this.#qualifications_list_element.appendChild(label_element);
         }
     }
 }

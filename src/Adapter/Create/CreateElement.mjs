@@ -88,6 +88,8 @@ export class CreateElement extends HTMLElement {
      */
     #render() {
         this.#form_element = FormElement.new(
+            this.#css_api,
+            "Create a new application",
             [
                 {
                     action: () => {
@@ -96,8 +98,6 @@ export class CreateElement extends HTMLElement {
                     label: "Continue"
                 }
             ],
-            this.#css_api,
-            "Create a new application",
             () => {
                 if (this.#form_element.inputs.password.value !== this.#form_element.inputs.confirm_password.value) {
                     this.#form_element.setCustomValidationMessage(
