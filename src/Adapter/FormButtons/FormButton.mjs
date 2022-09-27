@@ -1,3 +1,3 @@
 /**
- * @typedef {{action: () => void, label: string}} FormButton
+ * @typedef {{action: () => void, label: string, right?: boolean}} FormButton
  */

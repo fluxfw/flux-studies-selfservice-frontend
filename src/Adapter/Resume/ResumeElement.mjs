@@ -78,7 +78,8 @@ export class ResumeElement extends HTMLElement {
                     action: () => {
                         this.#resume();
                     },
-                    label: "Continue"
+                    label: "Continue",
+                    right: true
                 }
             ]
         );

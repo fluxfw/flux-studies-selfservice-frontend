@@ -95,7 +95,8 @@ export class CreateElement extends HTMLElement {
                     action: () => {
                         this.#create();
                     },
-                    label: "Continue"
+                    label: "Continue",
+                    right: true
                 }
             ],
             () => {

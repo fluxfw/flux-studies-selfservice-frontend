@@ -5,6 +5,7 @@ import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
+/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("./continueFunction.mjs").continueFunction} continueFunction */
 /** @typedef {import("../DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
@@ -12,6 +13,10 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
 export class ChoiceSubjectElement extends HTMLElement {
+    /**
+     * @type {backFunction}
+     */
+    #back_function;
     /**
      * @type {ChoiceSubject}
      */
@@ -38,13 +43,15 @@ export class ChoiceSubjectElement extends HTMLElement {
     #shadow;
 
     /**
+     * @param {backFunction} back_function
      * @param {ChoiceSubject} choice_subject
      * @param {continueFunction} continue_function
      * @param {CssApi} css_api
      * @returns {ChoiceSubjectElement}
      */
-    static new(choice_subject, continue_function, css_api) {
+    static new(back_function, choice_subject, continue_function, css_api) {
         return new this(
+            back_function,
             choice_subject,
             continue_function,
             css_api
@@ -52,14 +59,16 @@ export class ChoiceSubjectElement extends HTMLElement {
     }
 
     /**
+     * @param {backFunction} back_function
      * @param {ChoiceSubject} choice_subject
      * @param {continueFunction} continue_function
      * @param {CssApi} css_api
      * @private
      */
-    constructor(choice_subject, continue_function, css_api) {
+    constructor(back_function, choice_subject, continue_function, css_api) {
         super();
 
+        this.#back_function = back_function;
         this.#choice_subject = choice_subject;
         this.#continue_function = continue_function;
         this.#css_api = css_api;
@@ -71,6 +80,13 @@ export class ChoiceSubjectElement extends HTMLElement {
         );
 
         this.#render();
+    }
+
+    /**
+     * @returns {void}
+     */
+    #back() {
+        this.#back_function();
     }
 
     /**
@@ -129,9 +145,16 @@ export class ChoiceSubjectElement extends HTMLElement {
             [
                 {
                     action: () => {
+                        this.#back();
+                    },
+                    label: "Back"
+                },
+                {
+                    action: () => {
                         this.#continue();
                     },
-                    label: "Continue"
+                    label: "Continue",
+                    right: true
                 }
             ]
         );
