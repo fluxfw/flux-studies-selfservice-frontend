@@ -91,14 +91,27 @@ export class FormElement extends HTMLElement {
         const label_element = document.createElement("label");
 
         let input_element;
-        if (type === "select" || type === "textarea") {
-            input_element = document.createElement(type);
+        if (type === "readonly") {
+            input_element = document.createElement("div");
+            input_element.classList.add("input_readonly");
         } else {
-            input_element = document.createElement("input");
-            input_element.type = type;
+            if (type === "select" || type === "textarea") {
+                input_element = document.createElement(type);
+            } else {
+                input_element = document.createElement("input");
+                input_element.type = type;
+            }
+            input_element.classList.add("input");
+            input_element.name = name;
         }
-        input_element.classList.add("input");
-        input_element.name = name;
+
+        if (input_element instanceof HTMLSelectElement) {
+            const option_element = document.createElement("option");
+            option_element.text = "--";
+            option_element.value = "";
+            input_element.appendChild(option_element);
+        }
+
         label_element.appendChild(input_element);
 
         const text_element = document.createElement("div");
@@ -128,6 +141,18 @@ export class FormElement extends HTMLElement {
     clearInputs() {
         this.#form_element.querySelectorAll("label").forEach(element => {
             element.remove();
+        });
+    }
+
+    /**
+     * @param {HTMLSelectElement} select_element
+     * @returns {void}
+     */
+    clearSelectOptions(select_element) {
+        [
+            ...select_element.querySelectorAll("option")
+        ].filter(option_element => option_element.value !== "").forEach(option_element => {
+            option_element.remove();
         });
     }
 

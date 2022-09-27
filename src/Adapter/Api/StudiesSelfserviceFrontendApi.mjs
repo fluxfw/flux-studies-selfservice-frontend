@@ -1,12 +1,14 @@
-import { ChoiceSubjectElement } from "../Subject/ChoiceSubjectElement.mjs";
+import { ChoiceSubjectElement } from "../ChoiceSubject/ChoiceSubjectElement.mjs";
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { FetchApi } from "../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
+import { IntendedDegreeProgramElement } from "../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs";
 import { MainElement } from "../Main/MainElement.mjs";
 import { StartElement } from "../Start/StartElement.mjs";
-import { ELEMENT_CHOICE_SUBJECT, ELEMENT_CREATE, ELEMENT_RESUME, ELEMENT_ROOT, ELEMENT_START } from "../Element/ELEMENT.mjs";
+import { ELEMENT_CHOICE_SUBJECT, ELEMENT_CREATE, ELEMENT_INTENDED_DEGREE_PROGRAM, ELEMENT_RESUME, ELEMENT_ROOT, ELEMENT_START } from "../Element/ELEMENT.mjs";
 
-/** @typedef {import("../Subject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
+/** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
+/** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgram.mjs").IntendedDegreeProgram} IntendedDegreeProgram */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
@@ -88,14 +90,13 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
-     * @param {postFunction} post_function
      * @param {ChoiceSubject} choice_subject
+     * @param {postFunction} post_function
      * @returns {ChoiceSubjectElement}
      */
-    #getChoiceSubjectElement(post_function, choice_subject) {
+    #getChoiceSubjectElement(choice_subject, post_function) {
         return ChoiceSubjectElement.new(
             choice_subject,
-            this.#css_api,
             async chosen_subject => {
                 const post_result = await post_function(
                     {
@@ -107,7 +108,8 @@ export class StudiesSelfserviceFrontendApi {
                 if (post_result.ok) {
                     return;
                 }
-            }
+            },
+            this.#css_api
         );
     }
 
@@ -136,6 +138,30 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
+     * @param {IntendedDegreeProgram} intended_degree_program
+     * @param {postFunction} post_function
+     * @returns {IntendedDegreeProgramElement}
+     */
+    #getIntendedDegreeProgramElement(intended_degree_program, post_function) {
+        return IntendedDegreeProgramElement.new(
+            async chosen_intended_degree_program => {
+                const post_result = await post_function(
+                    {
+                        data: chosen_intended_degree_program,
+                        element: ELEMENT_INTENDED_DEGREE_PROGRAM
+                    }
+                );
+
+                if (post_result.ok) {
+                    return;
+                }
+            },
+            this.#css_api,
+            intended_degree_program
+        );
+    }
+
+    /**
      * @param {GetResult} get_result
      * @param {postFunction} post_function
      * @returns {HTMLElement}
@@ -144,8 +170,14 @@ export class StudiesSelfserviceFrontendApi {
         switch (get_result.element) {
             case ELEMENT_CHOICE_SUBJECT:
                 return this.#getChoiceSubjectElement(
-                    post_function,
-                    get_result.data
+                    get_result.data,
+                    post_function
+                );
+
+            case ELEMENT_INTENDED_DEGREE_PROGRAM:
+                return this.#getIntendedDegreeProgramElement(
+                    get_result.data,
+                    post_function
                 );
 
             case ELEMENT_CREATE:
