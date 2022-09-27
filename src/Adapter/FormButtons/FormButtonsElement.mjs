@@ -57,6 +57,9 @@ export class FormButtonsElement extends HTMLElement {
     #render() {
         for (const button of this.#buttons) {
             const button_element = document.createElement("button");
+            if (button.right) {
+                button_element.dataset.right = true;
+            }
             button_element.innerText = button.label;
             button_element.type = "button";
             button_element.addEventListener("click", () => {

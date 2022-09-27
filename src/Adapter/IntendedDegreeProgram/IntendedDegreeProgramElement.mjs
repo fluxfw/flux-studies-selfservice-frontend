@@ -5,6 +5,7 @@ import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
+/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./continueFunction.mjs").continueFunction} continueFunction */
 /** @typedef {import("./IntendedDegreeProgram.mjs").IntendedDegreeProgram} IntendedDegreeProgram */
 /** @typedef {import("../Subject/Subject.mjs").Subject} Subject */
@@ -12,6 +13,10 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
 export class IntendedDegreeProgramElement extends HTMLElement {
+    /**
+     * @type {backFunction}
+     */
+    #back_function;
     /**
      * @type {continueFunction}
      */
@@ -42,13 +47,15 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     #subject;
 
     /**
+     * @param {backFunction} back_function
      * @param {continueFunction} continue_function
      * @param {CssApi} css_api
      * @param {IntendedDegreeProgram} intended_degree_program
      * @returns {IntendedDegreeProgramElement}
      */
-    static new(continue_function, css_api, intended_degree_program) {
+    static new(back_function, continue_function, css_api, intended_degree_program) {
         return new this(
+            back_function,
             continue_function,
             css_api,
             intended_degree_program
@@ -56,14 +63,16 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     }
 
     /**
+     * @param {backFunction} back_function
      * @param {continueFunction} continue_function
      * @param {CssApi} css_api
      * @param {IntendedDegreeProgram} intended_degree_program
      * @private
      */
-    constructor(continue_function, css_api, intended_degree_program) {
+    constructor(back_function, continue_function, css_api, intended_degree_program) {
         super();
 
+        this.#back_function = back_function;
         this.#continue_function = continue_function;
         this.#css_api = css_api;
         this.#intended_degree_program = intended_degree_program;
@@ -76,6 +85,13 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         );
 
         this.#render();
+    }
+
+    /**
+     * @returns {void}
+     */
+    #back() {
+        this.#back_function();
     }
 
     /**
@@ -109,9 +125,16 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             [
                 {
                     action: () => {
+                        this.#back();
+                    },
+                    label: "Back"
+                },
+                {
+                    action: () => {
                         this.#continue();
                     },
-                    label: "Continue"
+                    label: "Continue",
+                    right: true
                 }
             ]
         );
