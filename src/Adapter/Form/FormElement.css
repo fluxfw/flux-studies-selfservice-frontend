@@ -18,17 +18,20 @@ label {
     padding: 5px 0;
 }
 
-.input:not([type="checkbox"]):not([type="radio"]) {
+.input:not([type="checkbox"]):not([type="radio"]), .input_readonly {
     all: initial;
-    background-color: var(--input-color);
-    border: var(--input-border-size) solid var(--input-border-color);
-    border-radius: 3px;
     color: var(--input-text-color);
     font-family: inherit;
     min-height: 20px;
     order: 2;
     padding: 5px;
     width: calc(60% - 14px);
+}
+
+.input:not([type="checkbox"]):not([type="radio"]) {
+    background-color: var(--input-color);
+    border: var(--input-border-size) solid var(--input-border-color);
+    border-radius: 3px;
 }
 
 textarea {

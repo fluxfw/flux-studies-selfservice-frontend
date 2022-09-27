@@ -1,5 +1,5 @@
 /** @typedef {import("./ChosenSubject.mjs").ChosenSubject} ChosenSubject */
 
 /**
- * @typedef {(chosen_subject: ChosenSubject) => void} nextFunction
+ * @typedef {(chosen_subject: ChosenSubject) => void} continueFunction
  */

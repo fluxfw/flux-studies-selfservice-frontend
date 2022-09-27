@@ -1,12 +1,13 @@
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
+import { ELEMENT_CHOICE_SUBJECT } from "../Element/ELEMENT.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
-/** @typedef {import("../DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
 /** @typedef {import("./ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
-/** @typedef {import("./nextFunction.mjs").nextFunction} nextFunction */
+/** @typedef {import("./continueFunction.mjs").continueFunction} continueFunction */
+/** @typedef {import("../DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -16,6 +17,10 @@ export class ChoiceSubjectElement extends HTMLElement {
      */
     #choice_subject;
     /**
+     * @type {continueFunction}
+     */
+    #continue_function;
+    /**
      * @type {CssApi}
      */
     #css_api;
@@ -23,10 +28,6 @@ export class ChoiceSubjectElement extends HTMLElement {
      * @type {FormElement}
      */
     #degree_program_form_element;
-    /**
-     * @type {nextFunction}
-     */
-    #next_function;
     /**
      * @type {FormElement}
      */
@@ -38,30 +39,30 @@ export class ChoiceSubjectElement extends HTMLElement {
 
     /**
      * @param {ChoiceSubject} choice_subject
+     * @param {continueFunction} continue_function
      * @param {CssApi} css_api
-     * @param {nextFunction} next_function
      * @returns {ChoiceSubjectElement}
      */
-    static new(choice_subject, css_api, next_function) {
+    static new(choice_subject, continue_function, css_api) {
         return new this(
             choice_subject,
-            css_api,
-            next_function
+            continue_function,
+            css_api
         );
     }
 
     /**
      * @param {ChoiceSubject} choice_subject
+     * @param {continueFunction} continue_function
      * @param {CssApi} css_api
-     * @param {nextFunction} next_function
      * @private
      */
-    constructor(choice_subject, css_api, next_function) {
+    constructor(choice_subject, continue_function, css_api) {
         super();
 
         this.#choice_subject = choice_subject;
+        this.#continue_function = continue_function;
         this.#css_api = css_api;
-        this.#next_function = next_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -75,12 +76,12 @@ export class ChoiceSubjectElement extends HTMLElement {
     /**
      * @returns {void}
      */
-    #next() {
+    #continue() {
         if (!this.#degree_program_form_element.validate() || !this.#qualifications_form_element.validate()) {
             return;
         }
 
-        this.#next_function(
+        this.#continue_function(
             {
                 "degree-program": this.#degree_program_form_element.inputs["degree-program"].value,
                 qualifications: Object.fromEntries(("qualification" in this.#qualifications_form_element.inputs ? (this.#qualifications_form_element.inputs.qualification instanceof RadioNodeList ? [
@@ -128,7 +129,7 @@ export class ChoiceSubjectElement extends HTMLElement {
             [
                 {
                     action: () => {
-                        this.#next();
+                        this.#continue();
                     },
                     label: "Continue"
                 }
@@ -157,6 +158,6 @@ export class ChoiceSubjectElement extends HTMLElement {
     }
 }
 
-export const CHOICE_SUBJECT_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}choice-subject`;
+export const CHOICE_SUBJECT_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${ELEMENT_CHOICE_SUBJECT}`;
 
 customElements.define(CHOICE_SUBJECT_ELEMENT_TAG_NAME, ChoiceSubjectElement);

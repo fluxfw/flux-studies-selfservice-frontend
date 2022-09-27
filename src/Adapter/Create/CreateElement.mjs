@@ -118,10 +118,6 @@ export class CreateElement extends HTMLElement {
         );
         semester_element.required = true;
 
-        const semester_option_element = document.createElement("option");
-        semester_option_element.text = "--";
-        semester_option_element.value = "";
-        semester_element.appendChild(semester_option_element);
         for (const semester of this.#start.semesters) {
             const option_element = document.createElement("option");
             option_element.text = semester.label;
