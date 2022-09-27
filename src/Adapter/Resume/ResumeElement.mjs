@@ -89,7 +89,7 @@ export class ResumeElement extends HTMLElement {
 
         const identification_number_element = this.#form_element.addInput(
             "Identification number",
-            "identification_number",
+            "identification-number",
             "text"
         );
         identification_number_element.required = true;
@@ -99,7 +99,7 @@ export class ResumeElement extends HTMLElement {
             "password",
             "password"
         );
-        password_element.minLength = this.#start.minPasswordLength;
+        password_element.minLength = this.#start["min-password-length"];
         password_element.required = true;
 
         this.#shadow.appendChild(this.#form_element);
@@ -115,7 +115,7 @@ export class ResumeElement extends HTMLElement {
 
         this.#resume_function(
             {
-                identification_number: this.#form_element.inputs.identification_number.value,
+                "identification-number": this.#form_element.inputs["identification-number"].value,
                 password: this.#form_element.inputs.password.value
             }
         );

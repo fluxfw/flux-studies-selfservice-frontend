@@ -76,7 +76,7 @@ export class CreateElement extends HTMLElement {
 
         this.#create_function(
             {
-                confirm_password: this.#form_element.inputs.confirm_password.value,
+                "confirm-password": this.#form_element.inputs["confirm-password"].value,
                 password: this.#form_element.inputs.password.value,
                 semester: this.#form_element.inputs.semester.value
             }
@@ -99,9 +99,9 @@ export class CreateElement extends HTMLElement {
                 }
             ],
             () => {
-                if (this.#form_element.inputs.password.value !== this.#form_element.inputs.confirm_password.value) {
+                if (this.#form_element.inputs.password.value !== this.#form_element.inputs["confirm-password"].value) {
                     this.#form_element.setCustomValidationMessage(
-                        this.#form_element.inputs.confirm_password,
+                        this.#form_element.inputs["confirm-password"],
                         "Confirm password does not match!"
                     );
                     return false;
@@ -130,7 +130,7 @@ export class CreateElement extends HTMLElement {
         }
 
         this.#form_element.addSubtitle(
-            `Enter a password with at least ${this.#start.minPasswordLength} characters which will allow you to access your data at a later stage.`
+            `Enter a password with at least ${this.#start["min-password-length"]} characters which will allow you to access your data at a later stage.`
         );
 
         const password_element = this.#form_element.addInput(
@@ -138,15 +138,15 @@ export class CreateElement extends HTMLElement {
             "password",
             "password"
         );
-        password_element.minLength = this.#start.minPasswordLength;
+        password_element.minLength = this.#start["min-password-length"];
         password_element.required = true;
 
         const confirm_password_element = this.#form_element.addInput(
             "Confirm password",
-            "confirm_password",
+            "confirm-password",
             "password"
         );
-        confirm_password_element.minLength = this.#start.minPasswordLength;
+        confirm_password_element.minLength = this.#start["min-password-length"];
         confirm_password_element.required = true;
 
         this.#shadow.appendChild(this.#form_element);

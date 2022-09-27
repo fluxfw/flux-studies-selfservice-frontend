@@ -1,3 +1,3 @@
 /**
- * @typedef {{qualifications: {[id: string]: boolean}, subject: string}} ChosenSubject
+ * @typedef {{"degree-program": string, qualifications: {[id: string]: boolean}}} ChosenSubject
  */

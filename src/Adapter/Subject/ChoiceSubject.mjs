@@ -1,5 +1,5 @@
-/** @typedef {import("./Subject.mjs").Subject} Subject */
+/** @typedef {import("../DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
 
 /**
- * @typedef {{subjects: Subject[]}} ChoiceSubject
+ * @typedef {{"degree-programs": DegreeProgram[]}} ChoiceSubject
  */

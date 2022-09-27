@@ -1,3 +1,3 @@
 /**
- * @typedef {{identification_number: string, password: string}} Resume
+ * @typedef {{"identification-number": string, password: string}} Resume
  */
