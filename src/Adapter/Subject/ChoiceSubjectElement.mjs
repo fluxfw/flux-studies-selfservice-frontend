@@ -4,9 +4,9 @@ import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
+/** @typedef {import("../DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
 /** @typedef {import("./ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("./nextFunction.mjs").nextFunction} nextFunction */
-/** @typedef {import("./Subject.mjs").Subject} Subject */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -20,6 +20,10 @@ export class ChoiceSubjectElement extends HTMLElement {
      */
     #css_api;
     /**
+     * @type {FormElement}
+     */
+    #degree_program_form_element;
+    /**
      * @type {nextFunction}
      */
     #next_function;
@@ -31,10 +35,6 @@ export class ChoiceSubjectElement extends HTMLElement {
      * @type {ShadowRoot}
      */
     #shadow;
-    /**
-     * @type {FormElement}
-     */
-    #subject_form_element;
 
     /**
      * @param {ChoiceSubject} choice_subject
@@ -76,12 +76,13 @@ export class ChoiceSubjectElement extends HTMLElement {
      * @returns {void}
      */
     #next() {
-        if (!this.#subject_form_element.validate() || !this.#qualifications_form_element.validate()) {
+        if (!this.#degree_program_form_element.validate() || !this.#qualifications_form_element.validate()) {
             return;
         }
 
         this.#next_function(
             {
+                "degree-program": this.#degree_program_form_element.inputs["degree-program"].value,
                 qualifications: Object.fromEntries(("qualification" in this.#qualifications_form_element.inputs ? (this.#qualifications_form_element.inputs.qualification instanceof RadioNodeList ? [
                     ...this.#qualifications_form_element.inputs.qualification
                 ] : [
@@ -89,8 +90,7 @@ export class ChoiceSubjectElement extends HTMLElement {
                 ]) : []).map(input_element => [
                     input_element.value,
                     input_element.checked
-                ])),
-                subject: this.#subject_form_element.inputs.subject.value
+                ]))
             }
         );
     }
@@ -104,23 +104,23 @@ export class ChoiceSubjectElement extends HTMLElement {
             "Choice of subject"
         ));
 
-        this.#subject_form_element = FormElement.new(
+        this.#degree_program_form_element = FormElement.new(
             this.#css_api,
             "Choose your degree program"
         );
 
-        for (const subject of this.#choice_subject.subjects) {
-            const input_element = this.#subject_form_element.addInput(subject.label, "subject", "radio");
+        for (const degree_program of this.#choice_subject["degree-programs"]) {
+            const input_element = this.#degree_program_form_element.addInput(degree_program.label, "degree-program", "radio");
             input_element.required = true;
-            input_element.value = subject.id;
+            input_element.value = degree_program.id;
             input_element.addEventListener("input", () => {
                 this.#renderQualifications(
-                    subject
+                    degree_program
                 );
             });
         }
 
-        this.#shadow.appendChild(this.#subject_form_element);
+        this.#shadow.appendChild(this.#degree_program_form_element);
 
         this.#qualifications_form_element = FormElement.new(
             this.#css_api,
@@ -143,13 +143,13 @@ export class ChoiceSubjectElement extends HTMLElement {
     }
 
     /**
-     * @param {Subject} subject
+     * @param {DegreeProgram} degree_program
      * @returns {void}
      */
-    #renderQualifications(subject) {
+    #renderQualifications(degree_program) {
         this.#qualifications_form_element.clearInputs();
 
-        for (const qualification of subject.qualifications) {
+        for (const qualification of degree_program.qualifications) {
             const input_element = this.#qualifications_form_element.addInput(qualification.label, "qualification", "checkbox");
             input_element.required = qualification.required ?? false;
             input_element.value = qualification.id;
