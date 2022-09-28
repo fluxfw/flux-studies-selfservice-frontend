@@ -1,5 +1,5 @@
-/** @typedef {import("../Element/ELEMENT.mjs").ELEMENT} ELEMENT */
+/** @typedef {import("../Page/PAGE.mjs").PAGE} PAGE */
 
 /**
- * @typedef {{data: {[key: string]: *}, element: ELEMENT}} Post
+ * @typedef {{page: PAGE, data: {[key: string]: *}}} Post
  */

@@ -7,7 +7,3 @@ export const ELEMENT_INTENDED_DEGREE_PROGRAM = "intended-degree-program";
 export const ELEMENT_RESUME = "resume";
 
 export const ELEMENT_START = "start";
-
-/**
- * @typedef {ELEMENT_CHOICE_SUBJECT | ELEMENT_CREATE | ELEMENT_INTENDED_DEGREE_PROGRAM | ELEMENT_RESUME | ELEMENT_START} ELEMENT
- */

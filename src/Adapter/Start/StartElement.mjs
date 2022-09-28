@@ -7,6 +7,7 @@ import { ResumeElement } from "../Resume/ResumeElement.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
+/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../Create/createFunction.mjs").createFunction} createFunction */
 /** @typedef {import("../Resume/resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("./Start.mjs").Start} Start */
@@ -14,6 +15,10 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
 export class StartElement extends HTMLElement {
+    /**
+     * @type {backFunction | null}
+     */
+    #back_function;
     /**
      * @type {createFunction}
      */
@@ -36,35 +41,39 @@ export class StartElement extends HTMLElement {
     #start;
 
     /**
-     * @param {createFunction} create_function
      * @param {CssApi} css_api
-     * @param {resumeFunction} resume_function
      * @param {Start} start
+     * @param {createFunction} create_function
+     * @param {resumeFunction} resume_function
+     * @param {backFunction | null} back_function
      * @returns {StartElement}
      */
-    static new(create_function, css_api, resume_function, start) {
+    static new(css_api, start, create_function, resume_function, back_function = null) {
         return new this(
-            create_function,
             css_api,
+            start,
+            create_function,
             resume_function,
-            start
+            back_function
         );
     }
 
     /**
-     * @param {createFunction} create_function
      * @param {CssApi} css_api
-     * @param {resumeFunction} resume_function
      * @param {Start} start
+     * @param {createFunction} create_function
+     * @param {resumeFunction} resume_function
+     * @param {backFunction | null} back_function
      * @private
      */
-    constructor(create_function, css_api, resume_function, start) {
+    constructor(css_api, start, create_function, resume_function, back_function) {
         super();
 
-        this.#create_function = create_function;
         this.#css_api = css_api;
-        this.#resume_function = resume_function;
         this.#start = start;
+        this.#create_function = create_function;
+        this.#resume_function = resume_function;
+        this.#back_function = back_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -90,15 +99,16 @@ export class StartElement extends HTMLElement {
         ));
 
         this.#shadow.appendChild(CreateElement.new(
-            this.#create_function,
             this.#css_api,
-            this.#start
+            this.#start,
+            this.#create_function
         ));
 
         this.#shadow.appendChild(ResumeElement.new(
             this.#css_api,
+            this.#start,
             this.#resume_function,
-            this.#start
+            this.#back_function
         ));
 
         this.#shadow.appendChild(MandatoryElement.new(

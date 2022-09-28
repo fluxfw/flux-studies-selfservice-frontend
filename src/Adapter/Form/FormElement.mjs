@@ -5,16 +5,12 @@ import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 import { FormTitleElement } from "../FormTitle/FormTitleElement.mjs";
 
 /** @typedef {import("./customValidationFunction.mjs").customValidationFunction} customValidationFunction */
-/** @typedef {import("../FormButtons/FormButton.mjs").FormButton} FormButton */
+/** @typedef {import("./formButtonAction.mjs").formButtonAction} formButtonAction */
 /** @typedef {import("./InputElement.mjs").InputElement} InputElement */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
 export class FormElement extends HTMLElement {
-    /**
-     * @type {FormButton[] | null}
-     */
-    #buttons;
     /**
      * @type {CssApi}
      */
@@ -43,15 +39,13 @@ export class FormElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {string} title
-     * @param {FormButton[] | null} buttons
      * @param {customValidationFunction | null} custom_validation_function
      * @returns {FormElement}
      */
-    static new(css_api, title, buttons = null, custom_validation_function = null) {
+    static new(css_api, title, custom_validation_function = null) {
         return new this(
             css_api,
             title,
-            buttons,
             custom_validation_function
         );
     }
@@ -59,16 +53,14 @@ export class FormElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {string} title
-     * @param {FormButton[] | null} buttons
      * @param {customValidationFunction | null} custom_validation_function
      * @private
      */
-    constructor(css_api, title, buttons, custom_validation_function) {
+    constructor(css_api, title, custom_validation_function) {
         super();
 
         this.#css_api = css_api;
         this.#title = title;
-        this.#buttons = buttons;
         this.#custom_validation_function = custom_validation_function;
         this.#has_custom_validation_messages = false;
 
@@ -82,12 +74,38 @@ export class FormElement extends HTMLElement {
     }
 
     /**
+     * @param {formButtonAction} continue_function
+     * @param {formButtonAction | null} back_function
+     * @param {string | null} subtitle
+     * @returns {void}
+     */
+    addButtons(continue_function, back_function = null, subtitle = null) {
+        this.#shadow.appendChild(FormButtonsElement.new(
+            this.#css_api,
+            [
+                {
+                    label: "Continue",
+                    action: continue_function,
+                    right: true
+                },
+                ...back_function !== null ? [
+                    {
+                        label: "Back",
+                        action: back_function
+                    }
+                ] : []
+            ],
+            subtitle
+        ));
+    }
+
+    /**
      * @param {string} label
-     * @param {string} name
      * @param {string} type
+     * @param {string | null} name
      * @returns {InputElement}
      */
-    addInput(label, name, type) {
+    addInput(label, type, name = null) {
         const label_element = document.createElement("label");
 
         let input_element;
@@ -102,7 +120,7 @@ export class FormElement extends HTMLElement {
                 input_element.type = type;
             }
             input_element.classList.add("input");
-            input_element.name = name;
+            input_element.name = name ?? "";
         }
 
         if (input_element instanceof HTMLSelectElement) {
@@ -139,9 +157,9 @@ export class FormElement extends HTMLElement {
      * @returns {void}
      */
     clearInputs() {
-        this.#form_element.querySelectorAll("label").forEach(element => {
-            element.remove();
-        });
+        for (const label_element of this.#form_element.querySelectorAll("label")) {
+            label_element.remove();
+        }
     }
 
     /**
@@ -149,11 +167,11 @@ export class FormElement extends HTMLElement {
      * @returns {void}
      */
     clearSelectOptions(select_element) {
-        [
+        for (const option_element of [
             ...select_element.querySelectorAll("option")
-        ].filter(option_element => option_element.value !== "").forEach(option_element => {
+        ].filter(_option_element => _option_element.value !== "")) {
             option_element.remove();
-        });
+        }
     }
 
     /**
@@ -221,13 +239,6 @@ export class FormElement extends HTMLElement {
         this.#form_element.addEventListener("input", () => {
             this.#removeCustomValidationMessages();
         });
-
-        if (this.#buttons !== null) {
-            this.#shadow.appendChild(FormButtonsElement.new(
-                this.#buttons,
-                this.#css_api
-            ));
-        }
     }
 }
 

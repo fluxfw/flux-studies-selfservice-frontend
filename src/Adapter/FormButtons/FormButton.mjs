@@ -1,3 +1,5 @@
+/** @typedef {import("./formButtonAction.mjs").formButtonAction} formButtonAction */
+
 /**
- * @typedef {{action: () => void, label: string, right?: boolean}} FormButton
+ * @typedef {{label: string, action: formButtonAction, right?: boolean}} FormButton
  */

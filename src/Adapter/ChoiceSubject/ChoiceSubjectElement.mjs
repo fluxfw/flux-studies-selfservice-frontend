@@ -7,14 +7,14 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
-/** @typedef {import("./continueFunction.mjs").continueFunction} continueFunction */
+/** @typedef {import("./chosenSubjectFunction.mjs").chosenSubjectFunction} chosenSubjectFunction */
 /** @typedef {import("../DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
 export class ChoiceSubjectElement extends HTMLElement {
     /**
-     * @type {backFunction}
+     * @type {backFunction | null}
      */
     #back_function;
     /**
@@ -22,9 +22,9 @@ export class ChoiceSubjectElement extends HTMLElement {
      */
     #choice_subject;
     /**
-     * @type {continueFunction}
+     * @type {chosenSubjectFunction}
      */
-    #continue_function;
+    #chosen_subject_function;
     /**
      * @type {CssApi}
      */
@@ -43,35 +43,35 @@ export class ChoiceSubjectElement extends HTMLElement {
     #shadow;
 
     /**
-     * @param {backFunction} back_function
-     * @param {ChoiceSubject} choice_subject
-     * @param {continueFunction} continue_function
      * @param {CssApi} css_api
+     * @param {ChoiceSubject} choice_subject
+     * @param {chosenSubjectFunction} chosen_subject_function
+     * @param {backFunction | null} back_function
      * @returns {ChoiceSubjectElement}
      */
-    static new(back_function, choice_subject, continue_function, css_api) {
+    static new(css_api, choice_subject, chosen_subject_function, back_function = null) {
         return new this(
-            back_function,
+            css_api,
             choice_subject,
-            continue_function,
-            css_api
+            chosen_subject_function,
+            back_function
         );
     }
 
     /**
-     * @param {backFunction} back_function
-     * @param {ChoiceSubject} choice_subject
-     * @param {continueFunction} continue_function
      * @param {CssApi} css_api
+     * @param {ChoiceSubject} choice_subject
+     * @param {chosenSubjectFunction} chosen_subject_function
+     * @param {backFunction | null} back_function
      * @private
      */
-    constructor(back_function, choice_subject, continue_function, css_api) {
+    constructor(css_api, choice_subject, chosen_subject_function, back_function) {
         super();
 
-        this.#back_function = back_function;
-        this.#choice_subject = choice_subject;
-        this.#continue_function = continue_function;
         this.#css_api = css_api;
+        this.#choice_subject = choice_subject;
+        this.#chosen_subject_function = chosen_subject_function;
+        this.#back_function = back_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -85,26 +85,19 @@ export class ChoiceSubjectElement extends HTMLElement {
     /**
      * @returns {void}
      */
-    #back() {
-        this.#back_function();
-    }
-
-    /**
-     * @returns {void}
-     */
-    #continue() {
+    #chosenSubject() {
         if (!this.#degree_program_form_element.validate() || !this.#qualifications_form_element.validate()) {
             return;
         }
 
-        this.#continue_function(
+        this.#chosen_subject_function(
             {
                 "degree-program": this.#degree_program_form_element.inputs["degree-program"].value,
-                qualifications: Object.fromEntries(("qualification" in this.#qualifications_form_element.inputs ? (this.#qualifications_form_element.inputs.qualification instanceof RadioNodeList ? [
+                qualifications: Object.fromEntries(("qualification" in this.#qualifications_form_element.inputs ? this.#qualifications_form_element.inputs.qualification instanceof RadioNodeList ? [
                     ...this.#qualifications_form_element.inputs.qualification
                 ] : [
                     this.#qualifications_form_element.inputs.qualification
-                ]) : []).map(input_element => [
+                ] : []).map(input_element => [
                     input_element.value,
                     input_element.checked
                 ]))
@@ -127,7 +120,11 @@ export class ChoiceSubjectElement extends HTMLElement {
         );
 
         for (const degree_program of this.#choice_subject["degree-programs"]) {
-            const input_element = this.#degree_program_form_element.addInput(degree_program.label, "degree-program", "radio");
+            const input_element = this.#degree_program_form_element.addInput(
+                degree_program.label,
+                "radio",
+                "degree-program"
+            );
             input_element.required = true;
             input_element.value = degree_program.id;
             input_element.addEventListener("input", () => {
@@ -141,22 +138,14 @@ export class ChoiceSubjectElement extends HTMLElement {
 
         this.#qualifications_form_element = FormElement.new(
             this.#css_api,
-            "Qualifications for admission",
-            [
-                {
-                    action: () => {
-                        this.#back();
-                    },
-                    label: "Back"
-                },
-                {
-                    action: () => {
-                        this.#continue();
-                    },
-                    label: "Continue",
-                    right: true
-                }
-            ]
+            "Qualifications for admission"
+        );
+
+        this.#qualifications_form_element.addButtons(
+            () => {
+                this.#chosenSubject();
+            },
+            this.#back_function
         );
 
         this.#shadow.appendChild(this.#qualifications_form_element);
@@ -174,7 +163,11 @@ export class ChoiceSubjectElement extends HTMLElement {
         this.#qualifications_form_element.clearInputs();
 
         for (const qualification of degree_program.qualifications) {
-            const input_element = this.#qualifications_form_element.addInput(qualification.label, "qualification", "checkbox");
+            const input_element = this.#qualifications_form_element.addInput(
+                qualification.label,
+                "checkbox",
+                "qualification"
+            );
             input_element.required = qualification.required ?? false;
             input_element.value = qualification.id;
         }

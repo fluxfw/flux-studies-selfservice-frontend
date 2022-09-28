@@ -1,3 +1,3 @@
 /**
- * @typedef {{combinations: {id: string, label: string, mandatory?: string}[], id: string, label: string}} Subject
+ * @typedef {{id: string, label: string, combinations: {id: string, label: string, mandatory?: string}[]}} Subject
  */

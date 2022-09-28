@@ -2,11 +2,15 @@
     background-color: var(--form-buttons-color);
     border: var(--form-border-size) solid var(--form-border-color);
     border-top: none;
+    display: block;
+    min-height: 35px;
+    padding: 10px 25px;
+}
+
+.buttons {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    min-height: 35px;
-    padding: 10px 25px;
 }
 
 button {
