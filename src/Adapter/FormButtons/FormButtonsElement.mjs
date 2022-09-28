@@ -1,5 +1,6 @@
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
+import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 
 /** @typedef {import("./FormButton.mjs").FormButton} FormButton */
 
@@ -18,29 +19,37 @@ export class FormButtonsElement extends HTMLElement {
      * @type {ShadowRoot}
      */
     #shadow;
+    /**
+     * @type {string | null}
+     */
+    #subtitle = null;
 
     /**
-     * @param {FormButton[]} buttons
      * @param {CssApi} css_api
+     * @param {FormButton[]} buttons
+     * @param {string | null} subtitle
      * @returns {FormButtonsElement}
      */
-    static new(buttons, css_api) {
+    static new(css_api, buttons, subtitle = null) {
         return new this(
+            css_api,
             buttons,
-            css_api
+            subtitle
         );
     }
 
     /**
-     * @param {FormButton[]} buttons
      * @param {CssApi} css_api
+     * @param {FormButton[]} buttons
+     * @param {string | null} subtitle
      * @private
      */
-    constructor(buttons, css_api) {
+    constructor(css_api, buttons, subtitle) {
         super();
 
-        this.#buttons = buttons;
         this.#css_api = css_api;
+        this.#buttons = buttons;
+        this.#subtitle = subtitle;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -55,9 +64,19 @@ export class FormButtonsElement extends HTMLElement {
      * @returns {void}
      */
     #render() {
+        if (this.#subtitle !== null) {
+            this.#shadow.appendChild(FormSubtitleElement.new(
+                this.#css_api,
+                this.#subtitle
+            ));
+        }
+
+        const buttons_element = document.createElement("div");
+        buttons_element.classList.add("buttons");
+
         for (const button of this.#buttons) {
             const button_element = document.createElement("button");
-            if (button.right) {
+            if (button.right ?? false) {
                 button_element.dataset.right = true;
             }
             button_element.innerText = button.label;
@@ -65,8 +84,10 @@ export class FormButtonsElement extends HTMLElement {
             button_element.addEventListener("click", () => {
                 button.action();
             });
-            this.#shadow.appendChild(button_element);
+            buttons_element.appendChild(button_element);
         }
+
+        this.#shadow.appendChild(buttons_element);
     }
 }
 

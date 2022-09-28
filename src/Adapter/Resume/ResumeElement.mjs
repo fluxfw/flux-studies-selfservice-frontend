@@ -3,12 +3,17 @@ import { ELEMENT_RESUME } from "../Element/ELEMENT.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 
+/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
 export class ResumeElement extends HTMLElement {
+    /**
+     * @type {backFunction | null}
+     */
+    #back_function;
     /**
      * @type {CssApi}
      */
@@ -32,30 +37,34 @@ export class ResumeElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
-     * @param {resumeFunction} resume_function
      * @param {Start} start
+     * @param {resumeFunction} resume_function
+     * @param {backFunction | null} back_function
      * @returns {ResumeElement}
      */
-    static new(css_api, resume_function, start) {
+    static new(css_api, start, resume_function, back_function = null) {
         return new this(
             css_api,
+            start,
             resume_function,
-            start
+            back_function
         );
     }
 
     /**
      * @param {CssApi} css_api
-     * @param {resumeFunction} resume_function
      * @param {Start} start
+     * @param {resumeFunction} resume_function
+     * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, resume_function, start) {
+    constructor(css_api, start, resume_function, back_function) {
         super();
 
         this.#css_api = css_api;
-        this.#resume_function = resume_function;
         this.#start = start;
+        this.#resume_function = resume_function;
+        this.#back_function = back_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -72,16 +81,7 @@ export class ResumeElement extends HTMLElement {
     #render() {
         this.#form_element = FormElement.new(
             this.#css_api,
-            "Resume the application process",
-            [
-                {
-                    action: () => {
-                        this.#resume();
-                    },
-                    label: "Continue",
-                    right: true
-                }
-            ]
+            "Resume the application process"
         );
 
         this.#form_element.addSubtitle(
@@ -90,8 +90,8 @@ export class ResumeElement extends HTMLElement {
 
         const identification_number_element = this.#form_element.addInput(
             "Identification number",
-            "identification-number",
-            "text"
+            "text",
+            "identification-number"
         );
         identification_number_element.required = true;
 
@@ -102,6 +102,13 @@ export class ResumeElement extends HTMLElement {
         );
         password_element.minLength = this.#start["min-password-length"];
         password_element.required = true;
+
+        this.#form_element.addButtons(
+            () => {
+                this.#resume();
+            },
+            this.#back_function
+        );
 
         this.#shadow.appendChild(this.#form_element);
     }

@@ -31,31 +31,31 @@ export class CreateElement extends HTMLElement {
     #start;
 
     /**
-     * @param {createFunction} create_function
      * @param {CssApi} css_api
      * @param {Start} start
+     * @param {createFunction} create_function
      * @returns {CreateElement}
      */
-    static new(create_function, css_api, start) {
+    static new(css_api, start, create_function) {
         return new this(
-            create_function,
             css_api,
-            start
+            start,
+            create_function
         );
     }
 
     /**
-     * @param {createFunction} create_function
      * @param {CssApi} css_api
      * @param {Start} start
+     * @param {createFunction} create_function
      * @private
      */
-    constructor(create_function, css_api, start) {
+    constructor(css_api, start, create_function) {
         super();
 
-        this.#create_function = create_function;
         this.#css_api = css_api;
         this.#start = start;
+        this.#create_function = create_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -76,9 +76,9 @@ export class CreateElement extends HTMLElement {
 
         this.#create_function(
             {
-                "confirm-password": this.#form_element.inputs["confirm-password"].value,
+                semester: this.#form_element.inputs.semester.value,
                 password: this.#form_element.inputs.password.value,
-                semester: this.#form_element.inputs.semester.value
+                "confirm-password": this.#form_element.inputs["confirm-password"].value
             }
         );
     }
@@ -90,15 +90,6 @@ export class CreateElement extends HTMLElement {
         this.#form_element = FormElement.new(
             this.#css_api,
             "Create a new application",
-            [
-                {
-                    action: () => {
-                        this.#create();
-                    },
-                    label: "Continue",
-                    right: true
-                }
-            ],
             () => {
                 if (this.#form_element.inputs.password.value !== this.#form_element.inputs["confirm-password"].value) {
                     this.#form_element.setCustomValidationMessage(
@@ -114,8 +105,8 @@ export class CreateElement extends HTMLElement {
 
         const semester_element = this.#form_element.addInput(
             "Semester",
-            "semester",
-            "select"
+            "select",
+            "semester"
         );
         semester_element.required = true;
 
@@ -140,11 +131,17 @@ export class CreateElement extends HTMLElement {
 
         const confirm_password_element = this.#form_element.addInput(
             "Confirm password",
-            "confirm-password",
-            "password"
+            "password",
+            "confirm-password"
         );
         confirm_password_element.minLength = this.#start["min-password-length"];
         confirm_password_element.required = true;
+
+        this.#form_element.addButtons(
+            () => {
+                this.#create();
+            }
+        );
 
         this.#shadow.appendChild(this.#form_element);
     }

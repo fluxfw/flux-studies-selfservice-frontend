@@ -6,7 +6,7 @@ import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
-/** @typedef {import("./continueFunction.mjs").continueFunction} continueFunction */
+/** @typedef {import("./chosenIntendedDegreeProgramFunction.mjs").chosenIntendedDegreeProgramFunction} chosenIntendedDegreeProgramFunction */
 /** @typedef {import("./IntendedDegreeProgram.mjs").IntendedDegreeProgram} IntendedDegreeProgram */
 /** @typedef {import("../Subject/Subject.mjs").Subject} Subject */
 
@@ -14,13 +14,13 @@ const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))
 
 export class IntendedDegreeProgramElement extends HTMLElement {
     /**
-     * @type {backFunction}
+     * @type {backFunction | null}
      */
     #back_function;
     /**
-     * @type {continueFunction}
+     * @type {chosenIntendedDegreeProgramFunction}
      */
-    #continue_function;
+    #chosen_intended_degree_program_function;
     /**
      * @type {CssApi}
      */
@@ -44,39 +44,38 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     /**
      * @type {Subject | null}
      */
-    #subject;
+    #subject = null;
 
     /**
-     * @param {backFunction} back_function
-     * @param {continueFunction} continue_function
      * @param {CssApi} css_api
      * @param {IntendedDegreeProgram} intended_degree_program
+     * @param {chosenIntendedDegreeProgramFunction} chosen_intended_degree_program_function
+     * @param {backFunction | null} back_function
      * @returns {IntendedDegreeProgramElement}
      */
-    static new(back_function, continue_function, css_api, intended_degree_program) {
+    static new(css_api, intended_degree_program, chosen_intended_degree_program_function, back_function = null) {
         return new this(
-            back_function,
-            continue_function,
             css_api,
-            intended_degree_program
+            intended_degree_program,
+            chosen_intended_degree_program_function,
+            back_function
         );
     }
 
     /**
-     * @param {backFunction} back_function
-     * @param {continueFunction} continue_function
      * @param {CssApi} css_api
      * @param {IntendedDegreeProgram} intended_degree_program
+     * @param {chosenIntendedDegreeProgramFunction} chosen_intended_degree_program_function
+     * @param {backFunction | null} back_function
      * @private
      */
-    constructor(back_function, continue_function, css_api, intended_degree_program) {
+    constructor(css_api, intended_degree_program, chosen_intended_degree_program_function, back_function) {
         super();
 
-        this.#back_function = back_function;
-        this.#continue_function = continue_function;
         this.#css_api = css_api;
         this.#intended_degree_program = intended_degree_program;
-        this.#subject = null;
+        this.#chosen_intended_degree_program_function = chosen_intended_degree_program_function;
+        this.#back_function = back_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -90,22 +89,15 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     /**
      * @returns {void}
      */
-    #back() {
-        this.#back_function();
-    }
-
-    /**
-     * @returns {void}
-     */
-    #continue() {
+    #chosenIntendedDegreeProgram() {
         if (!this.#form_element.validate()) {
             return;
         }
 
-        this.#continue_function(
+        this.#chosen_intended_degree_program_function(
             {
-                combination: this.#form_element.inputs.combination.value,
-                subject: this.#form_element.inputs.subject.value
+                subject: this.#form_element.inputs.subject.value,
+                combination: this.#form_element.inputs.combination.value
             }
         );
     }
@@ -121,28 +113,13 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         this.#form_element = FormElement.new(
             this.#css_api,
-            "Degree Program",
-            [
-                {
-                    action: () => {
-                        this.#back();
-                    },
-                    label: "Back"
-                },
-                {
-                    action: () => {
-                        this.#continue();
-                    },
-                    label: "Continue",
-                    right: true
-                }
-            ]
+            "Degree Program"
         );
 
         const subject_element = this.#form_element.addInput(
             "Subject",
-            "subject",
-            "select"
+            "select",
+            "subject"
         );
         subject_element.required = true;
 
@@ -159,8 +136,8 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         const combination_element = this.#form_element.addInput(
             "Combination of Subjects",
-            "combination",
-            "select"
+            "select",
+            "combination"
         );
         combination_element.required = true;
 
@@ -170,8 +147,15 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         this.#mandatory_element = this.#form_element.addInput(
             "Mandatory Subjects",
-            "mandatory",
             "readonly"
+        );
+
+        this.#form_element.addButtons(
+            () => {
+                this.#chosenIntendedDegreeProgram();
+            },
+            this.#back_function,
+            "Please save your selection, in case you need to choose additional mandatory subjects for your course, they will be shown on the next page."
         );
 
         this.#shadow.appendChild(this.#form_element);

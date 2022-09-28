@@ -92,20 +92,20 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
-     * @param {backFunction} back_function
      * @param {ChoiceSubject} choice_subject
      * @param {postFunction} post_function
+     * @param {backFunction | null} back_function
      * @returns {ChoiceSubjectElement}
      */
-    #getChoiceSubjectElement(back_function, choice_subject, post_function) {
+    #getChoiceSubjectElement(choice_subject, post_function, back_function = null) {
         return ChoiceSubjectElement.new(
-            back_function,
+            this.#css_api,
             choice_subject,
             async chosen_subject => {
                 const post_result = await post_function(
                     {
-                        data: chosen_subject,
-                        element: ELEMENT_CHOICE_SUBJECT
+                        page: ELEMENT_CHOICE_SUBJECT,
+                        data: chosen_subject
                     }
                 );
 
@@ -113,7 +113,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
             },
-            this.#css_api
+            back_function
         );
     }
 
@@ -142,19 +142,20 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
-     * @param {backFunction} back_function
      * @param {IntendedDegreeProgram} intended_degree_program
      * @param {postFunction} post_function
+     * @param {backFunction | null} back_function
      * @returns {IntendedDegreeProgramElement}
      */
-    #getIntendedDegreeProgramElement(back_function, intended_degree_program, post_function) {
+    #getIntendedDegreeProgramElement(intended_degree_program, post_function, back_function = null) {
         return IntendedDegreeProgramElement.new(
-            back_function,
+            this.#css_api,
+            intended_degree_program,
             async chosen_intended_degree_program => {
                 const post_result = await post_function(
                     {
-                        data: chosen_intended_degree_program,
-                        element: ELEMENT_INTENDED_DEGREE_PROGRAM
+                        page: ELEMENT_INTENDED_DEGREE_PROGRAM,
+                        data: chosen_intended_degree_program
                     }
                 );
 
@@ -162,58 +163,63 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
             },
-            this.#css_api,
-            intended_degree_program
+            back_function
         );
     }
 
     /**
-     * @param {backFunction} back_function
      * @param {GetResult} get_result
      * @param {postFunction} post_function
-     * @returns {HTMLElement | null}
+     * @param {backFunction} back_function
+     * @returns {HTMLElement}
      */
-    #getNextElement(back_function, get_result, post_function) {
-        switch (get_result.element) {
+    #getNextElement(get_result, post_function, back_function) {
+        const _back_function = get_result.can_back ?? false ? back_function : null;
+
+        switch (get_result.page) {
             case ELEMENT_CHOICE_SUBJECT:
                 return this.#getChoiceSubjectElement(
-                    back_function,
                     get_result.data,
-                    post_function
+                    post_function,
+                    _back_function
                 );
 
             case ELEMENT_INTENDED_DEGREE_PROGRAM:
                 return this.#getIntendedDegreeProgramElement(
-                    back_function,
                     get_result.data,
-                    post_function
+                    post_function,
+                    _back_function
                 );
 
             case ELEMENT_CREATE:
             case ELEMENT_RESUME:
             case ELEMENT_START:
                 return this.#getStartElement(
+                    get_result.data,
                     post_function,
-                    get_result.data
+                    _back_function
                 );
 
             default:
-                return null;
+                break;
         }
     }
 
     /**
-     * @param {postFunction} post_function
      * @param {Start} start
+     * @param {postFunction} post_function
+     * @param {backFunction | null} back_function
      * @returns {StartElement}
      */
-    #getStartElement(post_function, start) {
+    #getStartElement(start, post_function, back_function = null) {
         return StartElement.new(
+            this.#css_api,
+            start,
             async create => {
                 const post_result = await post_function(
                     {
-                        data: create,
-                        element: ELEMENT_CREATE
+                        page: ELEMENT_CREATE,
+                        data: create
                     }
                 );
 
@@ -221,12 +227,11 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
             },
-            this.#css_api,
             async resume => {
                 const post_result = await post_function(
                     {
-                        data: resume,
-                        element: ELEMENT_RESUME
+                        page: ELEMENT_RESUME,
+                        data: resume
                     }
                 );
 
@@ -234,7 +239,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
             },
-            start
+            back_function
         );
     }
 
@@ -244,11 +249,6 @@ export class StudiesSelfserviceFrontendApi {
     async #next() {
         this.#main_element.replaceContent(
             this.#getNextElement(
-                async () => {
-                    await this.#back();
-
-                    this.#next();
-                },
                 await this.#get(),
                 async post => {
                     const post_result = await this.#post(
@@ -262,6 +262,11 @@ export class StudiesSelfserviceFrontendApi {
                     this.#next();
 
                     return post_result;
+                },
+                async () => {
+                    await this.#back();
+
+                    this.#next();
                 }
             )
         );

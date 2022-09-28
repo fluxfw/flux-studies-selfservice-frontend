@@ -1,3 +1,3 @@
 /**
- * @typedef {{"confirm-password": string, password: string, semester: string}} Create
+ * @typedef {{semester: string, password: string, "confirm-password": string}} Create
  */

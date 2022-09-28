@@ -1,3 +1,3 @@
 /**
- * @typedef {{combination: string, subject: string}} ChosenIntendedDegreeProgram
+ * @typedef {{subject: string, combination: string}} ChosenIntendedDegreeProgram
  */
