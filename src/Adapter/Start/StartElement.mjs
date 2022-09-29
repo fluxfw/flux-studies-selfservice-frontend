@@ -1,8 +1,8 @@
 import { CreateElement } from "../Create/CreateElement.mjs";
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
-import { ELEMENT_START } from "../Element/ELEMENT.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
+import { PAGE_START } from "../Page/PAGE.mjs";
 import { ResumeElement } from "../Resume/ResumeElement.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
@@ -117,6 +117,6 @@ export class StartElement extends HTMLElement {
     }
 }
 
-export const START_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${ELEMENT_START}`;
+export const START_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_START}`;
 
 customElements.define(START_ELEMENT_TAG_NAME, StartElement);

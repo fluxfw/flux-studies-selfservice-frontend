@@ -1,7 +1,7 @@
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
-import { ELEMENT_RESUME } from "../Element/ELEMENT.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { PAGE_RESUME } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./resumeFunction.mjs").resumeFunction} resumeFunction */
@@ -80,7 +80,10 @@ export class ResumeElement extends HTMLElement {
      */
     #render() {
         this.#form_element = FormElement.new(
-            this.#css_api,
+            this.#css_api
+        );
+
+        this.#form_element.addTitle(
             "Resume the application process"
         );
 
@@ -130,6 +133,6 @@ export class ResumeElement extends HTMLElement {
     }
 }
 
-export const RESUME_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${ELEMENT_RESUME}`;
+export const RESUME_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_RESUME}`;
 
 customElements.define(RESUME_ELEMENT_TAG_NAME, ResumeElement);

@@ -1,19 +1,22 @@
-import { ChoiceSubjectElement } from "../ChoiceSubject/ChoiceSubjectElement.mjs";
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { FetchApi } from "../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
-import { IntendedDegreeProgramElement } from "../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs";
 import { MainElement } from "../Main/MainElement.mjs";
-import { StartElement } from "../Start/StartElement.mjs";
-import { ELEMENT_CHOICE_SUBJECT, ELEMENT_CREATE, ELEMENT_INTENDED_DEGREE_PROGRAM, ELEMENT_RESUME, ELEMENT_START } from "../Element/ELEMENT.mjs";
+import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
+import { PAGE_CHOICE_SUBJECT, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
+/** @typedef {import("../ChoiceSubject/ChoiceSubjectElement.mjs").ChoiceSubjectElement} ChoiceSubjectElement */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
+/** @typedef {import("../IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
+/** @typedef {import("../IdentificationNumber/IdentificationNumberElement.mjs").IdentificationNumberElement} IdentificationNumberElement */
 /** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgram.mjs").IntendedDegreeProgram} IntendedDegreeProgram */
+/** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs").IntendedDegreeProgramElement} IntendedDegreeProgramElement */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
+/** @typedef {import("../Start/StartElement.mjs").StartElement} StartElement */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -95,16 +98,16 @@ export class StudiesSelfserviceFrontendApi {
      * @param {ChoiceSubject} choice_subject
      * @param {postFunction} post_function
      * @param {backFunction | null} back_function
-     * @returns {ChoiceSubjectElement}
+     * @returns {Promise<ChoiceSubjectElement>}
      */
-    #getChoiceSubjectElement(choice_subject, post_function, back_function = null) {
-        return ChoiceSubjectElement.new(
+    async #getChoiceSubjectElement(choice_subject, post_function, back_function = null) {
+        return (await import("../ChoiceSubject/ChoiceSubjectElement.mjs")).ChoiceSubjectElement.new(
             this.#css_api,
             choice_subject,
             async chosen_subject => {
                 const post_result = await post_function(
                     {
-                        page: ELEMENT_CHOICE_SUBJECT,
+                        page: PAGE_CHOICE_SUBJECT,
                         data: chosen_subject
                     }
                 );
@@ -112,6 +115,8 @@ export class StudiesSelfserviceFrontendApi {
                 if (post_result.ok) {
                     return;
                 }
+
+                alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -134,7 +139,16 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<FetchApi>}
      */
     async #getFetchApi() {
-        const fetch_api = FetchApi.new();
+        const fetch_api = FetchApi.new(
+            null,
+            error => {
+                console.error(error);
+
+                alert("TODO: Error handling");
+
+                return false;
+            }
+        );
 
         await fetch_api.init();
 
@@ -142,19 +156,47 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
+     * @param {IdentificationNumber} identification_number
+     * @param {postFunction} post_function
+     * @param {backFunction | null} back_function
+     * @returns {Promise<IdentificationNumberElement>}
+     */
+    async #getIdentificationNumberElement(identification_number, post_function, back_function = null) {
+        return (await import("../IdentificationNumber/IdentificationNumberElement.mjs")).IdentificationNumberElement.new(
+            this.#css_api,
+            identification_number,
+            async () => {
+                const post_result = await post_function(
+                    {
+                        page: PAGE_IDENTIFICATION_NUMBER,
+                        data: {}
+                    }
+                );
+
+                if (post_result.ok) {
+                    return;
+                }
+
+                alert("TODO: Post non-ok handling");
+            },
+            back_function
+        );
+    }
+
+    /**
      * @param {IntendedDegreeProgram} intended_degree_program
      * @param {postFunction} post_function
      * @param {backFunction | null} back_function
-     * @returns {IntendedDegreeProgramElement}
+     * @returns {Promise<IntendedDegreeProgramElement>}
      */
-    #getIntendedDegreeProgramElement(intended_degree_program, post_function, back_function = null) {
-        return IntendedDegreeProgramElement.new(
+    async #getIntendedDegreeProgramElement(intended_degree_program, post_function, back_function = null) {
+        return (await import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs")).IntendedDegreeProgramElement.new(
             this.#css_api,
             intended_degree_program,
             async chosen_intended_degree_program => {
                 const post_result = await post_function(
                     {
-                        page: ELEMENT_INTENDED_DEGREE_PROGRAM,
+                        page: PAGE_INTENDED_DEGREE_PROGRAM,
                         data: chosen_intended_degree_program
                     }
                 );
@@ -162,6 +204,8 @@ export class StudiesSelfserviceFrontendApi {
                 if (post_result.ok) {
                     return;
                 }
+
+                alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -171,29 +215,36 @@ export class StudiesSelfserviceFrontendApi {
      * @param {GetResult} get_result
      * @param {postFunction} post_function
      * @param {backFunction} back_function
-     * @returns {HTMLElement}
+     * @returns {Promise<HTMLElement>}
      */
-    #getNextElement(get_result, post_function, back_function) {
+    async #getPage(get_result, post_function, back_function) {
         const _back_function = get_result.can_back ?? false ? back_function : null;
 
         switch (get_result.page) {
-            case ELEMENT_CHOICE_SUBJECT:
+            case PAGE_CHOICE_SUBJECT:
                 return this.#getChoiceSubjectElement(
                     get_result.data,
                     post_function,
                     _back_function
                 );
 
-            case ELEMENT_INTENDED_DEGREE_PROGRAM:
+            case PAGE_IDENTIFICATION_NUMBER:
+                return this.#getIdentificationNumberElement(
+                    get_result.data,
+                    post_function,
+                    _back_function
+                );
+
+            case PAGE_INTENDED_DEGREE_PROGRAM:
                 return this.#getIntendedDegreeProgramElement(
                     get_result.data,
                     post_function,
                     _back_function
                 );
 
-            case ELEMENT_CREATE:
-            case ELEMENT_RESUME:
-            case ELEMENT_START:
+            case PAGE_CREATE:
+            case PAGE_RESUME:
+            case PAGE_START:
                 return this.#getStartElement(
                     get_result.data,
                     post_function,
@@ -201,6 +252,7 @@ export class StudiesSelfserviceFrontendApi {
                 );
 
             default:
+                alert("TODO: Unsupported page handling");
                 break;
         }
     }
@@ -209,16 +261,16 @@ export class StudiesSelfserviceFrontendApi {
      * @param {Start} start
      * @param {postFunction} post_function
      * @param {backFunction | null} back_function
-     * @returns {StartElement}
+     * @returns {Promise<StartElement>}
      */
-    #getStartElement(start, post_function, back_function = null) {
-        return StartElement.new(
+    async #getStartElement(start, post_function, back_function = null) {
+        return (await import("../Start/StartElement.mjs")).StartElement.new(
             this.#css_api,
             start,
             async create => {
                 const post_result = await post_function(
                     {
-                        page: ELEMENT_CREATE,
+                        page: PAGE_CREATE,
                         data: create
                     }
                 );
@@ -226,11 +278,13 @@ export class StudiesSelfserviceFrontendApi {
                 if (post_result.ok) {
                     return;
                 }
+
+                alert("TODO: Post non-ok handling");
             },
             async resume => {
                 const post_result = await post_function(
                     {
-                        page: ELEMENT_RESUME,
+                        page: PAGE_RESUME,
                         data: resume
                     }
                 );
@@ -238,6 +292,8 @@ export class StudiesSelfserviceFrontendApi {
                 if (post_result.ok) {
                     return;
                 }
+
+                alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -248,7 +304,7 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #next() {
         this.#main_element.replaceContent(
-            this.#getNextElement(
+            await this.#getPage(
                 await this.#get(),
                 async post => {
                     const post_result = await this.#post(
@@ -279,7 +335,7 @@ export class StudiesSelfserviceFrontendApi {
     async #post(post) {
         return this.#fetch_api.fetch({
             url: "/api/post",
-            method: "POST",
+            method: METHOD_POST,
             data: post
         });
     }

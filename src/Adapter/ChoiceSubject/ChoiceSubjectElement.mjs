@@ -1,8 +1,8 @@
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
-import { ELEMENT_CHOICE_SUBJECT } from "../Element/ELEMENT.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
+import { PAGE_CHOICE_SUBJECT } from "../Page/PAGE.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
@@ -93,11 +93,9 @@ export class ChoiceSubjectElement extends HTMLElement {
         this.#chosen_subject_function(
             {
                 "degree-program": this.#degree_program_form_element.inputs["degree-program"].value,
-                qualifications: Object.fromEntries(("qualification" in this.#qualifications_form_element.inputs ? this.#qualifications_form_element.inputs.qualification instanceof RadioNodeList ? [
-                    ...this.#qualifications_form_element.inputs.qualification
-                ] : [
-                    this.#qualifications_form_element.inputs.qualification
-                ] : []).map(input_element => [
+                qualifications: Object.fromEntries(this.#qualifications_form_element.getGroupedInputs(
+                    "qualification"
+                ).map(input_element => [
                     input_element.value,
                     input_element.checked
                 ]))
@@ -115,7 +113,10 @@ export class ChoiceSubjectElement extends HTMLElement {
         ));
 
         this.#degree_program_form_element = FormElement.new(
-            this.#css_api,
+            this.#css_api
+        );
+
+        this.#degree_program_form_element.addTitle(
             "Choose your degree program"
         );
 
@@ -137,7 +138,10 @@ export class ChoiceSubjectElement extends HTMLElement {
         this.#shadow.appendChild(this.#degree_program_form_element);
 
         this.#qualifications_form_element = FormElement.new(
-            this.#css_api,
+            this.#css_api
+        );
+
+        this.#qualifications_form_element.addTitle(
             "Qualifications for admission"
         );
 
@@ -153,6 +157,24 @@ export class ChoiceSubjectElement extends HTMLElement {
         this.#shadow.appendChild(MandatoryElement.new(
             this.#css_api
         ));
+
+        if ((this.#choice_subject.values ?? null) !== null) {
+            for (const input_element of this.#degree_program_form_element.inputs["degree-program"]) {
+                if (input_element.value === this.#choice_subject.values["degree-program"]) {
+                    input_element.checked = true;
+                    input_element.dispatchEvent(new Event("input"));
+                    break;
+                }
+            }
+
+            for (const input_element of this.#qualifications_form_element.getGroupedInputs(
+                "qualification"
+            )) {
+                if (input_element.value in this.#choice_subject.values.qualifications) {
+                    input_element.checked = this.#choice_subject.values.qualifications[input_element.value];
+                }
+            }
+        }
     }
 
     /**
@@ -174,6 +196,6 @@ export class ChoiceSubjectElement extends HTMLElement {
     }
 }
 
-export const CHOICE_SUBJECT_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${ELEMENT_CHOICE_SUBJECT}`;
+export const CHOICE_SUBJECT_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_CHOICE_SUBJECT}`;
 
 customElements.define(CHOICE_SUBJECT_ELEMENT_TAG_NAME, ChoiceSubjectElement);

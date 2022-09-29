@@ -1,7 +1,7 @@
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
-import { ELEMENT_CREATE } from "../Element/ELEMENT.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { PAGE_CREATE } from "../Page/PAGE.mjs";
 
 /** @typedef {import("./createFunction.mjs").createFunction} createFunction */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
@@ -89,7 +89,6 @@ export class CreateElement extends HTMLElement {
     #render() {
         this.#form_element = FormElement.new(
             this.#css_api,
-            "Create a new application",
             () => {
                 if (this.#form_element.inputs.password.value !== this.#form_element.inputs["confirm-password"].value) {
                     this.#form_element.setCustomValidationMessage(
@@ -101,6 +100,10 @@ export class CreateElement extends HTMLElement {
 
                 return true;
             }
+        );
+
+        this.#form_element.addTitle(
+            "Create a new application"
         );
 
         const semester_element = this.#form_element.addInput(
@@ -147,6 +150,6 @@ export class CreateElement extends HTMLElement {
     }
 }
 
-export const CREATE_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${ELEMENT_CREATE}`;
+export const CREATE_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_CREATE}`;
 
 customElements.define(CREATE_ELEMENT_TAG_NAME, CreateElement);
