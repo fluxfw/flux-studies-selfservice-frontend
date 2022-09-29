@@ -31,36 +31,28 @@ export class FormElement extends HTMLElement {
      * @type {ShadowRoot}
      */
     #shadow;
-    /**
-     * @type {string}
-     */
-    #title;
 
     /**
      * @param {CssApi} css_api
-     * @param {string} title
      * @param {customValidationFunction | null} custom_validation_function
      * @returns {FormElement}
      */
-    static new(css_api, title, custom_validation_function = null) {
+    static new(css_api, custom_validation_function = null) {
         return new this(
             css_api,
-            title,
             custom_validation_function
         );
     }
 
     /**
      * @param {CssApi} css_api
-     * @param {string} title
      * @param {customValidationFunction | null} custom_validation_function
      * @private
      */
-    constructor(css_api, title, custom_validation_function) {
+    constructor(css_api, custom_validation_function) {
         super();
 
         this.#css_api = css_api;
-        this.#title = title;
         this.#custom_validation_function = custom_validation_function;
         this.#has_custom_validation_messages = false;
 
@@ -154,6 +146,17 @@ export class FormElement extends HTMLElement {
     }
 
     /**
+     * @param {string} title
+     * @returns {void}
+     */
+    addTitle(title) {
+        this.#shadow.prepend(FormTitleElement.new(
+            this.#css_api,
+            title
+        ));
+    }
+
+    /**
      * @returns {void}
      */
     clearInputs() {
@@ -172,6 +175,18 @@ export class FormElement extends HTMLElement {
         ].filter(_option_element => _option_element.value !== "")) {
             option_element.remove();
         }
+    }
+
+    /**
+     * @param {string} name
+     * @returns {HTMLInputElement[]}
+     */
+    getGroupedInputs(name) {
+        return name in this.inputs ? this.inputs[name] instanceof RadioNodeList ? [
+            ...this.inputs[name]
+        ] : [
+            this.inputs[name]
+        ] : [];
     }
 
     /**
@@ -230,11 +245,6 @@ export class FormElement extends HTMLElement {
      * @returns {void}
      */
     #render() {
-        this.#shadow.appendChild(FormTitleElement.new(
-            this.#css_api,
-            this.#title
-        ));
-
         this.#shadow.appendChild(this.#form_element = document.createElement("form"));
         this.#form_element.addEventListener("input", () => {
             this.#removeCustomValidationMessages();

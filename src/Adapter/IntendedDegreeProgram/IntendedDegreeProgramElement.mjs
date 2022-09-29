@@ -1,8 +1,8 @@
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
-import { ELEMENT_INTENDED_DEGREE_PROGRAM } from "../Element/ELEMENT.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
+import { PAGE_INTENDED_DEGREE_PROGRAM } from "../Page/PAGE.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
@@ -112,7 +112,10 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         ));
 
         this.#form_element = FormElement.new(
-            this.#css_api,
+            this.#css_api
+        );
+
+        this.#form_element.addTitle(
             "Degree Program"
         );
 
@@ -163,6 +166,14 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         this.#shadow.appendChild(MandatoryElement.new(
             this.#css_api
         ));
+
+        if ((this.#intended_degree_program.values ?? null) !== null) {
+            subject_element.value = this.#intended_degree_program.values.subject;
+            subject_element.dispatchEvent(new Event("input"));
+
+            combination_element.value = this.#intended_degree_program.values.combination;
+            combination_element.dispatchEvent(new Event("input"));
+        }
     }
 
     /**
@@ -175,7 +186,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         this.#subject = this.#intended_degree_program.subjects.find(subject => subject.id === this.#form_element.inputs.subject.value) ?? null;
 
-        this.#renderMandatory();
+        this.#form_element.inputs.combination.dispatchEvent(new Event("input"));
 
         if (this.#subject === null) {
             return;
@@ -197,6 +208,6 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     }
 }
 
-export const INTENDED_DEGREE_PROGRAM_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${ELEMENT_INTENDED_DEGREE_PROGRAM}`;
+export const INTENDED_DEGREE_PROGRAM_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_INTENDED_DEGREE_PROGRAM}`;
 
 customElements.define(INTENDED_DEGREE_PROGRAM_ELEMENT_TAG_NAME, IntendedDegreeProgramElement);
