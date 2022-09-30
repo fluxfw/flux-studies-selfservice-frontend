@@ -1,3 +1,9 @@
 :host {
+    --form-border-size: 0;
+    --form-buttons-color: transparent;
     display: block;
+}
+
+.identification-number {
+    font-weight: bold;
 }

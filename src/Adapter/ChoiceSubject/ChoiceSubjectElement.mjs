@@ -158,7 +158,7 @@ export class ChoiceSubjectElement extends HTMLElement {
             this.#css_api
         ));
 
-        if ((this.#choice_subject.values ?? null) !== null) {
+        if (this.#choice_subject.values !== null) {
             for (const input_element of this.#degree_program_form_element.inputs["degree-program"]) {
                 if (input_element.value === this.#choice_subject.values["degree-program"]) {
                     input_element.checked = true;

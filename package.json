@@ -1,13 +1,14 @@
 {
     "name": "flux-studies-selfservice-frontend",
     "productName": "flux-studies-selfservice-frontend",
-    "version": "2022-09-29-1-alpha",
+    "version": "2022-09-30-1-alpha",
     "description": "",
     "keywords": [],
     "homepage": "",
     "dependencies": {
         "flux-css-api": "https://github.com/fluxfw/flux-css-api/archive/refs/tags/v2022-09-26-1.tar.gz",
-        "flux-fetch-api": "https://github.com/fluxfw/flux-fetch-api/archive/refs/tags/v2022-09-27-1.tar.gz"
+        "flux-fetch-api": "https://github.com/fluxfw/flux-fetch-api/archive/refs/tags/v2022-09-30-1.tar.gz",
+        "flux-loading-api": "https://github.com/fluxfw/flux-loading-api/archive/refs/tags/v2022-09-30-2.tar.gz"
     },
     "private": true
 }

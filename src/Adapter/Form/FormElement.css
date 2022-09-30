@@ -18,7 +18,9 @@ label {
     padding: 5px 0;
 }
 
-.input:not([type="checkbox"]):not([type="radio"]), .input_readonly {
+.input:not([type="checkbox"]):not([type="radio"]),
+.input_readonly,
+.textarea {
     all: initial;
     color: var(--input-text-color);
     font-family: inherit;
@@ -28,14 +30,17 @@ label {
     width: calc(60% - 14px);
 }
 
-.input:not([type="checkbox"]):not([type="radio"]) {
+.input:not([type="checkbox"]):not([type="radio"]),
+.textarea {
     background-color: var(--input-color);
     border: var(--input-border-size) solid var(--input-border-color);
     border-radius: 3px;
 }
 
-textarea {
+.textarea {
+    min-height: 120px;
     resize: vertical;
+    width: 100%;
 }
 
 .input:required + .text::after {

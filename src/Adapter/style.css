@@ -1,5 +1,5 @@
 :root {
-    --active-color: #e3003d;
+    --accent-color: #e3003d;
     --form-border-color: #000000;
     --form-border-size: 2px;
     --form-button-color: #63788e;
@@ -10,11 +10,26 @@
     --input-border-size: 2px;
     --input-color: #ffffff;
     --input-text-color: #000000;
+    --loading-size: 100px;
+    --loading-width: 2px;
     --mandatory-color: #c12c2c;
+    accent-color: var(--accent-color);
+    font-family: sans-serif;
+    font-size: 16px;
 }
 
 body {
-    font-family: sans-serif;
-    font-size: 16px;
     margin: 0;
+}
+
+flux-loading {
+    background-color: rgba(0, 0, 0, 0.2);
+    bottom: 0;
+    height: auto;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: auto;
+    z-index: 1000;
 }
