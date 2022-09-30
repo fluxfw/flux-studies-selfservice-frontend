@@ -69,10 +69,10 @@ export class FormElement extends HTMLElement {
      * @param {formButtonAction} continue_function
      * @param {formButtonAction | null} back_function
      * @param {string | null} subtitle
-     * @returns {void}
+     * @returns {FormButtonsElement}
      */
     addButtons(continue_function, back_function = null, subtitle = null) {
-        this.#shadow.appendChild(FormButtonsElement.new(
+        const buttons_element = FormButtonsElement.new(
             this.#css_api,
             [
                 {
@@ -88,7 +88,9 @@ export class FormElement extends HTMLElement {
                 ] : []
             ],
             subtitle
-        ));
+        );
+        this.#shadow.appendChild(buttons_element);
+        return buttons_element;
     }
 
     /**
@@ -136,24 +138,40 @@ export class FormElement extends HTMLElement {
 
     /**
      * @param {string} subtitle
-     * @returns {void}
+     * @returns {FormSubtitleElement}
      */
     addSubtitle(subtitle) {
-        this.#form_element.appendChild(FormSubtitleElement.new(
+        const subtitle_element = FormSubtitleElement.new(
             this.#css_api,
             subtitle
-        ));
+        );
+        this.#form_element.appendChild(subtitle_element);
+        return subtitle_element;
+    }
+
+    /**
+     * @param {string} name
+     * @returns {HTMLTextAreaElement}
+     */
+    addTextarea(name) {
+        const textarea_element = document.createElement("textarea");
+        textarea_element.classList.add("textarea");
+        textarea_element.name = name;
+        this.#form_element.appendChild(textarea_element);
+        return textarea_element;
     }
 
     /**
      * @param {string} title
-     * @returns {void}
+     * @returns {FormTitleElement}
      */
     addTitle(title) {
-        this.#shadow.prepend(FormTitleElement.new(
+        const title_element = FormTitleElement.new(
             this.#css_api,
             title
-        ));
+        );
+        this.#shadow.prepend(title_element);
+        return title_element;
     }
 
     /**

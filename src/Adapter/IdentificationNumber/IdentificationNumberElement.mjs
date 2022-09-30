@@ -2,6 +2,7 @@ import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { PAGE_IDENTIFICATION_NUMBER } from "../Page/PAGE.mjs";
+import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
@@ -19,10 +20,6 @@ export class IdentificationNumberElement extends HTMLElement {
      * @type {formButtonAction}
      */
     #continue_function;
-    /**
-     * @type {FormElement}
-     */
-    #form_element;
     /**
      * @type {IdentificationNumber}
      */
@@ -79,46 +76,35 @@ export class IdentificationNumberElement extends HTMLElement {
     /**
      * @returns {void}
      */
-    #continue() {
-        if (!this.#form_element.validate()) {
-            return;
-        }
-
-        this.#continue_function();
-    }
-
-    /**
-     * @returns {void}
-     */
     #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             "Your personal identification number"
         ));
 
-        this.#form_element = FormElement.new(
-            this.#css_api
-        );
+        this.#shadow.appendChild(SubtitleElement.new(
+            this.#css_api,
+            "Your data will be saved under the following number:"
+        ));
 
-        const identification_number_element = this.#form_element.addInput(
-            "Your data will be saved under the following number:",
-            "readonly"
+        const identification_number_element = SubtitleElement.new(
+            this.#css_api,
+            this.#identification_number["identification-number"]
         );
-        identification_number_element.innerText = this.#identification_number["identification-number"];
-        identification_number_element.style.fontWeight = "bold";
+        identification_number_element.classList.add("identification-number");
+        this.#shadow.appendChild(identification_number_element);
 
-        this.#form_element.addSubtitle(
+        this.#shadow.appendChild(SubtitleElement.new(
+            this.#css_api,
             "Please keep your identification number safe so that you can access your data at a later stage."
-        );
+        ));
 
-        this.#form_element.addButtons(
-            () => {
-                this.#continue();
-            },
+        this.#shadow.appendChild(FormElement.new(
+            this.#css_api
+        ).addButtons(
+            this.#continue_function,
             this.#back_function
-        );
-
-        this.#shadow.appendChild(this.#form_element);
+        ));
     }
 }
 

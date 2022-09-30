@@ -167,7 +167,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             this.#css_api
         ));
 
-        if ((this.#intended_degree_program.values ?? null) !== null) {
+        if (this.#intended_degree_program.values !== null) {
             subject_element.value = this.#intended_degree_program.values.subject;
             subject_element.dispatchEvent(new Event("input"));
 

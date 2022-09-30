@@ -1,8 +1,9 @@
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { FetchApi } from "../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
+import { LoadingApi } from "../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs";
 import { MainElement } from "../Main/MainElement.mjs";
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
-import { PAGE_CHOICE_SUBJECT, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
+import { PAGE_CHOICE_SUBJECT, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
@@ -12,6 +13,9 @@ import { PAGE_CHOICE_SUBJECT, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTE
 /** @typedef {import("../IdentificationNumber/IdentificationNumberElement.mjs").IdentificationNumberElement} IdentificationNumberElement */
 /** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgram.mjs").IntendedDegreeProgram} IntendedDegreeProgram */
 /** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs").IntendedDegreeProgramElement} IntendedDegreeProgramElement */
+/** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2.mjs").IntendedDegreeProgram2} IntendedDegreeProgram2 */
+/** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs").IntendedDegreeProgram2Element} IntendedDegreeProgram2Element */
+/** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Loading/LoadingElement.mjs").LoadingElement} LoadingElement */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
@@ -29,6 +33,10 @@ export class StudiesSelfserviceFrontendApi {
      * @type {FetchApi | null}
      */
     #fetch_api = null;
+    /**
+     * @type {LoadingApi | null}
+     */
+    #loading_api = null;
     /**
      * @type {MainElement | null}
      */
@@ -56,6 +64,8 @@ export class StudiesSelfserviceFrontendApi {
 
         this.#css_api ??= await this.#getCssApi();
 
+        this.#loading_api ??= await this.#getLoadingApi();
+
         this.#css_api.importCssToRoot(
             document,
             `${__dirname}/../style.css`
@@ -81,7 +91,7 @@ export class StudiesSelfserviceFrontendApi {
     async #back() {
         await this.#fetch_api.fetch({
             url: "/api/back",
-            method: "POST"
+            method: METHOD_POST
         });
     }
 
@@ -212,6 +222,56 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
+     * @param {IntendedDegreeProgram2} intended_degree_program_2
+     * @param {postFunction} post_function
+     * @param {backFunction | null} back_function
+     * @returns {Promise<getIntendedDegreeProgram2Element>}
+     */
+    async #getIntendedDegreeProgram2Element(intended_degree_program_2, post_function, back_function = null) {
+        return (await import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs")).IntendedDegreeProgram2Element.new(
+            this.#css_api,
+            intended_degree_program_2,
+            async chosen_intended_degree_program_2 => {
+                const post_result = await post_function(
+                    {
+                        page: PAGE_INTENDED_DEGREE_PROGRAM_2,
+                        data: chosen_intended_degree_program_2
+                    }
+                );
+
+                if (post_result.ok) {
+                    return;
+                }
+
+                alert("TODO: Post non-ok handling");
+            },
+            back_function
+        );
+    }
+
+    /**
+     * @returns {Promise<LoadingApi>}
+     */
+    async #getLoadingApi() {
+        const loading_api = LoadingApi.new(
+            this.#css_api
+        );
+
+        await loading_api.init();
+
+        return loading_api;
+    }
+
+    /**
+     * @returns {LoadingElement}
+     */
+    #getLoadingElement() {
+        const loading_element = this.#loading_api.getLoadingElement();
+        document.body.appendChild(loading_element);
+        return loading_element;
+    }
+
+    /**
      * @param {GetResult} get_result
      * @param {postFunction} post_function
      * @param {backFunction} back_function
@@ -237,6 +297,13 @@ export class StudiesSelfserviceFrontendApi {
 
             case PAGE_INTENDED_DEGREE_PROGRAM:
                 return this.#getIntendedDegreeProgramElement(
+                    get_result.data,
+                    post_function,
+                    _back_function
+                );
+
+            case PAGE_INTENDED_DEGREE_PROGRAM_2:
+                return this.#getIntendedDegreeProgram2Element(
                     get_result.data,
                     post_function,
                     _back_function
@@ -303,13 +370,33 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<void>}
      */
     async #next() {
-        this.#main_element.replaceContent(
-            await this.#getPage(
+        scroll(0, 0);
+
+        const get_loading_element = this.#getLoadingElement();
+
+        let page;
+        try {
+            page = await this.#getPage(
                 await this.#get(),
                 async post => {
-                    const post_result = await this.#post(
-                        post
-                    );
+                    const post_loading_element = this.#getLoadingElement();
+
+                    let post_result;
+                    try {
+                        post_result = await this.#post(
+                            post
+                        );
+                    } catch (error) {
+                        console.error(error);
+
+                        alert("TODO: Post error handling");
+
+                        return {
+                            ok: false
+                        };
+                    } finally {
+                        post_loading_element.remove();
+                    }
 
                     if (!post_result.ok) {
                         return post_result;
@@ -320,11 +407,35 @@ export class StudiesSelfserviceFrontendApi {
                     return post_result;
                 },
                 async () => {
-                    await this.#back();
+                    const back_loading_element = this.#getLoadingElement();
+
+                    try {
+                        await this.#back();
+                    } catch (error) {
+                        console.error(error);
+
+                        alert("TODO: Back error handling");
+
+                        return;
+                    } finally {
+                        back_loading_element.remove();
+                    }
 
                     this.#next();
                 }
-            )
+            );
+        } catch (error) {
+            console.error(error);
+
+            alert("TODO: Get error handling");
+
+            return;
+        } finally {
+            get_loading_element.remove();
+        }
+
+        this.#main_element.replaceContent(
+            page
         );
     }
 
