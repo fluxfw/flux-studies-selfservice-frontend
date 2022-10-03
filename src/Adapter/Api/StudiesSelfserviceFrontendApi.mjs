@@ -1,5 +1,6 @@
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { FetchApi } from "../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
+import { LabelService } from "../../Service/Label/Port/LabelService.mjs";
 import { LoadingApi } from "../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs";
 import { MainElement } from "../Main/MainElement.mjs";
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
@@ -34,6 +35,10 @@ export class StudiesSelfserviceFrontendApi {
      */
     #fetch_api = null;
     /**
+     * @type {LabelService | null}
+     */
+    #label_service = null;
+    /**
      * @type {LoadingApi | null}
      */
     #loading_api = null;
@@ -65,6 +70,8 @@ export class StudiesSelfserviceFrontendApi {
         this.#css_api ??= await this.#getCssApi();
 
         this.#loading_api ??= await this.#getLoadingApi();
+
+        this.#label_service ??= this.#getLabelService();
 
         this.#css_api.importCssToRoot(
             document,
@@ -126,7 +133,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                globalThis.globalThis.alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -154,7 +161,7 @@ export class StudiesSelfserviceFrontendApi {
             error => {
                 console.error(error);
 
-                alert("TODO: Error handling");
+                globalThis.globalThis.alert("TODO: Error handling");
 
                 return false;
             }
@@ -187,7 +194,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                globalThis.globalThis.alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -202,6 +209,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getIntendedDegreeProgramElement(intended_degree_program, post_function, back_function = null) {
         return (await import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs")).IntendedDegreeProgramElement.new(
             this.#css_api,
+            this.#label_service,
             intended_degree_program,
             async chosen_intended_degree_program => {
                 const post_result = await post_function(
@@ -215,7 +223,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                globalThis.globalThis.alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -230,6 +238,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getIntendedDegreeProgram2Element(intended_degree_program_2, post_function, back_function = null) {
         return (await import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs")).IntendedDegreeProgram2Element.new(
             this.#css_api,
+            this.#label_service,
             intended_degree_program_2,
             async chosen_intended_degree_program_2 => {
                 const post_result = await post_function(
@@ -243,10 +252,17 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                globalThis.globalThis.alert("TODO: Post non-ok handling");
             },
             back_function
         );
+    }
+
+    /**
+     * @returns {LabelService}
+     */
+    #getLabelService() {
+        return LabelService.new();
     }
 
     /**
@@ -319,7 +335,7 @@ export class StudiesSelfserviceFrontendApi {
                 );
 
             default:
-                alert("TODO: Unsupported page handling");
+                globalThis.globalThis.alert("TODO: Unsupported page handling");
                 break;
         }
     }
@@ -346,7 +362,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                globalThis.globalThis.alert("TODO: Post non-ok handling");
             },
             async resume => {
                 const post_result = await post_function(
@@ -360,7 +376,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                globalThis.globalThis.alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -389,7 +405,7 @@ export class StudiesSelfserviceFrontendApi {
                     } catch (error) {
                         console.error(error);
 
-                        alert("TODO: Post error handling");
+                        globalThis.globalThis.alert("TODO: Post error handling");
 
                         return {
                             ok: false
@@ -414,7 +430,7 @@ export class StudiesSelfserviceFrontendApi {
                     } catch (error) {
                         console.error(error);
 
-                        alert("TODO: Back error handling");
+                        globalThis.globalThis.alert("TODO: Back error handling");
 
                         return;
                     } finally {
@@ -427,7 +443,7 @@ export class StudiesSelfserviceFrontendApi {
         } catch (error) {
             console.error(error);
 
-            alert("TODO: Get error handling");
+            globalThis.globalThis.alert("TODO: Get error handling");
 
             return;
         } finally {

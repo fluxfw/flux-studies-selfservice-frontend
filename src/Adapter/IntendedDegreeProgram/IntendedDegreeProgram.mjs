@@ -1,6 +1,6 @@
 /** @typedef {import("./ChosenIntendedDegreeProgram.mjs").ChosenIntendedDegreeProgram} ChosenIntendedDegreeProgram */
-/** @typedef {import("../Subject/Subject.mjs").Subject} Subject */
+/** @typedef {import("../Subject/SubjectWithCombinations.mjs").SubjectWithCombinations} SubjectWithCombinations */
 
 /**
- * @typedef {{subjects: Subject[], values: ChosenIntendedDegreeProgram | null}} IntendedDegreeProgram
+ * @typedef {{subjects: SubjectWithCombinations[], values: ChosenIntendedDegreeProgram | null}} IntendedDegreeProgram
  */

@@ -1,4 +1,3 @@
-import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
@@ -7,8 +6,10 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenIntendedDegreeProgramFunction.mjs").chosenIntendedDegreeProgramFunction} chosenIntendedDegreeProgramFunction */
+/** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("./IntendedDegreeProgram.mjs").IntendedDegreeProgram} IntendedDegreeProgram */
-/** @typedef {import("../Subject/Subject.mjs").Subject} Subject */
+/** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../Subject/SubjectWithCombinations.mjs").SubjectWithCombinations} SubjectWithCombinations */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -34,6 +35,10 @@ export class IntendedDegreeProgramElement extends HTMLElement {
      */
     #intended_degree_program;
     /**
+     * @type {LabelService}
+     */
+    #label_service;
+    /**
      * @type {HTMLDivElement}
      */
     #mandatory_element;
@@ -42,20 +47,22 @@ export class IntendedDegreeProgramElement extends HTMLElement {
      */
     #shadow;
     /**
-     * @type {Subject | null}
+     * @type {SubjectWithCombinations | null}
      */
     #subject = null;
 
     /**
      * @param {CssApi} css_api
+     * @param {LabelService} label_service
      * @param {IntendedDegreeProgram} intended_degree_program
      * @param {chosenIntendedDegreeProgramFunction} chosen_intended_degree_program_function
      * @param {backFunction | null} back_function
      * @returns {IntendedDegreeProgramElement}
      */
-    static new(css_api, intended_degree_program, chosen_intended_degree_program_function, back_function = null) {
+    static new(css_api, label_service, intended_degree_program, chosen_intended_degree_program_function, back_function = null) {
         return new this(
             css_api,
+            label_service,
             intended_degree_program,
             chosen_intended_degree_program_function,
             back_function
@@ -64,15 +71,17 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
+     * @param {LabelService} label_service
      * @param {IntendedDegreeProgram} intended_degree_program
      * @param {chosenIntendedDegreeProgramFunction} chosen_intended_degree_program_function
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, intended_degree_program, chosen_intended_degree_program_function, back_function) {
+    constructor(css_api, label_service, intended_degree_program, chosen_intended_degree_program_function, back_function) {
         super();
 
         this.#css_api = css_api;
+        this.#label_service = label_service;
         this.#intended_degree_program = intended_degree_program;
         this.#chosen_intended_degree_program_function = chosen_intended_degree_program_function;
         this.#back_function = back_function;
@@ -128,7 +137,9 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         for (const subject of this.#intended_degree_program.subjects) {
             const option_element = document.createElement("option");
-            option_element.text = subject.label;
+            option_element.text = this.#label_service.getSubjectLabel(
+                subject
+            );
             option_element.value = subject.id;
             subject_element.appendChild(option_element);
         }
@@ -194,7 +205,9 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         for (const combination of this.#subject.combinations) {
             const option_element = document.createElement("option");
-            option_element.text = combination.label;
+            option_element.text = this.#label_service.getCombinationLabel(
+                combination
+            );
             option_element.value = combination.id;
             this.#form_element.inputs.combination.appendChild(option_element);
         }
@@ -204,7 +217,9 @@ export class IntendedDegreeProgramElement extends HTMLElement {
      * @returns {void}
      */
     #renderMandatory() {
-        this.#mandatory_element.innerText = this.#subject?.combinations?.find(combination => combination.id === this.#form_element.inputs.combination.value)?.mandatory ?? "";
+        this.#mandatory_element.innerText = this.#label_service.getMultipleMandatoryLabel(
+            this.#subject?.combinations?.find(combination => combination.id === this.#form_element.inputs.combination.value) ?? null
+        );
     }
 }
 
