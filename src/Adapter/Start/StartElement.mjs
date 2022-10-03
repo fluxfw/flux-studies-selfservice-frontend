@@ -1,5 +1,4 @@
 import { CreateElement } from "../Create/CreateElement.mjs";
-import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_START } from "../Page/PAGE.mjs";
@@ -9,6 +8,7 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../Create/createFunction.mjs").createFunction} createFunction */
+/** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../Resume/resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("./Start.mjs").Start} Start */
 
