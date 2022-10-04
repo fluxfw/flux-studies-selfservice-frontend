@@ -133,7 +133,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                globalThis.globalThis.alert("TODO: Post non-ok handling");
+                alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -161,7 +161,7 @@ export class StudiesSelfserviceFrontendApi {
             error => {
                 console.error(error);
 
-                globalThis.globalThis.alert("TODO: Error handling");
+                alert("TODO: Error handling");
 
                 return false;
             }
@@ -194,7 +194,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                globalThis.globalThis.alert("TODO: Post non-ok handling");
+                alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -223,7 +223,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                globalThis.globalThis.alert("TODO: Post non-ok handling");
+                alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -252,7 +252,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                globalThis.globalThis.alert("TODO: Post non-ok handling");
+                alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -294,7 +294,7 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<HTMLElement>}
      */
     async #getPage(get_result, post_function, back_function) {
-        const _back_function = get_result.can_back ?? false ? back_function : null;
+        const _back_function = get_result.can_back ? back_function : null;
 
         switch (get_result.page) {
             case PAGE_CHOICE_SUBJECT:
@@ -335,7 +335,7 @@ export class StudiesSelfserviceFrontendApi {
                 );
 
             default:
-                globalThis.globalThis.alert("TODO: Unsupported page handling");
+                alert("TODO: Unsupported page handling");
                 break;
         }
     }
@@ -362,7 +362,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                globalThis.globalThis.alert("TODO: Post non-ok handling");
+                alert("TODO: Post non-ok handling");
             },
             async resume => {
                 const post_result = await post_function(
@@ -376,7 +376,7 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                globalThis.globalThis.alert("TODO: Post non-ok handling");
+                alert("TODO: Post non-ok handling");
             },
             back_function
         );
@@ -405,7 +405,7 @@ export class StudiesSelfserviceFrontendApi {
                     } catch (error) {
                         console.error(error);
 
-                        globalThis.globalThis.alert("TODO: Post error handling");
+                        alert("TODO: Post error handling");
 
                         return {
                             ok: false
@@ -430,7 +430,7 @@ export class StudiesSelfserviceFrontendApi {
                     } catch (error) {
                         console.error(error);
 
-                        globalThis.globalThis.alert("TODO: Back error handling");
+                        alert("TODO: Back error handling");
 
                         return;
                     } finally {
@@ -443,7 +443,7 @@ export class StudiesSelfserviceFrontendApi {
         } catch (error) {
             console.error(error);
 
-            globalThis.globalThis.alert("TODO: Get error handling");
+            alert("TODO: Get error handling");
 
             return;
         } finally {

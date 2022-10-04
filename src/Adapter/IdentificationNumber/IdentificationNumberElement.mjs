@@ -84,7 +84,7 @@ export class IdentificationNumberElement extends HTMLElement {
 
         this.#shadow.appendChild(SubtitleElement.new(
             this.#css_api,
-            "Your data will be saved under the following number:"
+            "Your data will be saved under the following number"
         ));
 
         const identification_number_element = SubtitleElement.new(
@@ -96,7 +96,7 @@ export class IdentificationNumberElement extends HTMLElement {
 
         this.#shadow.appendChild(SubtitleElement.new(
             this.#css_api,
-            "Please keep your identification number safe so that you can access your data at a later stage."
+            "Please keep your identification number safe so that you can access your data at a later stage"
         ));
 
         this.#shadow.appendChild(FormElement.new(

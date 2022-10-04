@@ -190,7 +190,7 @@ export class ChoiceSubjectElement extends HTMLElement {
                 "checkbox",
                 "qualification"
             );
-            input_element.required = qualification.required ?? false;
+            input_element.required = qualification.required;
             input_element.value = qualification.id;
         }
     }

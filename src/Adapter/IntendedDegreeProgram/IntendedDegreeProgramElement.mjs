@@ -169,7 +169,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
                 this.#chosenIntendedDegreeProgram();
             },
             this.#back_function,
-            "Please save your selection, in case you need to choose additional mandatory subjects for your course, they will be shown on the next page."
+            "Please save your selection, in case you need to choose additional mandatory subjects for your course, they will be shown on the next page"
         );
 
         this.#shadow.appendChild(this.#form_element);

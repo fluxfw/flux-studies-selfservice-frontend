@@ -95,7 +95,7 @@ export class StartElement extends HTMLElement {
 
         this.#shadow.appendChild(SubtitleElement.new(
             this.#css_api,
-            "Create a new application by entering a password of you choice, or continue with your application by using your application identification number and your password."
+            "Create a new application by entering a password of you choice, or continue with your application by using your application identification number and your password"
         ));
 
         this.#shadow.appendChild(CreateElement.new(
