@@ -97,10 +97,15 @@ export class FormElement extends HTMLElement {
      * @param {string} label
      * @param {string} type
      * @param {string | null} name
+     * @param {boolean} seperate
      * @returns {InputElement}
      */
-    addInput(label, type, name = null) {
+    addInput(label, type, name = null, seperate = false) {
         const label_element = document.createElement("label");
+
+        if (seperate) {
+            label_element.dataset.seperate = true;
+        }
 
         let input_element;
         if (type === "readonly") {
@@ -109,11 +114,12 @@ export class FormElement extends HTMLElement {
         } else {
             if (type === "select" || type === "textarea") {
                 input_element = document.createElement(type);
+                input_element.classList.add(`input_${type}`);
             } else {
                 input_element = document.createElement("input");
+                input_element.classList.add("input");
                 input_element.type = type;
             }
-            input_element.classList.add("input");
             input_element.name = name ?? "";
         }
 
@@ -150,18 +156,6 @@ export class FormElement extends HTMLElement {
     }
 
     /**
-     * @param {string} name
-     * @returns {HTMLTextAreaElement}
-     */
-    addTextarea(name) {
-        const textarea_element = document.createElement("textarea");
-        textarea_element.classList.add("textarea");
-        textarea_element.name = name;
-        this.#form_element.appendChild(textarea_element);
-        return textarea_element;
-    }
-
-    /**
      * @param {string} title
      * @returns {FormTitleElement}
      */
@@ -189,7 +183,7 @@ export class FormElement extends HTMLElement {
      */
     clearSelectOptions(select_element) {
         for (const option_element of [
-            ...select_element.querySelectorAll("option")
+            ...select_element.options
         ].filter(_option_element => _option_element.value !== "")) {
             option_element.remove();
         }
@@ -197,7 +191,7 @@ export class FormElement extends HTMLElement {
 
     /**
      * @param {string} name
-     * @returns {HTMLInputElement[]}
+     * @returns {InputElement[]}
      */
     getGroupedInputs(name) {
         return name in this.inputs ? this.inputs[name] instanceof RadioNodeList ? [
@@ -205,6 +199,17 @@ export class FormElement extends HTMLElement {
         ] : [
             this.inputs[name]
         ] : [];
+    }
+
+    /**
+     * @param {string} name
+     * @returns {{[key: string]: InputElement}}
+     */
+    getStartsWithInputs(name) {
+        return Object.fromEntries(Object.values(this.inputs).filter(input_element => input_element.name.startsWith(name)).map(input_element => [
+            input_element.name.substring(name.length),
+            input_element
+        ]));
     }
 
     /**
