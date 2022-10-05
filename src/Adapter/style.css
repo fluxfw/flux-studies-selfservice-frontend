@@ -6,6 +6,9 @@
     --form-button-text-color: #ffffff;
     --form-buttons-color: #eaeaea;
     --form-color: #f7f7f7;
+    --form-invalid-border-color: #e2003c;
+    --form-invalid-border-size: 2px;
+    --form-invalid-color: #efa69d;
     --input-border-color: #e6e6e6;
     --input-border-size: 2px;
     --input-color: #ffffff;
@@ -20,16 +23,4 @@
 
 body {
     margin: 0;
-}
-
-flux-loading {
-    background-color: rgba(0, 0, 0, 0.2);
-    bottom: 0;
-    height: auto;
-    left: 0;
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: auto;
-    z-index: 1000;
 }

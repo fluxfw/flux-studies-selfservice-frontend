@@ -117,6 +117,11 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                         ].map(option_element => option_element.value)
                     ])) : null,
                 "further-information": this.#form_element.inputs["further-information"].value.replaceAll("\r\n", "\n").replaceAll("\r", "\n")
+            },
+            () => {
+                this.#form_element.addInvalidMessage(
+                    "Please check your data"
+                );
             }
         );
     }

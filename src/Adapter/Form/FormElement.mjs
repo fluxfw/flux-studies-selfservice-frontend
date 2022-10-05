@@ -1,5 +1,6 @@
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormButtonsElement } from "../FormButtons/FormButtonsElement.mjs";
+import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
 import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 import { FormTitleElement } from "../FormTitle/FormTitleElement.mjs";
 
@@ -27,6 +28,10 @@ export class FormElement extends HTMLElement {
      * @type {boolean}
      */
     #has_custom_validation_messages;
+    /**
+     * @type {FormInvalidElement[] | null}
+     */
+    #invalid_messages = null;
     /**
      * @type {ShadowRoot}
      */
@@ -143,6 +148,24 @@ export class FormElement extends HTMLElement {
     }
 
     /**
+     * @param {string} message
+     * @returns {FormInvalidElement}
+     */
+    addInvalidMessage(message) {
+        const invalid_element = FormInvalidElement.new(
+            this.#css_api,
+            message
+        );
+
+        this.#invalid_messages ??= [];
+        this.#invalid_messages.unshift(invalid_element);
+
+        this.#form_element.prepend(invalid_element);
+
+        return invalid_element;
+    }
+
+    /**
      * @param {string} subtitle
      * @returns {FormSubtitleElement}
      */
@@ -236,6 +259,7 @@ export class FormElement extends HTMLElement {
      */
     validate() {
         this.#removeCustomValidationMessages();
+        this.#removeInvalidMessages();
 
         if (!this.#form_element.checkValidity()) {
             this.#form_element.reportValidity();
@@ -262,6 +286,21 @@ export class FormElement extends HTMLElement {
         for (const input_element of this.#form_element.elements) {
             input_element.setCustomValidity("");
         }
+    }
+
+    /**
+     * @returns {void}
+     */
+    #removeInvalidMessages() {
+        if (this.#invalid_messages === null) {
+            return;
+        }
+
+        for (const invalid_element of this.#invalid_messages) {
+            invalid_element.remove();
+        }
+
+        this.#invalid_messages = null;
     }
 
     /**

@@ -5,8 +5,8 @@ import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
+/** @typedef {import("./continueFunction.mjs").continueFunction} continueFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
-/** @typedef {import("../FormButtons/formButtonAction.mjs").formButtonAction} formButtonAction */
 /** @typedef {import("./IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -17,9 +17,13 @@ export class IdentificationNumberElement extends HTMLElement {
      */
     #back_function;
     /**
-     * @type {formButtonAction}
+     * @type {continueFunction}
      */
     #continue_function;
+    /**
+     * @type {FormElement}
+     */
+    #form_element;
     /**
      * @type {IdentificationNumber}
      */
@@ -36,7 +40,7 @@ export class IdentificationNumberElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {IdentificationNumber} identification_number
-     * @param {formButtonAction} continue_function
+     * @param {continueFunction} continue_function
      * @param {backFunction | null} back_function
      * @returns {IdentificationNumberElement}
      */
@@ -52,7 +56,7 @@ export class IdentificationNumberElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {IdentificationNumber} identification_number
-     * @param {formButtonAction} continue_function
+     * @param {continueFunction} continue_function
      * @param {backFunction | null} back_function
      * @private
      */
@@ -76,6 +80,23 @@ export class IdentificationNumberElement extends HTMLElement {
     /**
      * @returns {void}
      */
+    #continue() {
+        if (!this.#form_element.validate()) {
+            return;
+        }
+
+        this.#continue_function(
+            () => {
+                this.#shadow.prepend(this.#form_element.addInvalidMessage(
+                    "Please check your data"
+                ));
+            }
+        );
+    }
+
+    /**
+     * @returns {void}
+     */
     #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
@@ -86,6 +107,10 @@ export class IdentificationNumberElement extends HTMLElement {
             this.#css_api,
             "Your data will be saved under the following number"
         ));
+
+        this.#form_element = FormElement.new(
+            this.#css_api
+        );
 
         const identification_number_element = SubtitleElement.new(
             this.#css_api,
@@ -99,10 +124,10 @@ export class IdentificationNumberElement extends HTMLElement {
             "Please keep your identification number safe so that you can access your data at a later stage"
         ));
 
-        this.#shadow.appendChild(FormElement.new(
-            this.#css_api
-        ).addButtons(
-            this.#continue_function,
+        this.#shadow.appendChild(this.#form_element.addButtons(
+            () => {
+                this.#continue();
+            },
             this.#back_function
         ));
     }

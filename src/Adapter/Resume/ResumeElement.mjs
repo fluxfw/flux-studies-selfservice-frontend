@@ -128,6 +128,11 @@ export class ResumeElement extends HTMLElement {
             {
                 "identification-number": this.#form_element.inputs["identification-number"].value,
                 password: this.#form_element.inputs.password.value
+            },
+            () => {
+                this.#form_element.addInvalidMessage(
+                    "Please check your data"
+                );
             }
         );
     }
