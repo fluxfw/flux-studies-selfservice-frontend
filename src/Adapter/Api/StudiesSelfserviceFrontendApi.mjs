@@ -9,6 +9,7 @@ import { PAGE_CHOICE_SUBJECT, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTE
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("../ChoiceSubject/ChoiceSubjectElement.mjs").ChoiceSubjectElement} ChoiceSubjectElement */
+/** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Loading/FullscreenLoadingElement.mjs").FullscreenLoadingElement} FullscreenLoadingElement */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
 /** @typedef {import("../IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
 /** @typedef {import("../IdentificationNumber/IdentificationNumberElement.mjs").IdentificationNumberElement} IdentificationNumberElement */
@@ -16,7 +17,6 @@ import { PAGE_CHOICE_SUBJECT, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTE
 /** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs").IntendedDegreeProgramElement} IntendedDegreeProgramElement */
 /** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2.mjs").IntendedDegreeProgram2} IntendedDegreeProgram2 */
 /** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs").IntendedDegreeProgram2Element} IntendedDegreeProgram2Element */
-/** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Loading/LoadingElement.mjs").LoadingElement} LoadingElement */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
@@ -78,6 +78,10 @@ export class StudiesSelfserviceFrontendApi {
             `${__dirname}/../style.css`
         );
 
+        this.#css_api.importCss(
+            `${__dirname.substring(0, __dirname.lastIndexOf("/"))}/FormInvalid/FormInvalidElement.css`
+        );
+
         document.title = "Studies selfservice";
     }
 
@@ -121,7 +125,7 @@ export class StudiesSelfserviceFrontendApi {
         return (await import("../ChoiceSubject/ChoiceSubjectElement.mjs")).ChoiceSubjectElement.new(
             this.#css_api,
             choice_subject,
-            async chosen_subject => {
+            async (chosen_subject, post_result_function) => {
                 const post_result = await post_function(
                     {
                         page: PAGE_CHOICE_SUBJECT,
@@ -133,7 +137,9 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                post_result_function(
+                    post_result
+                );
             },
             back_function
         );
@@ -182,7 +188,7 @@ export class StudiesSelfserviceFrontendApi {
         return (await import("../IdentificationNumber/IdentificationNumberElement.mjs")).IdentificationNumberElement.new(
             this.#css_api,
             identification_number,
-            async () => {
+            async post_result_function => {
                 const post_result = await post_function(
                     {
                         page: PAGE_IDENTIFICATION_NUMBER,
@@ -194,7 +200,9 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                post_result_function(
+                    post_result
+                );
             },
             back_function
         );
@@ -211,7 +219,7 @@ export class StudiesSelfserviceFrontendApi {
             this.#css_api,
             this.#label_service,
             intended_degree_program,
-            async chosen_intended_degree_program => {
+            async (chosen_intended_degree_program, post_result_function) => {
                 const post_result = await post_function(
                     {
                         page: PAGE_INTENDED_DEGREE_PROGRAM,
@@ -223,7 +231,9 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                post_result_function(
+                    post_result
+                );
             },
             back_function
         );
@@ -240,7 +250,7 @@ export class StudiesSelfserviceFrontendApi {
             this.#css_api,
             this.#label_service,
             intended_degree_program_2,
-            async chosen_intended_degree_program_2 => {
+            async (chosen_intended_degree_program_2, post_result_function) => {
                 const post_result = await post_function(
                     {
                         page: PAGE_INTENDED_DEGREE_PROGRAM_2,
@@ -252,7 +262,9 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                post_result_function(
+                    post_result
+                );
             },
             back_function
         );
@@ -279,10 +291,10 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
-     * @returns {LoadingElement}
+     * @returns {FullscreenLoadingElement}
      */
     #getLoadingElement() {
-        const loading_element = this.#loading_api.getLoadingElement();
+        const loading_element = this.#loading_api.getFullscreenLoadingElement();
         document.body.appendChild(loading_element);
         return loading_element;
     }
@@ -350,7 +362,7 @@ export class StudiesSelfserviceFrontendApi {
         return (await import("../Start/StartElement.mjs")).StartElement.new(
             this.#css_api,
             start,
-            async create => {
+            async (create, post_result_function) => {
                 const post_result = await post_function(
                     {
                         page: PAGE_CREATE,
@@ -362,9 +374,11 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                post_result_function(
+                    post_result
+                );
             },
-            async resume => {
+            async (resume, post_result_function) => {
                 const post_result = await post_function(
                     {
                         page: PAGE_RESUME,
@@ -376,7 +390,9 @@ export class StudiesSelfserviceFrontendApi {
                     return;
                 }
 
-                alert("TODO: Post non-ok handling");
+                post_result_function(
+                    post_result
+                );
             },
             back_function
         );

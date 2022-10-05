@@ -99,6 +99,11 @@ export class ChoiceSubjectElement extends HTMLElement {
                     input_element.value,
                     input_element.checked
                 ]))
+            },
+            () => {
+                this.#degree_program_form_element.addInvalidMessage(
+                    "Please check your data"
+                );
             }
         );
     }

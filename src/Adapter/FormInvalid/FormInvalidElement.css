@@ -1,0 +1,7 @@
+:host {
+    background-color: var(--form-invalid-color);
+    border: var(--form-invalid-border-size) solid var(--form-invalid-border-color);
+    display: block;
+    margin-bottom: 30px;
+    padding: 30px;
+}

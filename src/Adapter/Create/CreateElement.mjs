@@ -79,6 +79,11 @@ export class CreateElement extends HTMLElement {
                 semester: this.#form_element.inputs.semester.value,
                 password: this.#form_element.inputs.password.value,
                 "confirm-password": this.#form_element.inputs["confirm-password"].value
+            },
+            () => {
+                this.#form_element.addInvalidMessage(
+                    "Please check your data"
+                );
             }
         );
     }

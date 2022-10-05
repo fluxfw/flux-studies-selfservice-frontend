@@ -107,6 +107,11 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             {
                 subject: this.#form_element.inputs.subject.value,
                 combination: this.#form_element.inputs.combination.value
+            },
+            () => {
+                this.#form_element.addInvalidMessage(
+                    "Please check your data"
+                );
             }
         );
     }
