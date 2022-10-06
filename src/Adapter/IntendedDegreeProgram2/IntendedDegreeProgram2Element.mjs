@@ -87,14 +87,14 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #chosenIntendedDegreeProgram2() {
+    async #chosenIntendedDegreeProgram2() {
         if (!this.#form_element.validate()) {
             return;
         }
 
-        this.#chosen_intended_degree_program_2_function(
+        const post_result = await this.#chosen_intended_degree_program_2_function(
             {
                 "single-choice": this.#intended_degree_program_2.combination["single-choice"] !== null ? Object.fromEntries(Object.entries(this.#form_element.getStartsWithInputs(
                     "single-choice_"
@@ -117,12 +117,15 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                         ].map(option_element => option_element.value)
                     ])) : null,
                 "further-information": this.#form_element.inputs["further-information"].value.replaceAll("\r\n", "\n").replaceAll("\r", "\n")
-            },
-            () => {
-                this.#form_element.addInvalidMessage(
-                    "Please check your data"
-                );
             }
+        );
+
+        if (post_result.ok) {
+            return;
+        }
+
+        this.#form_element.addInvalidMessage(
+            "Please check your data"
         );
     }
 
@@ -263,6 +266,10 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                         multiple_choice_element.appendChild(option_element);
                     }
                 }
+
+                this.#form_element.addSubtitle(
+                    "On desktop operating systems/browsers may use Ctrl + Click for select multiple options"
+                );
             }
         }
 

@@ -96,23 +96,26 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #chosenIntendedDegreeProgram() {
+    async #chosenIntendedDegreeProgram() {
         if (!this.#form_element.validate()) {
             return;
         }
 
-        this.#chosen_intended_degree_program_function(
+        const post_result = await this.#chosen_intended_degree_program_function(
             {
                 subject: this.#form_element.inputs.subject.value,
                 combination: this.#form_element.inputs.combination.value
-            },
-            () => {
-                this.#form_element.addInvalidMessage(
-                    "Please check your data"
-                );
             }
+        );
+
+        if (post_result.ok) {
+            return;
+        }
+
+        this.#form_element.addInvalidMessage(
+            "Please check your data"
         );
     }
 

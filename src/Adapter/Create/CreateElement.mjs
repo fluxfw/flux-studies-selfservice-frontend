@@ -4,6 +4,7 @@ import { PAGE_CREATE } from "../Page/PAGE.mjs";
 
 /** @typedef {import("./createFunction.mjs").createFunction} createFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
+/** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -22,6 +23,10 @@ export class CreateElement extends HTMLElement {
      */
     #form_element;
     /**
+     * @type {LabelService}
+     */
+    #label_service;
+    /**
      * @type {ShadowRoot}
      */
     #shadow;
@@ -32,13 +37,15 @@ export class CreateElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
+     * @param {LabelService} label_service
      * @param {Start} start
      * @param {createFunction} create_function
      * @returns {CreateElement}
      */
-    static new(css_api, start, create_function) {
+    static new(css_api, label_service, start, create_function) {
         return new this(
             css_api,
+            label_service,
             start,
             create_function
         );
@@ -46,14 +53,16 @@ export class CreateElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
+     * @param {LabelService} label_service
      * @param {Start} start
      * @param {createFunction} create_function
      * @private
      */
-    constructor(css_api, start, create_function) {
+    constructor(css_api, label_service, start, create_function) {
         super();
 
         this.#css_api = css_api;
+        this.#label_service = label_service;
         this.#start = start;
         this.#create_function = create_function;
 
@@ -67,24 +76,27 @@ export class CreateElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #create() {
+    async #create() {
         if (!this.#form_element.validate()) {
             return;
         }
 
-        this.#create_function(
+        const post_result = await this.#create_function(
             {
                 semester: this.#form_element.inputs.semester.value,
                 password: this.#form_element.inputs.password.value,
                 "confirm-password": this.#form_element.inputs["confirm-password"].value
-            },
-            () => {
-                this.#form_element.addInvalidMessage(
-                    "Please check your data"
-                );
             }
+        );
+
+        if (post_result.ok) {
+            return;
+        }
+
+        this.#form_element.addInvalidMessage(
+            "Please check your data"
         );
     }
 
@@ -120,7 +132,9 @@ export class CreateElement extends HTMLElement {
 
         for (const semester of this.#start.semesters) {
             const option_element = document.createElement("option");
-            option_element.text = semester.label;
+            option_element.text = this.#label_service.getSemesterLabel(
+                semester
+            );
             option_element.value = semester.id;
             semester_element.appendChild(option_element);
         }

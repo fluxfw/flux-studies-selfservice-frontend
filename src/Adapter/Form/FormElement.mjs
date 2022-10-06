@@ -71,20 +71,22 @@ export class FormElement extends HTMLElement {
     }
 
     /**
-     * @param {formButtonAction} continue_function
+     * @param {formButtonAction | null} continue_function
      * @param {formButtonAction | null} back_function
      * @param {string | null} subtitle
      * @returns {FormButtonsElement}
      */
-    addButtons(continue_function, back_function = null, subtitle = null) {
+    addButtons(continue_function = null, back_function = null, subtitle = null) {
         const buttons_element = FormButtonsElement.new(
             this.#css_api,
             [
-                {
-                    label: "Continue",
-                    action: continue_function,
-                    right: true
-                },
+                ...continue_function !== null ? [
+                    {
+                        label: "Continue",
+                        action: continue_function,
+                        right: true
+                    }
+                ] : [],
                 ...back_function !== null ? [
                     {
                         label: "Back",

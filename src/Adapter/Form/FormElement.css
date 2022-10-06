@@ -62,6 +62,11 @@ label {
     width: 40%;
 }
 
+.input[type="checkbox"] + .text,
+.input[type="radio"] + .text {
+    width: calc(100% - 30px);
+}
+
 label[data-seperate] {
     align-items: unset;
     flex-direction: column;
