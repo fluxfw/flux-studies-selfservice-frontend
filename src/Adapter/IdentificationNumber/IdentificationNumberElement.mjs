@@ -21,6 +21,10 @@ export class IdentificationNumberElement extends HTMLElement {
      */
     #continue_function;
     /**
+     * @type {CssApi}
+     */
+    #css_api;
+    /**
      * @type {FormElement}
      */
     #form_element;
@@ -28,10 +32,6 @@ export class IdentificationNumberElement extends HTMLElement {
      * @type {IdentificationNumber}
      */
     #identification_number;
-    /**
-     * @type {CssApi}
-     */
-    #css_api;
     /**
      * @type {ShadowRoot}
      */
@@ -78,20 +78,22 @@ export class IdentificationNumberElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #continue() {
+    async #continue() {
         if (!this.#form_element.validate()) {
             return;
         }
 
-        this.#continue_function(
-            () => {
-                this.#shadow.prepend(this.#form_element.addInvalidMessage(
-                    "Please check your data"
-                ));
-            }
-        );
+        const post_result = await this.#continue_function();
+
+        if (post_result.ok) {
+            return;
+        }
+
+        this.#shadow.prepend(this.#form_element.addInvalidMessage(
+            "Please check your data"
+        ));
     }
 
     /**
@@ -133,6 +135,6 @@ export class IdentificationNumberElement extends HTMLElement {
     }
 }
 
-export const IDENTIFICATION_NUMBER_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_IDENTIFICATION_NUMBER}`;
+export const IDENTIFICATION_NUMBER_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_IDENTIFICATION_NUMBER}`;
 
-customElements.define(IDENTIFICATION_NUMBER_TAG_NAME, IdentificationNumberElement);
+customElements.define(IDENTIFICATION_NUMBER_ELEMENT_TAG_NAME, IdentificationNumberElement);

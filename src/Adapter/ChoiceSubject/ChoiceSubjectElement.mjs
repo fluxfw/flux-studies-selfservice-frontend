@@ -83,14 +83,14 @@ export class ChoiceSubjectElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #chosenSubject() {
+    async #chosenSubject() {
         if (!this.#degree_program_form_element.validate() || !this.#qualifications_form_element.validate()) {
             return;
         }
 
-        this.#chosen_subject_function(
+        const post_result = await this.#chosen_subject_function(
             {
                 "degree-program": this.#degree_program_form_element.inputs["degree-program"].value,
                 qualifications: Object.fromEntries(this.#qualifications_form_element.getGroupedInputs(
@@ -99,12 +99,15 @@ export class ChoiceSubjectElement extends HTMLElement {
                     input_element.value,
                     input_element.checked
                 ]))
-            },
-            () => {
-                this.#degree_program_form_element.addInvalidMessage(
-                    "Please check your data"
-                );
             }
+        );
+
+        if (post_result.ok) {
+            return;
+        }
+
+        this.#degree_program_form_element.addInvalidMessage(
+            "Please check your data"
         );
     }
 

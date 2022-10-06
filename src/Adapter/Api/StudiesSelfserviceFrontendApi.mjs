@@ -4,11 +4,12 @@ import { LabelService } from "../../Service/Label/Port/LabelService.mjs";
 import { LoadingApi } from "../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs";
 import { MainElement } from "../Main/MainElement.mjs";
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
-import { PAGE_CHOICE_SUBJECT, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
+import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("../ChoiceSubject/ChoiceSubjectElement.mjs").ChoiceSubjectElement} ChoiceSubjectElement */
+/** @typedef {import("../Completed/CompletedElement.mjs").CompletedElement} CompletedElement */
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Loading/FullscreenLoadingElement.mjs").FullscreenLoadingElement} FullscreenLoadingElement */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
 /** @typedef {import("../IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
@@ -17,6 +18,8 @@ import { PAGE_CHOICE_SUBJECT, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTE
 /** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs").IntendedDegreeProgramElement} IntendedDegreeProgramElement */
 /** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2.mjs").IntendedDegreeProgram2} IntendedDegreeProgram2 */
 /** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs").IntendedDegreeProgram2Element} IntendedDegreeProgram2Element */
+/** @typedef {import("../Legal/Legal.mjs").Legal} Legal */
+/** @typedef {import("../Legal/LegalElement.mjs").LegalElement} LegalElement */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
@@ -82,6 +85,11 @@ export class StudiesSelfserviceFrontendApi {
             `${__dirname.substring(0, __dirname.lastIndexOf("/"))}/FormInvalid/FormInvalidElement.css`
         );
 
+        const viewport_meta = document.createElement("meta");
+        viewport_meta.content = "initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no";
+        viewport_meta.name = "viewport";
+        document.head.appendChild(viewport_meta);
+
         document.title = "Studies selfservice";
     }
 
@@ -125,22 +133,23 @@ export class StudiesSelfserviceFrontendApi {
         return (await import("../ChoiceSubject/ChoiceSubjectElement.mjs")).ChoiceSubjectElement.new(
             this.#css_api,
             choice_subject,
-            async (chosen_subject, post_result_function) => {
-                const post_result = await post_function(
-                    {
-                        page: PAGE_CHOICE_SUBJECT,
-                        data: chosen_subject
-                    }
-                );
-
-                if (post_result.ok) {
-                    return;
+            async chosen_subject => post_function(
+                {
+                    page: PAGE_CHOICE_SUBJECT,
+                    data: chosen_subject
                 }
+            ),
+            back_function
+        );
+    }
 
-                post_result_function(
-                    post_result
-                );
-            },
+    /**
+     * @param {backFunction | null} back_function
+     * @returns {Promise<CompletedElement>}
+     */
+    async #getCompletedElement(back_function = null) {
+        return (await import("../Completed/CompletedElement.mjs")).CompletedElement.new(
+            this.#css_api,
             back_function
         );
     }
@@ -188,22 +197,12 @@ export class StudiesSelfserviceFrontendApi {
         return (await import("../IdentificationNumber/IdentificationNumberElement.mjs")).IdentificationNumberElement.new(
             this.#css_api,
             identification_number,
-            async post_result_function => {
-                const post_result = await post_function(
-                    {
-                        page: PAGE_IDENTIFICATION_NUMBER,
-                        data: {}
-                    }
-                );
-
-                if (post_result.ok) {
-                    return;
+            async () => post_function(
+                {
+                    page: PAGE_IDENTIFICATION_NUMBER,
+                    data: {}
                 }
-
-                post_result_function(
-                    post_result
-                );
-            },
+            ),
             back_function
         );
     }
@@ -219,22 +218,12 @@ export class StudiesSelfserviceFrontendApi {
             this.#css_api,
             this.#label_service,
             intended_degree_program,
-            async (chosen_intended_degree_program, post_result_function) => {
-                const post_result = await post_function(
-                    {
-                        page: PAGE_INTENDED_DEGREE_PROGRAM,
-                        data: chosen_intended_degree_program
-                    }
-                );
-
-                if (post_result.ok) {
-                    return;
+            async chosen_intended_degree_program => post_function(
+                {
+                    page: PAGE_INTENDED_DEGREE_PROGRAM,
+                    data: chosen_intended_degree_program
                 }
-
-                post_result_function(
-                    post_result
-                );
-            },
+            ),
             back_function
         );
     }
@@ -243,29 +232,19 @@ export class StudiesSelfserviceFrontendApi {
      * @param {IntendedDegreeProgram2} intended_degree_program_2
      * @param {postFunction} post_function
      * @param {backFunction | null} back_function
-     * @returns {Promise<getIntendedDegreeProgram2Element>}
+     * @returns {Promise<IntendedDegreeProgram2Element>}
      */
     async #getIntendedDegreeProgram2Element(intended_degree_program_2, post_function, back_function = null) {
         return (await import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs")).IntendedDegreeProgram2Element.new(
             this.#css_api,
             this.#label_service,
             intended_degree_program_2,
-            async (chosen_intended_degree_program_2, post_result_function) => {
-                const post_result = await post_function(
-                    {
-                        page: PAGE_INTENDED_DEGREE_PROGRAM_2,
-                        data: chosen_intended_degree_program_2
-                    }
-                );
-
-                if (post_result.ok) {
-                    return;
+            async chosen_intended_degree_program_2 => post_function(
+                {
+                    page: PAGE_INTENDED_DEGREE_PROGRAM_2,
+                    data: chosen_intended_degree_program_2
                 }
-
-                post_result_function(
-                    post_result
-                );
-            },
+            ),
             back_function
         );
     }
@@ -275,6 +254,27 @@ export class StudiesSelfserviceFrontendApi {
      */
     #getLabelService() {
         return LabelService.new();
+    }
+
+    /**
+     * @param {Legal} legal
+     * @param {postFunction} post_function
+     * @param {backFunction | null} back_function
+     * @returns {Promise<LegalElement>}
+     */
+    async #getLegalElement(legal, post_function, back_function = null) {
+        return (await import("../Legal/LegalElement.mjs")).LegalElement.new(
+            this.#css_api,
+            this.#label_service,
+            legal,
+            async accepted_legal => post_function(
+                {
+                    page: PAGE_LEGAL,
+                    data: accepted_legal
+                }
+            ),
+            back_function
+        );
     }
 
     /**
@@ -316,6 +316,20 @@ export class StudiesSelfserviceFrontendApi {
                     _back_function
                 );
 
+            case PAGE_COMPLETED:
+                return this.#getCompletedElement(
+                    _back_function
+                );
+
+            case PAGE_CREATE:
+            case PAGE_RESUME:
+            case PAGE_START:
+                return this.#getStartElement(
+                    get_result.data,
+                    post_function,
+                    _back_function
+                );
+
             case PAGE_IDENTIFICATION_NUMBER:
                 return this.#getIdentificationNumberElement(
                     get_result.data,
@@ -337,10 +351,8 @@ export class StudiesSelfserviceFrontendApi {
                     _back_function
                 );
 
-            case PAGE_CREATE:
-            case PAGE_RESUME:
-            case PAGE_START:
-                return this.#getStartElement(
+            case PAGE_LEGAL:
+                return this.#getLegalElement(
                     get_result.data,
                     post_function,
                     _back_function
@@ -361,39 +373,20 @@ export class StudiesSelfserviceFrontendApi {
     async #getStartElement(start, post_function, back_function = null) {
         return (await import("../Start/StartElement.mjs")).StartElement.new(
             this.#css_api,
+            this.#label_service,
             start,
-            async (create, post_result_function) => {
-                const post_result = await post_function(
-                    {
-                        page: PAGE_CREATE,
-                        data: create
-                    }
-                );
-
-                if (post_result.ok) {
-                    return;
+            async create => post_function(
+                {
+                    page: PAGE_CREATE,
+                    data: create
                 }
-
-                post_result_function(
-                    post_result
-                );
-            },
-            async (resume, post_result_function) => {
-                const post_result = await post_function(
-                    {
-                        page: PAGE_RESUME,
-                        data: resume
-                    }
-                );
-
-                if (post_result.ok) {
-                    return;
+            ),
+            async resume => post_function(
+                {
+                    page: PAGE_RESUME,
+                    data: resume
                 }
-
-                post_result_function(
-                    post_result
-                );
-            },
+            ),
             back_function
         );
     }

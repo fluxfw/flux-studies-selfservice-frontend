@@ -117,23 +117,26 @@ export class ResumeElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #resume() {
+    async #resume() {
         if (!this.#form_element.validate()) {
             return;
         }
 
-        this.#resume_function(
+        const post_result = await this.#resume_function(
             {
                 "identification-number": this.#form_element.inputs["identification-number"].value,
                 password: this.#form_element.inputs.password.value
-            },
-            () => {
-                this.#form_element.addInvalidMessage(
-                    "Please check your data"
-                );
             }
+        );
+
+        if (post_result.ok) {
+            return;
+        }
+
+        this.#form_element.addInvalidMessage(
+            "Please check your data"
         );
     }
 }

@@ -3,6 +3,7 @@
 /** @typedef {import("../../../Adapter/Combination/Mandatory.mjs").Mandatory} Mandatory */
 /** @typedef {import("../../../Adapter/Combination/MultipleChoice.mjs").MultipleChoice} MultipleChoice */
 /** @typedef {import("../../../Adapter/Combination/SingleChoice.mjs").SingleChoice} SingleChoice */
+/** @typedef {import("../../../Adapter/Semester/Semester.mjs").Semester} Semester */
 /** @typedef {import("../../../Adapter/Subject/Subject.mjs").Subject} Subject */
 
 export class LabelService {
@@ -92,6 +93,14 @@ export class LabelService {
         return combination?.mandatory?.map(mandatory => this.getMandatoryLabel(
             mandatory
         ))?.join("\n") ?? "-";
+    }
+
+    /**
+     * @param {Semester} semester
+     * @returns {string}
+     */
+    getSemesterLabel(semester) {
+        return semester.label;
     }
 
     /**
