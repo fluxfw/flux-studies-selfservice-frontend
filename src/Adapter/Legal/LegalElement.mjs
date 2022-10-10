@@ -112,7 +112,7 @@ export class LegalElement extends HTMLElement {
 
         const post_result = await this.#accepted_legal_function(
             {
-                "non-disqualified": this.#disqualification_form_element.inputs["non-disqualified"].checked,
+                "not-disqualified": this.#disqualification_form_element.inputs["not-disqualified"].checked,
                 agb: this.#agb_form_element.inputs.agb.checked,
                 complete: this.#complete_form_element.inputs.complete.checked,
                 comments: this.#comments_form_element.inputs.comments.value.replaceAll("\r\n", "\n").replaceAll("\r", "\n")
@@ -123,7 +123,21 @@ export class LegalElement extends HTMLElement {
             return;
         }
 
-        this.#degree_program_form_element.addInvalidMessage(
+        if (post_result.network) {
+            this.#comments_form_element.addInvalidMessage(
+                "Network error"
+            );
+            return;
+        }
+
+        if (post_result.server) {
+            this.#comments_form_element.addInvalidMessage(
+                "Server error"
+            );
+            return;
+        }
+
+        this.#comments_form_element.addInvalidMessage(
             "Please check your data"
         );
     }
@@ -179,12 +193,12 @@ export class LegalElement extends HTMLElement {
             "Disqualification"
         );
 
-        const non_disqualified_element = this.#disqualification_form_element.addInput(
+        const not_disqualified_element = this.#disqualification_form_element.addInput(
             "I am not disqualified from continuing my studies in the above-mentioned main subject because of exam failure or am not exams at another institution of higher education planned before the intended transfer, which would result in disqualification from the above-mentioned main subject in case of failure or non-attendance",
             "checkbox",
-            "non-disqualified"
+            "not-disqualified"
         );
-        non_disqualified_element.required = true;
+        not_disqualified_element.required = true;
 
         this.#shadow.appendChild(this.#disqualification_form_element);
 
@@ -242,7 +256,7 @@ export class LegalElement extends HTMLElement {
         comments_element.parentElement.insertAdjacentElement("afterend", comments_left_element);
 
         comments_element.addEventListener("input", () => {
-            comments_left_element.innerText = `Number of characters left: ${this.#legal["max-comments-length"] - comments_element.value.length}`;
+            comments_left_element.innerText = `Characters left: ${this.#legal["max-comments-length"] - comments_element.value.length}`;
         });
 
         this.#comments_form_element.addButtons(
@@ -259,7 +273,7 @@ export class LegalElement extends HTMLElement {
         ));
 
         if (this.#legal.values !== null) {
-            non_disqualified_element.checked = this.#legal.values["non-disqualified"];
+            not_disqualified_element.checked = this.#legal.values["not-disqualified"];
 
             agb_element.checked = this.#legal.values.agb;
 

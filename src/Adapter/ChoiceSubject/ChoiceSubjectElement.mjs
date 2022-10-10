@@ -106,6 +106,20 @@ export class ChoiceSubjectElement extends HTMLElement {
             return;
         }
 
+        if (post_result.network) {
+            this.#degree_program_form_element.addInvalidMessage(
+                "Network error"
+            );
+            return;
+        }
+
+        if (post_result.server) {
+            this.#degree_program_form_element.addInvalidMessage(
+                "Server error"
+            );
+            return;
+        }
+
         this.#degree_program_form_element.addInvalidMessage(
             "Please check your data"
         );

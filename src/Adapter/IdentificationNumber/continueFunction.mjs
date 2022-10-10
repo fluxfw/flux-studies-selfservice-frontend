@@ -1,5 +1,5 @@
-/** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
+/** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
 
 /**
- * @typedef {() => Promise<PostResult>} continueFunction
+ * @typedef {() => Promise<PostClientResult>} continueFunction
  */
