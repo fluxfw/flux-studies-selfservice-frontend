@@ -1,6 +1,6 @@
 /** @typedef {import("./ChosenIntendedDegreeProgram.mjs").ChosenIntendedDegreeProgram} ChosenIntendedDegreeProgram */
-/** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
+/** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
 
 /**
- * @typedef {(chosen_intended_degree_program: ChosenIntendedDegreeProgram) => Promise<PostResult>} chosenIntendedDegreeProgramFunction
+ * @typedef {(chosen_intended_degree_program: ChosenIntendedDegreeProgram) => Promise<PostClientResult>} chosenIntendedDegreeProgramFunction
  */

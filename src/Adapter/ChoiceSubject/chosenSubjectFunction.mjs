@@ -1,6 +1,6 @@
 /** @typedef {import("./ChosenSubject.mjs").ChosenSubject} ChosenSubject */
-/** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
+/** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
 
 /**
- * @typedef {(chosen_subject: ChosenSubject) => Promise<PostResult>} chosenSubjectFunction
+ * @typedef {(chosen_subject: ChosenSubject) => Promise<PostClientResult>} chosenSubjectFunction
  */

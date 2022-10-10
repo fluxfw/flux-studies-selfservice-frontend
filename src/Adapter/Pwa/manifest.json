@@ -1,0 +1,29 @@
+{
+    "background_color": null,
+    "categories": [
+        "education"
+    ],
+    "description": "",
+    "dir": null,
+    "display": "standalone",
+    "icons": [
+        {
+            "sizes": "any",
+            "src": "../Icon/icon.svg",
+            "type": "image/svg+xml"
+        },
+        {
+            "sizes": "1024x1024",
+            "src": "../Icon/icon.webp",
+            "type": "image/webp"
+        }
+    ],
+    "id": "studies-selfservice",
+    "lang": null,
+    "name": "Studies selfservice",
+    "orientation": "any",
+    "scope": "../..",
+    "short_name": "Studies selfservice",
+    "start_url": "../..",
+    "theme_color": null
+}

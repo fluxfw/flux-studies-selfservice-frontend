@@ -91,6 +91,20 @@ export class IdentificationNumberElement extends HTMLElement {
             return;
         }
 
+        if (post_result.network) {
+            this.#shadow.prepend(this.#form_element.addInvalidMessage(
+                "Network error"
+            ));
+            return;
+        }
+
+        if (post_result.server) {
+            this.#shadow.prepend(this.#form_element.addInvalidMessage(
+                "Server error"
+            ));
+            return;
+        }
+
         this.#shadow.prepend(this.#form_element.addInvalidMessage(
             "Please check your data"
         ));

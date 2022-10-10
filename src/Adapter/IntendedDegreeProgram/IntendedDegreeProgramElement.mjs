@@ -114,6 +114,20 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             return;
         }
 
+        if (post_result.network) {
+            this.#form_element.addInvalidMessage(
+                "Network error"
+            );
+            return;
+        }
+
+        if (post_result.server) {
+            this.#form_element.addInvalidMessage(
+                "Server error"
+            );
+            return;
+        }
+
         this.#form_element.addInvalidMessage(
             "Please check your data"
         );

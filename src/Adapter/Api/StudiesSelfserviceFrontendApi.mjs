@@ -1,9 +1,12 @@
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { FetchApi } from "../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
+import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
+import { JsonApi } from "../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs";
 import { LabelService } from "../../Service/Label/Port/LabelService.mjs";
 import { LoadingApi } from "../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs";
 import { MainElement } from "../Main/MainElement.mjs";
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
+import { PwaApi } from "../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
@@ -22,7 +25,7 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../Legal/LegalElement.mjs").LegalElement} LegalElement */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
-/** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
+/** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 /** @typedef {import("../Start/StartElement.mjs").StartElement} StartElement */
 
@@ -38,6 +41,10 @@ export class StudiesSelfserviceFrontendApi {
      */
     #fetch_api = null;
     /**
+     * @type {JsonApi | null}
+     */
+    #json_api = null;
+    /**
      * @type {LabelService | null}
      */
     #label_service = null;
@@ -49,6 +56,10 @@ export class StudiesSelfserviceFrontendApi {
      * @type {MainElement | null}
      */
     #main_element = null;
+    /**
+     * @type {PwaApi | null}
+     */
+    #pwa_api = null;
 
     /**
      * @returns {StudiesSelfserviceFrontendApi}
@@ -72,7 +83,11 @@ export class StudiesSelfserviceFrontendApi {
 
         this.#css_api ??= await this.#getCssApi();
 
+        this.#json_api ??= await this.#getJsonApi();
+
         this.#loading_api ??= await this.#getLoadingApi();
+
+        this.#pwa_api ??= await this.#getPwaApi();
 
         this.#label_service ??= this.#getLabelService();
 
@@ -85,12 +100,7 @@ export class StudiesSelfserviceFrontendApi {
             `${__dirname.substring(0, __dirname.lastIndexOf("/"))}/FormInvalid/FormInvalidElement.css`
         );
 
-        const viewport_meta = document.createElement("meta");
-        viewport_meta.content = "initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no";
-        viewport_meta.name = "viewport";
-        document.head.appendChild(viewport_meta);
-
-        document.title = "Studies selfservice";
+        this.#pwa_api.initPwa();
     }
 
     /**
@@ -105,22 +115,52 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
-     * @returns {Promise<void>}
+     * @returns {Promise<PostClientResult>}
      */
     async #back() {
-        await this.#fetch_api.fetch({
-            url: "/api/back",
-            method: METHOD_POST
-        });
+        try {
+            await this.#fetch_api.fetch({
+                url: "/api/back",
+                method: METHOD_POST
+            });
+
+            return {
+                ok: true
+            };
+        } catch (error) {
+            console.error(error);
+
+            return {
+                ok: false,
+                ...error instanceof Response ? {
+                    server: true
+                } : {
+                    network: true
+                }
+            };
+        }
     }
 
     /**
-     * @returns {Promise<GetResult>}
+     * @returns {Promise<GetResult | PostClientResult>}
      */
     async #get() {
-        return this.#fetch_api.fetch({
-            url: "/api/get"
-        });
+        try {
+            return await this.#fetch_api.fetch({
+                url: "/api/get"
+            });
+        } catch (error) {
+            console.error(error);
+
+            return {
+                ok: false,
+                ...error instanceof Response ? {
+                    server: true
+                } : {
+                    network: true
+                }
+            };
+        }
     }
 
     /**
@@ -171,20 +211,22 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<FetchApi>}
      */
     async #getFetchApi() {
-        const fetch_api = FetchApi.new(
-            null,
-            error => {
-                console.error(error);
-
-                alert("TODO: Error handling");
-
-                return false;
-            }
-        );
+        const fetch_api = FetchApi.new();
 
         await fetch_api.init();
 
         return fetch_api;
+    }
+
+    /**
+     * @param {string} message
+     * @returns {FormInvalidElement}
+     */
+    #getFormInvalidElement(message) {
+        return FormInvalidElement.new(
+            this.#css_api,
+            message
+        );
     }
 
     /**
@@ -247,6 +289,19 @@ export class StudiesSelfserviceFrontendApi {
             ),
             back_function
         );
+    }
+
+    /**
+     * @returns {Promise<JsonApi>}
+     */
+    async #getJsonApi() {
+        const json_api = JsonApi.new(
+            this.#fetch_api
+        );
+
+        await json_api.init();
+
+        return json_api;
     }
 
     /**
@@ -359,9 +414,29 @@ export class StudiesSelfserviceFrontendApi {
                 );
 
             default:
-                alert("TODO: Unsupported page handling");
-                break;
+                return this.#getFormInvalidElement(
+                    `Unsupported page ${get_result.page}`
+                );
         }
+    }
+
+    /**
+     * @returns {Promise<PwaApi>}
+     */
+    async #getPwaApi() {
+        const pwa_api = PwaApi.new(
+            this.#css_api,
+            this.#json_api,
+            `${__dirname}/../Pwa/manifest.json`,
+            () => "#ffffff",
+            () => "ltr",
+            () => "en",
+            () => getComputedStyle(document.documentElement).getPropertyValue("--accent-color").trim()
+        );
+
+        await pwa_api.init();
+
+        return pwa_api;
     }
 
     /**
@@ -399,29 +474,22 @@ export class StudiesSelfserviceFrontendApi {
 
         const get_loading_element = this.#getLoadingElement();
 
+        const get_result = await this.#get();
+
+        get_loading_element.remove();
+
         let page;
-        try {
+        if (!("ok" in get_result)) {
             page = await this.#getPage(
-                await this.#get(),
+                get_result,
                 async post => {
                     const post_loading_element = this.#getLoadingElement();
 
-                    let post_result;
-                    try {
-                        post_result = await this.#post(
-                            post
-                        );
-                    } catch (error) {
-                        console.error(error);
+                    const post_result = await this.#post(
+                        post
+                    );
 
-                        alert("TODO: Post error handling");
-
-                        return {
-                            ok: false
-                        };
-                    } finally {
-                        post_loading_element.remove();
-                    }
+                    post_loading_element.remove();
 
                     if (!post_result.ok) {
                         return post_result;
@@ -434,29 +502,26 @@ export class StudiesSelfserviceFrontendApi {
                 async () => {
                     const back_loading_element = this.#getLoadingElement();
 
-                    try {
-                        await this.#back();
-                    } catch (error) {
-                        console.error(error);
+                    const back_result = await this.#back();
 
-                        alert("TODO: Back error handling");
+                    back_loading_element.remove();
 
+                    if (!back_result.ok) {
+                        this.#main_element.replaceContent(
+                            this.#getFormInvalidElement(
+                                back_result.server ? "Server error" : "Network error"
+                            )
+                        );
                         return;
-                    } finally {
-                        back_loading_element.remove();
                     }
 
                     this.#next();
                 }
             );
-        } catch (error) {
-            console.error(error);
-
-            alert("TODO: Get error handling");
-
-            return;
-        } finally {
-            get_loading_element.remove();
+        } else {
+            page = this.#getFormInvalidElement(
+                get_result.server ? "Server error" : "Network error"
+            );
         }
 
         this.#main_element.replaceContent(
@@ -466,13 +531,26 @@ export class StudiesSelfserviceFrontendApi {
 
     /**
      * @param {Post} post
-     * @returns {Promise<PostResult>}
+     * @returns {Promise<PostClientResult>}
      */
     async #post(post) {
-        return this.#fetch_api.fetch({
-            url: "/api/post",
-            method: METHOD_POST,
-            data: post
-        });
+        try {
+            return await this.#fetch_api.fetch({
+                url: "/api/post",
+                method: METHOD_POST,
+                data: post
+            });
+        } catch (error) {
+            console.error(error);
+
+            return {
+                ok: false,
+                ...error instanceof Response ? {
+                    server: true
+                } : {
+                    network: true
+                }
+            };
+        }
     }
 }
