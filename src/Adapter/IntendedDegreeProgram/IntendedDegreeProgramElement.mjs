@@ -9,6 +9,7 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("./IntendedDegreeProgram.mjs").IntendedDegreeProgram} IntendedDegreeProgram */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../Subject/SubjectWithCombinations.mjs").SubjectWithCombinations} SubjectWithCombinations */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -39,6 +40,10 @@ export class IntendedDegreeProgramElement extends HTMLElement {
      */
     #label_service;
     /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+    /**
      * @type {HTMLDivElement}
      */
     #mandatory_element;
@@ -54,15 +59,17 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {IntendedDegreeProgram} intended_degree_program
      * @param {chosenIntendedDegreeProgramFunction} chosen_intended_degree_program_function
      * @param {backFunction | null} back_function
      * @returns {IntendedDegreeProgramElement}
      */
-    static new(css_api, label_service, intended_degree_program, chosen_intended_degree_program_function, back_function = null) {
+    static new(css_api, label_service, localization_api, intended_degree_program, chosen_intended_degree_program_function, back_function = null) {
         return new this(
             css_api,
             label_service,
+            localization_api,
             intended_degree_program,
             chosen_intended_degree_program_function,
             back_function
@@ -72,16 +79,18 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {IntendedDegreeProgram} intended_degree_program
      * @param {chosenIntendedDegreeProgramFunction} chosen_intended_degree_program_function
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, label_service, intended_degree_program, chosen_intended_degree_program_function, back_function) {
+    constructor(css_api, label_service, localization_api, intended_degree_program, chosen_intended_degree_program_function, back_function) {
         super();
 
         this.#css_api = css_api;
         this.#label_service = label_service;
+        this.#localization_api = localization_api;
         this.#intended_degree_program = intended_degree_program;
         this.#chosen_intended_degree_program_function = chosen_intended_degree_program_function;
         this.#back_function = back_function;
@@ -116,20 +125,26 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         if (post_result.network) {
             this.#form_element.addInvalidMessage(
-                "Network error"
+                this.#localization_api.translate(
+                    "Network error!"
+                )
             );
             return;
         }
 
         if (post_result.server) {
             this.#form_element.addInvalidMessage(
-                "Server error"
+                this.#localization_api.translate(
+                    "Server error!"
+                )
             );
             return;
         }
 
         this.#form_element.addInvalidMessage(
-            "Please check your data"
+            this.#localization_api.translate(
+                "Please check your data!"
+            )
         );
     }
 
@@ -139,19 +154,26 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            "Intended Degree Program"
+            this.#localization_api.translate(
+                "Intended Degree Program"
+            )
         ));
 
         this.#form_element = FormElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         );
 
         this.#form_element.addTitle(
-            "Degree Program"
+            this.#localization_api.translate(
+                "Degree Program"
+            )
         );
 
         const subject_element = this.#form_element.addInput(
-            "Subject",
+            this.#localization_api.translate(
+                "Subject"
+            ),
             "select",
             "subject"
         );
@@ -171,7 +193,9 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         });
 
         const combination_element = this.#form_element.addInput(
-            "Combination of Subjects",
+            this.#localization_api.translate(
+                "Combination of Subjects"
+            ),
             "select",
             "combination"
         );
@@ -182,7 +206,9 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         });
 
         this.#mandatory_element = this.#form_element.addInput(
-            "Mandatory Subjects",
+            this.#localization_api.translate(
+                "Mandatory Subjects"
+            ),
             "readonly"
         );
 
@@ -191,13 +217,16 @@ export class IntendedDegreeProgramElement extends HTMLElement {
                 this.#chosenIntendedDegreeProgram();
             },
             this.#back_function,
-            "Please save your selection, in case you need to choose additional mandatory subjects for your course, they will be shown on the next page"
+            this.#localization_api.translate(
+                "Please save your selection, in case you need to choose additional mandatory subjects for your course, they will be shown on the next page"
+            )
         );
 
         this.#shadow.appendChild(this.#form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         ));
 
         if (this.#intended_degree_program.values !== null) {

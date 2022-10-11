@@ -9,6 +9,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("./chosenSubjectFunction.mjs").chosenSubjectFunction} chosenSubjectFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
+/** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -34,6 +36,14 @@ export class ChoiceSubjectElement extends HTMLElement {
      */
     #degree_program_form_element;
     /**
+     * @type {LabelService}
+     */
+    #label_service;
+    /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+    /**
      * @type {FormElement}
      */
     #qualifications_form_element;
@@ -44,14 +54,18 @@ export class ChoiceSubjectElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
+     * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {ChoiceSubject} choice_subject
      * @param {chosenSubjectFunction} chosen_subject_function
      * @param {backFunction | null} back_function
      * @returns {ChoiceSubjectElement}
      */
-    static new(css_api, choice_subject, chosen_subject_function, back_function = null) {
+    static new(css_api, label_service, localization_api, choice_subject, chosen_subject_function, back_function = null) {
         return new this(
             css_api,
+            label_service,
+            localization_api,
             choice_subject,
             chosen_subject_function,
             back_function
@@ -60,15 +74,19 @@ export class ChoiceSubjectElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
+     * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {ChoiceSubject} choice_subject
      * @param {chosenSubjectFunction} chosen_subject_function
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, choice_subject, chosen_subject_function, back_function) {
+    constructor(css_api, label_service, localization_api, choice_subject, chosen_subject_function, back_function) {
         super();
 
         this.#css_api = css_api;
+        this.#label_service = label_service;
+        this.#localization_api = localization_api;
         this.#choice_subject = choice_subject;
         this.#chosen_subject_function = chosen_subject_function;
         this.#back_function = back_function;
@@ -108,20 +126,26 @@ export class ChoiceSubjectElement extends HTMLElement {
 
         if (post_result.network) {
             this.#degree_program_form_element.addInvalidMessage(
-                "Network error"
+                this.#localization_api.translate(
+                    "Network error!"
+                )
             );
             return;
         }
 
         if (post_result.server) {
             this.#degree_program_form_element.addInvalidMessage(
-                "Server error"
+                this.#localization_api.translate(
+                    "Server error!"
+                )
             );
             return;
         }
 
         this.#degree_program_form_element.addInvalidMessage(
-            "Please check your data"
+            this.#localization_api.translate(
+                "Please check your data!"
+            )
         );
     }
 
@@ -131,20 +155,27 @@ export class ChoiceSubjectElement extends HTMLElement {
     #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            "Choice of subject"
+            this.#localization_api.translate(
+                "Choice of subject"
+            )
         ));
 
         this.#degree_program_form_element = FormElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         );
 
         this.#degree_program_form_element.addTitle(
-            "Choose your degree program"
+            this.#localization_api.translate(
+                "Choose your degree program"
+            )
         );
 
         for (const degree_program of this.#choice_subject["degree-programs"]) {
             const input_element = this.#degree_program_form_element.addInput(
-                degree_program.label,
+                this.#label_service.getDegreeProgramLabel(
+                    degree_program
+                ),
                 "radio",
                 "degree-program"
             );
@@ -160,11 +191,14 @@ export class ChoiceSubjectElement extends HTMLElement {
         this.#shadow.appendChild(this.#degree_program_form_element);
 
         this.#qualifications_form_element = FormElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         );
 
         this.#qualifications_form_element.addTitle(
-            "Qualifications for admission"
+            this.#localization_api.translate(
+                "Qualifications for admission"
+            )
         );
 
         this.#qualifications_form_element.addButtons(
@@ -177,7 +211,8 @@ export class ChoiceSubjectElement extends HTMLElement {
         this.#shadow.appendChild(this.#qualifications_form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         ));
 
         if (this.#choice_subject.values !== null) {
@@ -208,7 +243,9 @@ export class ChoiceSubjectElement extends HTMLElement {
 
         for (const qualification of degree_program.qualifications) {
             const input_element = this.#qualifications_form_element.addInput(
-                qualification.label,
+                this.#label_service.getQualificationLabel(
+                    qualification
+                ),
                 "checkbox",
                 "qualification"
             );

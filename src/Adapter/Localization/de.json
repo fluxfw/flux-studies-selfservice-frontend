@@ -1,0 +1,18 @@
+{
+    "{ect} ECT": "{ect} ECT",
+    "{label} ({ect})": "{label} ({ect})",
+    "Back": "Zurück",
+    "Characters left: {characters}": "Zeichen übrig: {characters}",
+    "Click": "Klick",
+    "Confirm password does not match!": "Bestätigungs-Passwort stimmt nicht überrein!",
+    "Continue": "Fortfahren",
+    "Ctrl": "Ctrl",
+    "Mandatory": "Pflichtfeld",
+    "Network error!": "Netzwerk-Fehler!",
+    "On desktop operating systems/browsers may use {ctrl} + {click} for select multiple options": "Auf Desktop-Betriebsysteme/-Browser benutze ev. {ctrl} + {click} um mehrere Optionen auszuwählen",
+    "Please check your data!": "Bitte überprüfe deine Daten!",
+    "Please select less {ect}!": "Bitte wähle {ect} weniger aus!",
+    "Please select more {ect}!": "Bitte wähle {ect} mehr aus!",
+    "Server error!": "Server-Fehler!",
+    "Studies selfservice": "Studium-Selfservice"
+}

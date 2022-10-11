@@ -5,6 +5,7 @@ import { PAGE_CREATE } from "../Page/PAGE.mjs";
 /** @typedef {import("./createFunction.mjs").createFunction} createFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -27,6 +28,10 @@ export class CreateElement extends HTMLElement {
      */
     #label_service;
     /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+    /**
      * @type {ShadowRoot}
      */
     #shadow;
@@ -38,14 +43,16 @@ export class CreateElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {Start} start
      * @param {createFunction} create_function
      * @returns {CreateElement}
      */
-    static new(css_api, label_service, start, create_function) {
+    static new(css_api, label_service, localization_api, start, create_function) {
         return new this(
             css_api,
             label_service,
+            localization_api,
             start,
             create_function
         );
@@ -54,15 +61,17 @@ export class CreateElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {Start} start
      * @param {createFunction} create_function
      * @private
      */
-    constructor(css_api, label_service, start, create_function) {
+    constructor(css_api, label_service, localization_api, start, create_function) {
         super();
 
         this.#css_api = css_api;
         this.#label_service = label_service;
+        this.#localization_api = localization_api;
         this.#start = start;
         this.#create_function = create_function;
 
@@ -97,20 +106,26 @@ export class CreateElement extends HTMLElement {
 
         if (post_result.network) {
             this.#form_element.addInvalidMessage(
-                "Network error"
+                this.#localization_api.translate(
+                    "Network error!"
+                )
             );
             return;
         }
 
         if (post_result.server) {
             this.#form_element.addInvalidMessage(
-                "Server error"
+                this.#localization_api.translate(
+                    "Server error!"
+                )
             );
             return;
         }
 
         this.#form_element.addInvalidMessage(
-            "Please check your data"
+            this.#localization_api.translate(
+                "Please check your data!"
+            )
         );
     }
 
@@ -120,11 +135,14 @@ export class CreateElement extends HTMLElement {
     #render() {
         this.#form_element = FormElement.new(
             this.#css_api,
+            this.#localization_api,
             () => {
                 if (this.#form_element.inputs.password.value !== this.#form_element.inputs["confirm-password"].value) {
                     this.#form_element.setCustomValidationMessage(
                         this.#form_element.inputs["confirm-password"],
-                        "Confirm password does not match!"
+                        this.#localization_api.translate(
+                            "Confirm password does not match!"
+                        )
                     );
                     return false;
                 }
@@ -134,11 +152,15 @@ export class CreateElement extends HTMLElement {
         );
 
         this.#form_element.addTitle(
-            "Create a new application"
+            this.#localization_api.translate(
+                "Create a new application"
+            )
         );
 
         const semester_element = this.#form_element.addInput(
-            "Semester",
+            this.#localization_api.translate(
+                "Semester"
+            ),
             "select",
             "semester"
         );
@@ -154,11 +176,19 @@ export class CreateElement extends HTMLElement {
         }
 
         this.#form_element.addSubtitle(
-            `Enter a password with at least ${this.#start["min-password-length"]} characters which will allow you to access your data at a later stage.`
+            this.#localization_api.translate(
+                "Enter a password with at least {min-password-length} characters which will allow you to access your data at a later stage",
+                null,
+                {
+                    "min-password-length": this.#start["min-password-length"]
+                }
+            )
         );
 
         const password_element = this.#form_element.addInput(
-            "Password",
+            this.#localization_api.translate(
+                "Password"
+            ),
             "password",
             "password"
         );
@@ -166,7 +196,9 @@ export class CreateElement extends HTMLElement {
         password_element.required = true;
 
         const confirm_password_element = this.#form_element.addInput(
-            "Confirm password",
+            this.#localization_api.translate(
+                "Confirm password"
+            ),
             "password",
             "confirm-password"
         );

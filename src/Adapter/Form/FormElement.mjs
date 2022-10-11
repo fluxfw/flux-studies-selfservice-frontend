@@ -8,6 +8,7 @@ import { FormTitleElement } from "../FormTitle/FormTitleElement.mjs";
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("./formButtonAction.mjs").formButtonAction} formButtonAction */
 /** @typedef {import("./InputElement.mjs").InputElement} InputElement */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -33,31 +34,39 @@ export class FormElement extends HTMLElement {
      */
     #invalid_messages = null;
     /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+    /**
      * @type {ShadowRoot}
      */
     #shadow;
 
     /**
      * @param {CssApi} css_api
+     * @param {LocalizationApi} localization_api
      * @param {customValidationFunction | null} custom_validation_function
      * @returns {FormElement}
      */
-    static new(css_api, custom_validation_function = null) {
+    static new(css_api, localization_api, custom_validation_function = null) {
         return new this(
             css_api,
+            localization_api,
             custom_validation_function
         );
     }
 
     /**
      * @param {CssApi} css_api
+     * @param {LocalizationApi} localization_api
      * @param {customValidationFunction | null} custom_validation_function
      * @private
      */
-    constructor(css_api, custom_validation_function) {
+    constructor(css_api, localization_api, custom_validation_function) {
         super();
 
         this.#css_api = css_api;
+        this.#localization_api = localization_api;
         this.#custom_validation_function = custom_validation_function;
         this.#has_custom_validation_messages = false;
 
@@ -82,14 +91,18 @@ export class FormElement extends HTMLElement {
             [
                 ...continue_function !== null ? [
                     {
-                        label: "Continue",
+                        label: this.#localization_api.translate(
+                            "Continue"
+                        ),
                         action: continue_function,
                         right: true
                     }
                 ] : [],
                 ...back_function !== null ? [
                     {
-                        label: "Back",
+                        label: this.#localization_api.translate(
+                            "Back"
+                        ),
                         action: back_function
                     }
                 ] : []

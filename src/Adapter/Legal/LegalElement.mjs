@@ -8,6 +8,7 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("./Legal.mjs").Legal} Legal */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -50,6 +51,10 @@ export class LegalElement extends HTMLElement {
      */
     #label_service;
     /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+    /**
      * @type {Legal}
      */
     #legal;
@@ -61,15 +66,17 @@ export class LegalElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {Legal} legal
      * @param {acceptedLegalFunction} accepted_legal_function
      * @param {backFunction | null} back_function
      * @returns {LegalElement}
      */
-    static new(css_api, label_service, legal, accepted_legal_function, back_function = null) {
+    static new(css_api, label_service, localization_api, legal, accepted_legal_function, back_function = null) {
         return new this(
             css_api,
             label_service,
+            localization_api,
             legal,
             accepted_legal_function,
             back_function
@@ -79,16 +86,18 @@ export class LegalElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {Legal} legal
      * @param {acceptedLegalFunction} accepted_legal_function
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, label_service, legal, accepted_legal_function, back_function) {
+    constructor(css_api, label_service, localization_api, legal, accepted_legal_function, back_function) {
         super();
 
         this.#css_api = css_api;
         this.#label_service = label_service;
+        this.#localization_api = localization_api;
         this.#legal = legal;
         this.#accepted_legal_function = accepted_legal_function;
         this.#back_function = back_function;
@@ -125,20 +134,26 @@ export class LegalElement extends HTMLElement {
 
         if (post_result.network) {
             this.#comments_form_element.addInvalidMessage(
-                "Network error"
+                this.#localization_api.translate(
+                    "Network error!"
+                )
             );
             return;
         }
 
         if (post_result.server) {
             this.#comments_form_element.addInvalidMessage(
-                "Server error"
+                this.#localization_api.translate(
+                    "Server error!"
+                )
             );
             return;
         }
 
         this.#comments_form_element.addInvalidMessage(
-            "Please check your data"
+            this.#localization_api.translate(
+                "Please check your data!"
+            )
         );
     }
 
@@ -148,19 +163,26 @@ export class LegalElement extends HTMLElement {
     #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            "Legal"
+            this.#localization_api.translate(
+                "Legal"
+            )
         ));
 
         this.#degree_program_form_element = FormElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         );
 
         this.#degree_program_form_element.addTitle(
-            "Intended Degree Program"
+            this.#localization_api.translate(
+                "Intended Degree Program"
+            )
         );
 
         const subject_element = this.#degree_program_form_element.addInput(
-            "Subject",
+            this.#localization_api.translate(
+                "Subject"
+            ),
             "readonly"
         );
         subject_element.innerText = this.#label_service.getSubjectLabel(
@@ -168,7 +190,9 @@ export class LegalElement extends HTMLElement {
         );
 
         const combination_element = this.#degree_program_form_element.addInput(
-            "Combination of Subjects",
+            this.#localization_api.translate(
+                "Combination of Subjects"
+            ),
             "readonly"
         );
         combination_element.innerText = this.#label_service.getCombinationLabel(
@@ -176,7 +200,9 @@ export class LegalElement extends HTMLElement {
         );
 
         const mandatory_element = this.#degree_program_form_element.addInput(
-            "Mandatory Subjects",
+            this.#localization_api.translate(
+                "Mandatory Subjects"
+            ),
             "readonly"
         );
         mandatory_element.innerText = this.#label_service.getMultipleMandatoryLabel(
@@ -186,15 +212,20 @@ export class LegalElement extends HTMLElement {
         this.#shadow.appendChild(this.#degree_program_form_element);
 
         this.#disqualification_form_element = FormElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         );
 
         this.#disqualification_form_element.addTitle(
-            "Disqualification"
+            this.#localization_api.translate(
+                "Disqualification"
+            )
         );
 
         const not_disqualified_element = this.#disqualification_form_element.addInput(
-            "I am not disqualified from continuing my studies in the above-mentioned main subject because of exam failure or am not exams at another institution of higher education planned before the intended transfer, which would result in disqualification from the above-mentioned main subject in case of failure or non-attendance",
+            this.#localization_api.translate(
+                "I am not disqualified from continuing my studies in the above-mentioned main subject because of exam failure or am not exams at another institution of higher education planned before the intended transfer, which would result in disqualification from the above-mentioned main subject in case of failure or non-attendance"
+            ),
             "checkbox",
             "not-disqualified"
         );
@@ -203,15 +234,24 @@ export class LegalElement extends HTMLElement {
         this.#shadow.appendChild(this.#disqualification_form_element);
 
         this.#agb_form_element = FormElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         );
 
         this.#agb_form_element.addTitle(
-            "AGB"
+            this.#localization_api.translate(
+                "AGB"
+            )
         );
 
         const agb_element = this.#agb_form_element.addInput(
-            "I accept the terms and conditions of TODO",
+            this.#localization_api.translate(
+                "I accept the terms and conditions of {agb}",
+                null,
+                {
+                    agb: "TODO"
+                }
+            ),
             "checkbox",
             "agb"
         );
@@ -220,15 +260,20 @@ export class LegalElement extends HTMLElement {
         this.#shadow.appendChild(this.#agb_form_element);
 
         this.#complete_form_element = FormElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         );
 
         this.#complete_form_element.addTitle(
-            "Complete"
+            this.#localization_api.translate(
+                "Complete"
+            )
         );
 
         const complete_element = this.#complete_form_element.addInput(
-            "I confirm that all provided data is complete and truthful. The application is legally binding",
+            this.#localization_api.translate(
+                "I confirm that all provided data is complete and truthful. The application is legally binding"
+            ),
             "checkbox",
             "complete"
         );
@@ -237,15 +282,24 @@ export class LegalElement extends HTMLElement {
         this.#shadow.appendChild(this.#complete_form_element);
 
         this.#comments_form_element = FormElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         );
 
         this.#comments_form_element.addTitle(
-            "Comments"
+            this.#localization_api.translate(
+                "Comments"
+            )
         );
 
         const comments_element = this.#comments_form_element.addInput(
-            `Did any problems during the application proccess occur or would you like to share any comments or suggestions with us, so please use the comment box below (max ${this.#legal["max-comments-length"]} characters)`,
+            this.#localization_api.translate(
+                "Did any problems during the application proccess occur or would you like to share any comments or suggestions with us, so please use the comment box below (max {max-comments-length} characters)",
+                null,
+                {
+                    "max-comments-length": this.#legal["max-comments-length"]
+                }
+            ),
             "textarea",
             "comments",
             true
@@ -256,7 +310,13 @@ export class LegalElement extends HTMLElement {
         comments_element.parentElement.insertAdjacentElement("afterend", comments_left_element);
 
         comments_element.addEventListener("input", () => {
-            comments_left_element.innerText = `Characters left: ${this.#legal["max-comments-length"] - comments_element.value.length}`;
+            comments_left_element.innerText = this.#localization_api.translate(
+                "Characters left: {characters}",
+                null,
+                {
+                    characters: this.#legal["max-comments-length"] - comments_element.value.length
+                }
+            );
         });
 
         this.#comments_form_element.addButtons(
@@ -269,7 +329,8 @@ export class LegalElement extends HTMLElement {
         this.#shadow.appendChild(this.#comments_form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         ));
 
         if (this.#legal.values !== null) {

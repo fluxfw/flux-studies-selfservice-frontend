@@ -4,6 +4,7 @@ import { PAGE_RESUME } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("./resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 
@@ -23,6 +24,10 @@ export class ResumeElement extends HTMLElement {
      */
     #form_element;
     /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+    /**
      * @type {resumeFunction}
      */
     #resume_function;
@@ -37,14 +42,16 @@ export class ResumeElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
+     * @param {LocalizationApi} localization_api
      * @param {Start} start
      * @param {resumeFunction} resume_function
      * @param {backFunction | null} back_function
      * @returns {ResumeElement}
      */
-    static new(css_api, start, resume_function, back_function = null) {
+    static new(css_api, localization_api, start, resume_function, back_function = null) {
         return new this(
             css_api,
+            localization_api,
             start,
             resume_function,
             back_function
@@ -53,15 +60,17 @@ export class ResumeElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
+     * @param {LocalizationApi} localization_api
      * @param {Start} start
      * @param {resumeFunction} resume_function
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, start, resume_function, back_function) {
+    constructor(css_api, localization_api, start, resume_function, back_function) {
         super();
 
         this.#css_api = css_api;
+        this.#localization_api = localization_api;
         this.#start = start;
         this.#resume_function = resume_function;
         this.#back_function = back_function;
@@ -80,26 +89,35 @@ export class ResumeElement extends HTMLElement {
      */
     #render() {
         this.#form_element = FormElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         );
 
         this.#form_element.addTitle(
-            "Resume the application process"
+            this.#localization_api.translate(
+                "Resume the application process"
+            )
         );
 
         this.#form_element.addSubtitle(
-            "Resume from where you left off!"
+            this.#localization_api.translate(
+                "Resume from where you left off!"
+            )
         );
 
         const identification_number_element = this.#form_element.addInput(
-            "Identification number",
+            this.#localization_api.translate(
+                "Identification number"
+            ),
             "text",
             "identification-number"
         );
         identification_number_element.required = true;
 
         const password_element = this.#form_element.addInput(
-            "Password",
+            this.#localization_api.translate(
+                "Password"
+            ),
             "password",
             "password"
         );
@@ -137,20 +155,26 @@ export class ResumeElement extends HTMLElement {
 
         if (post_result.network) {
             this.#form_element.addInvalidMessage(
-                "Network error"
+                this.#localization_api.translate(
+                    "Network error!"
+                )
             );
             return;
         }
 
         if (post_result.server) {
             this.#form_element.addInvalidMessage(
-                "Server error"
+                this.#localization_api.translate(
+                    "Server error!"
+                )
             );
             return;
         }
 
         this.#form_element.addInvalidMessage(
-            "Please check your data"
+            this.#localization_api.translate(
+                "Please check your data!"
+            )
         );
     }
 }
