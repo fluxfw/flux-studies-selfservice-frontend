@@ -1,5 +1,6 @@
 :root {
-    --accent-color: #e3003d;
+    --color-scheme-light-background: #ffffff;
+    --color-scheme-light-foreground: #000000;
     --form-border-color: #000000;
     --form-border-size: 2px;
     --form-button-color: #63788e;
@@ -16,7 +17,6 @@
     --loading-size: 100px;
     --loading-width: 2px;
     --mandatory-color: #c12c2c;
-    accent-color: var(--accent-color);
     font-family: sans-serif;
     font-size: 16px;
 }

@@ -1,3 +1,6 @@
+import { AccentColorApi } from "../../Libs/flux-accent-color-api/src/Adapter/Api/AccentColorApi.mjs";
+import { COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
+import { ColorSchemeApi } from "../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs";
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { FetchApi } from "../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
 import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
@@ -10,6 +13,7 @@ import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD
 import { PwaApi } from "../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs";
 import { SettingsApi } from "../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs";
 import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
+import { VARIABLE_BACKGROUND } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/VARIABLE.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
@@ -29,12 +33,21 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/SelectLanguage/SelectLanguageButtonElement.mjs").SelectLanguageButtonElement} SelectLanguageButtonElement */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 /** @typedef {import("../Start/StartElement.mjs").StartElement} StartElement */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
 export class StudiesSelfserviceFrontendApi {
+    /**
+     * @type {AccentColorApi | null}
+     */
+    #accent_color_api = null;
+    /**
+     * @type {ColorSchemeApi | null}
+     */
+    #color_scheme_api = null;
     /**
      * @type {CssApi | null}
      */
@@ -100,6 +113,10 @@ export class StudiesSelfserviceFrontendApi {
 
         this.#localization_api ??= await this.#getLocalizationApi();
 
+        this.#color_scheme_api ??= await this.#getColorSchemeApi();
+
+        this.#accent_color_api ??= await this.#getAccentColorApi();
+
         this.#loading_api ??= await this.#getLoadingApi();
 
         this.#pwa_api ??= await this.#getPwaApi();
@@ -115,7 +132,7 @@ export class StudiesSelfserviceFrontendApi {
             `${__dirname.substring(0, __dirname.lastIndexOf("/"))}/FormInvalid/FormInvalidElement.css`
         );
 
-        this.#pwa_api.initPwa();
+        await this.#selectLanguage();
     }
 
     /**
@@ -123,10 +140,21 @@ export class StudiesSelfserviceFrontendApi {
      */
     async showFrontend() {
         document.body.appendChild(this.#main_element = MainElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#getSelectLanguageButtonElement()
         ));
 
         await this.#next();
+    }
+
+    /**
+     * @returns {void}
+     */
+    #afterSelectLanguage() {
+        this.#main_element.remove();
+        this.#main_element = null;
+
+        this.showFrontend();
     }
 
     /**
@@ -179,6 +207,25 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
+     * @returns {Promise<AccentColorApi>}
+     */
+    async #getAccentColorApi() {
+        const accent_color_api = AccentColorApi.new(
+            [
+                "#e3003d"
+            ],
+            this.#css_api,
+            this.#localization_api,
+            this.#settings_api,
+            false
+        );
+
+        await accent_color_api.init();
+
+        return accent_color_api;
+    }
+
+    /**
      * @param {ChoiceSubject} choice_subject
      * @param {postFunction} post_function
      * @param {backFunction | null} back_function
@@ -187,6 +234,8 @@ export class StudiesSelfserviceFrontendApi {
     async #getChoiceSubjectElement(choice_subject, post_function, back_function = null) {
         return (await import("../ChoiceSubject/ChoiceSubjectElement.mjs")).ChoiceSubjectElement.new(
             this.#css_api,
+            this.#label_service,
+            this.#localization_api,
             choice_subject,
             async chosen_subject => post_function(
                 {
@@ -199,12 +248,37 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
+     * @returns {Promise<ColorSchemeApi>}
+     */
+    async #getColorSchemeApi() {
+        const color_scheme_api = ColorSchemeApi.new(
+            [
+                {
+                    color_scheme: COLOR_SCHEME_LIGHT,
+                    name: "light"
+                }
+            ],
+            this.#css_api,
+            this.#localization_api,
+            this.#settings_api,
+            {
+                [COLOR_SCHEME_LIGHT]: "light"
+            }
+        );
+
+        await color_scheme_api.init();
+
+        return color_scheme_api;
+    }
+
+    /**
      * @param {backFunction | null} back_function
      * @returns {Promise<CompletedElement>}
      */
     async #getCompletedElement(back_function = null) {
         return (await import("../Completed/CompletedElement.mjs")).CompletedElement.new(
             this.#css_api,
+            this.#localization_api,
             back_function
         );
     }
@@ -253,6 +327,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getIdentificationNumberElement(identification_number, post_function, back_function = null) {
         return (await import("../IdentificationNumber/IdentificationNumberElement.mjs")).IdentificationNumberElement.new(
             this.#css_api,
+            this.#localization_api,
             identification_number,
             async () => post_function(
                 {
@@ -274,6 +349,7 @@ export class StudiesSelfserviceFrontendApi {
         return (await import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs")).IntendedDegreeProgramElement.new(
             this.#css_api,
             this.#label_service,
+            this.#localization_api,
             intended_degree_program,
             async chosen_intended_degree_program => post_function(
                 {
@@ -295,6 +371,7 @@ export class StudiesSelfserviceFrontendApi {
         return (await import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs")).IntendedDegreeProgram2Element.new(
             this.#css_api,
             this.#label_service,
+            this.#localization_api,
             intended_degree_program_2,
             async chosen_intended_degree_program_2 => post_function(
                 {
@@ -323,7 +400,9 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {LabelService}
      */
     #getLabelService() {
-        return LabelService.new();
+        return LabelService.new(
+            this.#localization_api
+        );
     }
 
     /**
@@ -336,6 +415,7 @@ export class StudiesSelfserviceFrontendApi {
         return (await import("../Legal/LegalElement.mjs")).LegalElement.new(
             this.#css_api,
             this.#label_service,
+            this.#localization_api,
             legal,
             async accepted_legal => post_function(
                 {
@@ -458,15 +538,49 @@ export class StudiesSelfserviceFrontendApi {
             this.#css_api,
             this.#json_api,
             `${__dirname}/../Pwa/manifest.json`,
-            () => "#ffffff",
-            () => "ltr",
-            () => "en",
-            () => getComputedStyle(document.documentElement).getPropertyValue("--accent-color").trim()
+            () => this.#color_scheme_api.getVariable(
+                VARIABLE_BACKGROUND
+            ),
+            () => this.#localization_api.getDirection(),
+            () => this.#localization_api.getLanguage(),
+            () => this.#accent_color_api.getAccentColor(),
+            text => this.#localization_api.translate(
+                text
+            )
         );
 
         await pwa_api.init();
 
         return pwa_api;
+    }
+
+    /**
+     * @returns {SelectLanguageButtonElement}
+     */
+    #getSelectLanguageButtonElement() {
+        const select_language_parameters = this.#getSelectLanguageParameters();
+
+        return this.#localization_api.getSelectLanguageButtonElement(
+            select_language_parameters.localization_folder,
+            select_language_parameters.module,
+            select_language_parameters.ensure,
+            () => {
+                this.#afterSelectLanguage();
+            }
+        );
+    }
+
+    /**
+     * @returns {{localization_folder: string, module: string | null, ensure: () => Promise<void> | null}}
+     */
+    #getSelectLanguageParameters() {
+        return {
+            localization_folder: `${__dirname}/../Localization`,
+            module: null,
+            ensure: async () => {
+                this.#pwa_api.initPwa();
+            }
+        };
     }
 
     /**
@@ -492,6 +606,7 @@ export class StudiesSelfserviceFrontendApi {
         return (await import("../Start/StartElement.mjs")).StartElement.new(
             this.#css_api,
             this.#label_service,
+            this.#localization_api,
             start,
             async create => post_function(
                 {
@@ -552,7 +667,9 @@ export class StudiesSelfserviceFrontendApi {
                     if (!back_result.ok) {
                         this.#main_element.replaceContent(
                             this.#getFormInvalidElement(
-                                back_result.server ? "Server error" : "Network error"
+                                this.#localization_api.translate(
+                                    back_result.server ? "Server error!" : "Network error!"
+                                )
                             )
                         );
                         return;
@@ -563,7 +680,9 @@ export class StudiesSelfserviceFrontendApi {
             );
         } else {
             page = this.#getFormInvalidElement(
-                get_result.server ? "Server error" : "Network error"
+                this.#localization_api.translate(
+                    get_result.server ? "Server error!" : "Network error!"
+                )
             );
         }
 
@@ -595,5 +714,18 @@ export class StudiesSelfserviceFrontendApi {
                 }
             };
         }
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #selectLanguage() {
+        const select_language_parameters = this.#getSelectLanguageParameters();
+
+        await this.#localization_api.selectLanguage(
+            select_language_parameters.localization_folder,
+            select_language_parameters.module,
+            select_language_parameters.ensure
+        );
     }
 }

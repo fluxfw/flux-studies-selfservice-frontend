@@ -9,6 +9,7 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("./IntendedDegreeProgram2.mjs").IntendedDegreeProgram2} IntendedDegreeProgram2 */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -38,6 +39,10 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
      */
     #label_service;
     /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+    /**
      * @type {ShadowRoot}
      */
     #shadow;
@@ -45,15 +50,17 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {IntendedDegreeProgram2} intended_degree_program_2
      * @param {chosenIntendedDegreeProgram2Function} chosen_intended_degree_program_2_function
      * @param {backFunction | null} back_function
      * @returns {IntendedDegreeProgram2Element}
      */
-    static new(css_api, label_service, intended_degree_program_2, chosen_intended_degree_program_2_function, back_function = null) {
+    static new(css_api, label_service, localization_api, intended_degree_program_2, chosen_intended_degree_program_2_function, back_function = null) {
         return new this(
             css_api,
             label_service,
+            localization_api,
             intended_degree_program_2,
             chosen_intended_degree_program_2_function,
             back_function
@@ -63,16 +70,18 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {IntendedDegreeProgram2} intended_degree_program_2
      * @param {chosenIntendedDegreeProgram2Function} chosen_intended_degree_program_2_function
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, label_service, intended_degree_program_2, chosen_intended_degree_program_2_function, back_function) {
+    constructor(css_api, label_service, localization_api, intended_degree_program_2, chosen_intended_degree_program_2_function, back_function) {
         super();
 
         this.#css_api = css_api;
         this.#label_service = label_service;
+        this.#localization_api = localization_api;
         this.#intended_degree_program_2 = intended_degree_program_2;
         this.#chosen_intended_degree_program_2_function = chosen_intended_degree_program_2_function;
         this.#back_function = back_function;
@@ -126,20 +135,26 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         if (post_result.network) {
             this.#form_element.addInvalidMessage(
-                "Network error"
+                this.#localization_api.translate(
+                    "Network error!"
+                )
             );
             return;
         }
 
         if (post_result.server) {
             this.#form_element.addInvalidMessage(
-                "Server error"
+                this.#localization_api.translate(
+                    "Server error!"
+                )
             );
             return;
         }
 
         this.#form_element.addInvalidMessage(
-            "Please check your data"
+            this.#localization_api.translate(
+                "Please check your data!"
+            )
         );
     }
 
@@ -149,11 +164,14 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
     #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            "Intended Degree Program"
+            this.#localization_api.translate(
+                "Intended Degree Program"
+            )
         ));
 
         this.#form_element = FormElement.new(
             this.#css_api,
+            this.#localization_api,
             () => {
                 if (this.#intended_degree_program_2.combination["multiple-choice"] === null) {
                     return true;
@@ -176,10 +194,15 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                     if (ect < multiple_choice.ect) {
                         this.#form_element.setCustomValidationMessage(
                             input_element,
-                            `Please select more${this.#label_service.getEctLabel(
-                                multiple_choice.ect - ect,
-                                false
-                            )}!`
+                            this.#localization_api.translate(
+                                "Please select more {ect}!",
+                                null,
+                                {
+                                    ect: this.#label_service.getEctLabel(
+                                        multiple_choice.ect - ect
+                                    )
+                                }
+                            )
                         );
                         return false;
                     }
@@ -187,10 +210,15 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                     if (ect > multiple_choice.ect) {
                         this.#form_element.setCustomValidationMessage(
                             input_element,
-                            `Please select less${this.#label_service.getEctLabel(
-                                ect - multiple_choice.ect,
-                                false
-                            )}!`
+                            this.#localization_api.translate(
+                                "Please select less {ect}!",
+                                null,
+                                {
+                                    ect: this.#label_service.getEctLabel(
+                                        ect - multiple_choice.ect
+                                    )
+                                }
+                            )
                         );
                         return false;
                     }
@@ -201,11 +229,15 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         );
 
         this.#form_element.addTitle(
-            "Choice of Subjects"
+            this.#localization_api.translate(
+                "Choice of Subjects"
+            )
         );
 
         const subject_element = this.#form_element.addInput(
-            "Subject",
+            this.#localization_api.translate(
+                "Subject"
+            ),
             "readonly"
         );
         subject_element.innerText = this.#label_service.getSubjectLabel(
@@ -213,7 +245,9 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         );
 
         const combination_element = this.#form_element.addInput(
-            "Combination of Subjects",
+            this.#localization_api.translate(
+                "Combination of Subjects"
+            ),
             "readonly"
         );
         combination_element.innerText = this.#label_service.getCombinationLabel(
@@ -221,7 +255,9 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         );
 
         const mandatory_element = this.#form_element.addInput(
-            "Mandatory Subjects",
+            this.#localization_api.translate(
+                "Mandatory Subjects"
+            ),
             "readonly"
         );
         mandatory_element.innerText = this.#label_service.getMultipleMandatoryLabel(
@@ -230,7 +266,9 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         if (this.#intended_degree_program_2.combination["single-choice"] !== null || this.#intended_degree_program_2.combination["multiple-choice"] !== null) {
             this.#form_element.addSubtitle(
-                "Please choose your combination of subjects from the given selection below"
+                this.#localization_api.translate(
+                    "Please choose your combination of subjects from the given selection below"
+                )
             );
 
             if (this.#intended_degree_program_2.combination["single-choice"] !== null) {
@@ -282,13 +320,26 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                 }
 
                 this.#form_element.addSubtitle(
-                    "On desktop operating systems/browsers may use Ctrl + Click for select multiple options"
+                    this.#localization_api.translate(
+                        "On desktop operating systems/browsers may use {ctrl} + {click} for select multiple options",
+                        null,
+                        {
+                            click: this.#localization_api.translate(
+                                "Click"
+                            ),
+                            ctrl: this.#localization_api.translate(
+                                "Ctrl"
+                            )
+                        }
+                    )
                 );
             }
         }
 
         const further_information_element = this.#form_element.addInput(
-            "If you have already studied the choosen subject and would like to continue in an advanced semester, please enter it here",
+            this.#localization_api.translate(
+                "If you have already studied the choosen subject and would like to continue in an advanced semester, please enter it here"
+            ),
             "textarea",
             "further-information",
             true
@@ -304,7 +355,8 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         this.#shadow.appendChild(this.#form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         ));
 
         if (this.#intended_degree_program_2.values !== null) {

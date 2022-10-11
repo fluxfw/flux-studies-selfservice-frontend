@@ -2,3 +2,7 @@
     display: block;
     margin: 50px;
 }
+
+flux-select-language-button {
+    margin-bottom: 20px;
+}

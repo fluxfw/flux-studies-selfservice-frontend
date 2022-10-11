@@ -8,6 +8,10 @@ else
     node_modules="node_modules"
 fi
 
+(mkdir -p $node_modules/flux-accent-color-api && cd $node_modules/flux-accent-color-api && wget -O - https://github.com/fluxfw/flux-accent-color-api/archive/refs/tags/v2022-10-11-1.tar.gz | tar -xz --strip-components=1)
+
+(mkdir -p $node_modules/flux-color-scheme-api && cd $node_modules/flux-color-scheme-api && wget -O - https://github.com/fluxfw/flux-color-scheme-api/archive/refs/tags/v2022-10-11-1.tar.gz | tar -xz --strip-components=1)
+
 (mkdir -p $node_modules/flux-css-api && cd $node_modules/flux-css-api && wget -O - https://github.com/fluxfw/flux-css-api/archive/refs/tags/v2022-10-03-1.tar.gz | tar -xz --strip-components=1)
 
 (mkdir -p $node_modules/flux-fetch-api && cd $node_modules/flux-fetch-api && wget -O - https://github.com/fluxfw/flux-fetch-api/archive/refs/tags/v2022-09-30-1.tar.gz | tar -xz --strip-components=1)

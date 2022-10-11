@@ -10,6 +10,7 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Create/createFunction.mjs").createFunction} createFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../Resume/resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("./Start.mjs").Start} Start */
 
@@ -33,6 +34,10 @@ export class StartElement extends HTMLElement {
      */
     #label_service;
     /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+    /**
      * @type {resumeFunction}
      */
     #resume_function;
@@ -48,16 +53,18 @@ export class StartElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {Start} start
      * @param {createFunction} create_function
      * @param {resumeFunction} resume_function
      * @param {backFunction | null} back_function
      * @returns {StartElement}
      */
-    static new(css_api, label_service, start, create_function, resume_function, back_function = null) {
+    static new(css_api, label_service, localization_api, start, create_function, resume_function, back_function = null) {
         return new this(
             css_api,
             label_service,
+            localization_api,
             start,
             create_function,
             resume_function,
@@ -68,17 +75,19 @@ export class StartElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
      * @param {Start} start
      * @param {createFunction} create_function
      * @param {resumeFunction} resume_function
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, label_service, start, create_function, resume_function, back_function) {
+    constructor(css_api, label_service, localization_api, start, create_function, resume_function, back_function) {
         super();
 
         this.#css_api = css_api;
         this.#label_service = label_service;
+        this.#localization_api = localization_api;
         this.#start = start;
         this.#create_function = create_function;
         this.#resume_function = resume_function;
@@ -99,30 +108,37 @@ export class StartElement extends HTMLElement {
     #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            "Application / Login"
+            this.#localization_api.translate(
+                "Application / Login"
+            )
         ));
 
         this.#shadow.appendChild(SubtitleElement.new(
             this.#css_api,
-            "Create a new application by entering a password of you choice, or continue with your application by using your application identification number and your password"
+            this.#localization_api.translate(
+                "Create a new application by entering a password of you choice, or continue with your application by using your application identification number and your password"
+            )
         ));
 
         this.#shadow.appendChild(CreateElement.new(
             this.#css_api,
             this.#label_service,
+            this.#localization_api,
             this.#start,
             this.#create_function
         ));
 
         this.#shadow.appendChild(ResumeElement.new(
             this.#css_api,
+            this.#localization_api,
             this.#start,
             this.#resume_function,
             this.#back_function
         ));
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         ));
     }
 }

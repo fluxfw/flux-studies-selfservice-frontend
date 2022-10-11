@@ -1,24 +1,36 @@
 /** @typedef {import("../../../Adapter/Combination/Choice.mjs").Choice} Choice */
 /** @typedef {import("../../../Adapter/Combination/Combination.mjs").Combination} Combination */
+/** @typedef {import("../../../Adapter/DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
+/** @typedef {import("../../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../../../Adapter/Combination/Mandatory.mjs").Mandatory} Mandatory */
 /** @typedef {import("../../../Adapter/Combination/MultipleChoice.mjs").MultipleChoice} MultipleChoice */
+/** @typedef {import("../../../Adapter/Qualification/Qualification.mjs").Qualification} Qualification */
 /** @typedef {import("../../../Adapter/Combination/SingleChoice.mjs").SingleChoice} SingleChoice */
 /** @typedef {import("../../../Adapter/Semester/Semester.mjs").Semester} Semester */
 /** @typedef {import("../../../Adapter/Subject/Subject.mjs").Subject} Subject */
 
 export class LabelService {
     /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+
+    /**
+     * @param {LocalizationApi} localization_api
      * @returns {LabelService}
      */
-    static new() {
-        return new this();
+    static new(localization_api) {
+        return new this(
+            localization_api
+        );
     }
 
     /**
+     * @param {LocalizationApi} localization_api
      * @private
      */
-    constructor() {
-
+    constructor(localization_api) {
+        this.#localization_api = localization_api;
     }
 
     /**
@@ -36,21 +48,39 @@ export class LabelService {
      * @returns {string}
      */
     getCombinationLabel(combination) {
-        return `${combination.label}${this.getEctLabel(
-            [
-                ...combination.mandatory?.map(mandatory => mandatory.ect) ?? [],
-                ...combination["single-choice"]?.map(single_choice => single_choice.ect) ?? [],
-                ...combination["multiple-choice"]?.map(multiple_choice => multiple_choice.ect) ?? []
-            ]
-        )}`;
+        return this.#localization_api.translate(
+            "{label} ({ect})",
+            null,
+            {
+                ect: this.getEctLabel(
+                    [
+                        ...combination.mandatory?.map(mandatory => mandatory.ect) ?? [],
+                        ...combination["single-choice"]?.map(single_choice => single_choice.ect) ?? [],
+                        ...combination["multiple-choice"]?.map(multiple_choice => multiple_choice.ect) ?? []
+                    ]
+                ),
+                label: this.#localization_api.translate(
+                    combination.label
+                )
+            }
+        );
+    }
+
+    /**
+     * @param {DegreeProgram} degree_program
+     * @returns {string}
+     */
+    getDegreeProgramLabel(degree_program) {
+        return this.#localization_api.translate(
+            degree_program.label
+        );
     }
 
     /**
      * @param {number | number[]} ect
-     * @param {boolean} clamps
      * @returns {string}
      */
-    getEctLabel(ect, clamps = true) {
+    getEctLabel(ect) {
         let _ect;
         if (Array.isArray(ect)) {
             _ect = ect.join(", ");
@@ -58,11 +88,13 @@ export class LabelService {
             _ect = ect;
         }
 
-        if (!clamps) {
-            return ` ${_ect} ECT`;
-        }
-
-        return ` (${_ect} ECT)`;
+        return this.#localization_api.translate(
+            "{ect} ECT",
+            null,
+            {
+                ect: _ect
+            }
+        );
     }
 
     /**
@@ -96,11 +128,23 @@ export class LabelService {
     }
 
     /**
+     * @param {Qualification} qualification
+     * @returns {string}
+     */
+    getQualificationLabel(qualification) {
+        return this.#localization_api.translate(
+            qualification.label
+        );
+    }
+
+    /**
      * @param {Semester} semester
      * @returns {string}
      */
     getSemesterLabel(semester) {
-        return semester.label;
+        return this.#localization_api.translate(
+            semester.label
+        );
     }
 
     /**
@@ -118,8 +162,17 @@ export class LabelService {
      * @returns {string}
      */
     getSubjectLabel(subject) {
-        return `${subject.label}${this.getEctLabel(
-            subject.ect
-        )}`;
+        return this.#localization_api.translate(
+            "{label} ({ect})",
+            null,
+            {
+                ect: this.getEctLabel(
+                    subject.ect
+                ),
+                label: this.#localization_api.translate(
+                    subject.label
+                )
+            }
+        );
     }
 }
