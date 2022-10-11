@@ -4,9 +4,12 @@ import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
 import { JsonApi } from "../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs";
 import { LabelService } from "../../Service/Label/Port/LabelService.mjs";
 import { LoadingApi } from "../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs";
+import { LocalizationApi } from "../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs";
 import { MainElement } from "../Main/MainElement.mjs";
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
 import { PwaApi } from "../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs";
+import { SettingsApi } from "../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs";
+import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
@@ -53,6 +56,10 @@ export class StudiesSelfserviceFrontendApi {
      */
     #loading_api = null;
     /**
+     * @type {LocalizationApi | null}
+     */
+    #localization_api = null;
+    /**
      * @type {MainElement | null}
      */
     #main_element = null;
@@ -60,6 +67,10 @@ export class StudiesSelfserviceFrontendApi {
      * @type {PwaApi | null}
      */
     #pwa_api = null;
+    /**
+     * @type {SettingsApi | null}
+     */
+    #settings_api = null;
 
     /**
      * @returns {StudiesSelfserviceFrontendApi}
@@ -84,6 +95,10 @@ export class StudiesSelfserviceFrontendApi {
         this.#css_api ??= await this.#getCssApi();
 
         this.#json_api ??= await this.#getJsonApi();
+
+        this.#settings_api ??= await this.#getSettingsApi();
+
+        this.#localization_api ??= await this.#getLocalizationApi();
 
         this.#loading_api ??= await this.#getLoadingApi();
 
@@ -355,6 +370,21 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
+     * @returns {Promise<LocalizationApi>}
+     */
+    async #getLocalizationApi() {
+        const localization_api = LocalizationApi.new(
+            this.#css_api,
+            this.#json_api,
+            this.#settings_api
+        );
+
+        await localization_api.init();
+
+        return localization_api;
+    }
+
+    /**
      * @param {GetResult} get_result
      * @param {postFunction} post_function
      * @param {backFunction} back_function
@@ -437,6 +467,19 @@ export class StudiesSelfserviceFrontendApi {
         await pwa_api.init();
 
         return pwa_api;
+    }
+
+    /**
+     * @returns {Promise<SettingsApi>}
+     */
+    async #getSettingsApi() {
+        const settings_api = SettingsApi.newWithAutoSettings(
+            STORAGE_SETTINGS_PREFIX
+        );
+
+        await settings_api.init();
+
+        return settings_api;
     }
 
     /**
