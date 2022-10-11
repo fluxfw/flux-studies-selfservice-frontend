@@ -79,6 +79,6 @@ export class CompletedElement extends HTMLElement {
     }
 }
 
-export const COMPLETED_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_COMPLETED}`;
+export const COMPLETED_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_COMPLETED}`;
 
-customElements.define(COMPLETED_TAG_NAME, CompletedElement);
+customElements.define(COMPLETED_ELEMENT_TAG_NAME, CompletedElement);

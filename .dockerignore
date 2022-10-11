@@ -1,4 +1,5 @@
 *
+!bin/install-dependencies.sh
 !src
 !src/**
 !package.json
