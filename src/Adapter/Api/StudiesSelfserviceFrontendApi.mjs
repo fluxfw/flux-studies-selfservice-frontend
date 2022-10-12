@@ -1,5 +1,4 @@
 import { AccentColorApi } from "../../Libs/flux-accent-color-api/src/Adapter/Api/AccentColorApi.mjs";
-import { COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
 import { ColorSchemeApi } from "../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs";
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { FetchApi } from "../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
@@ -14,6 +13,7 @@ import { PwaApi } from "../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs";
 import { SettingsApi } from "../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs";
 import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
 import { VARIABLE_BACKGROUND } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/VARIABLE.mjs";
+import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
@@ -256,14 +256,23 @@ export class StudiesSelfserviceFrontendApi {
                 {
                     color_scheme: COLOR_SCHEME_LIGHT,
                     name: "light"
+                },
+                {
+                    color_scheme: COLOR_SCHEME_DARK,
+                    name: "dark"
                 }
             ],
             this.#css_api,
             this.#localization_api,
             this.#settings_api,
             {
-                [COLOR_SCHEME_LIGHT]: "light"
-            }
+                [COLOR_SCHEME_LIGHT]: "light",
+                [COLOR_SCHEME_DARK]: "dark"
+            },
+            [
+                "form-background-color",
+                "form-buttons-background-color"
+            ]
         );
 
         await color_scheme_api.init();

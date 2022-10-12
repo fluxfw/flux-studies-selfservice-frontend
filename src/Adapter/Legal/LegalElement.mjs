@@ -209,6 +209,49 @@ export class LegalElement extends HTMLElement {
             this.#legal.combination
         );
 
+        if (this.#legal.combination["single-choice"] !== null) {
+            for (const single_choice of this.#legal.combination["single-choice"]) {
+                const single_choice_element = this.#degree_program_form_element.addInput(
+                    this.#localization_api.translate(
+                        this.#label_service.getSingleChoiceLabel(
+                            single_choice
+                        )
+                    ),
+                    "readonly"
+                );
+
+                if (this.#legal["single-choice"] !== null) {
+                    for (const choice of single_choice.choices) {
+                        if (choice.id === this.#legal["single-choice"][single_choice.id]) {
+                            single_choice_element.innerText = this.#label_service.getChoiceLabel(
+                                choice
+                            );
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (this.#legal.combination["multiple-choice"] !== null) {
+            for (const multiple_choice of this.#legal.combination["multiple-choice"]) {
+                const multiple_choice_element = this.#degree_program_form_element.addInput(
+                    this.#localization_api.translate(
+                        this.#label_service.getMultipleChoiceLabel(
+                            multiple_choice
+                        )
+                    ),
+                    "readonly"
+                );
+
+                if (this.#legal["multiple-choice"] !== null) {
+                    multiple_choice_element.innerText = this.#label_service.getChoicesLabel(
+                        multiple_choice.choices.filter(choice => this.#legal["multiple-choice"][multiple_choice.id].includes(choice.id))
+                    );
+                }
+            }
+        }
+
         this.#shadow.appendChild(this.#degree_program_form_element);
 
         this.#disqualification_form_element = FormElement.new(
@@ -249,7 +292,7 @@ export class LegalElement extends HTMLElement {
                 "I accept the terms and conditions of {agb}",
                 null,
                 {
-                    agb: "TODO"
+                    agb: this.#legal.agb
                 }
             ),
             "checkbox",

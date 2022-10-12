@@ -1,6 +1,6 @@
 :host {
     --form-border-size: 0;
-    --form-buttons-color: transparent;
+    --form-buttons-background-color: transparent;
     display: block;
 }
 

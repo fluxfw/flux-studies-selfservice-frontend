@@ -1,5 +1,5 @@
 :host {
-    background-color: var(--form-color);
+    background-color: var(--form-background-color);
     border: var(--form-border-size) solid var(--form-border-color);
     border-bottom: none;
     display: inline-block;

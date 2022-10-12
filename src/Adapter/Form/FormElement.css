@@ -4,7 +4,7 @@
 }
 
 form {
-    background-color: var(--form-color);
+    background-color: var(--form-background-color);
     border: var(--form-border-size) solid var(--form-border-color);
     padding: 30px 40px;
 }
@@ -34,7 +34,7 @@ label {
 .input:not([type="checkbox"]):not([type="radio"]),
 .input_select,
 .input_textarea {
-    background-color: var(--input-color);
+    background-color: var(--input-background-color);
     border: var(--input-border-size) solid var(--input-border-color);
     border-radius: 3px;
 }
@@ -68,9 +68,9 @@ label {
 }
 
 label[data-seperate] {
-    align-items: unset;
+    align-items: start;
     flex-direction: column;
-    flex-wrap: unset;
+    flex-wrap: nowrap;
 }
 
 label[data-seperate] .input:not([type="checkbox"]):not([type="radio"]),
@@ -78,5 +78,21 @@ label[data-seperate] .input_readonly,
 label[data-seperate] .input_select,
 label[data-seperate] .input_textarea,
 label[data-seperate] .text {
-    width: 100%;
+    width: calc(100% - 14px);
+}
+
+@media (max-width: 800px) {
+    label {
+        align-items: start;
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
+    .input:not([type="checkbox"]):not([type="radio"]),
+    .input_readonly,
+    .input_select,
+    .input_textarea,
+    .text {
+        width: calc(100% - 14px);
+    }
 }
