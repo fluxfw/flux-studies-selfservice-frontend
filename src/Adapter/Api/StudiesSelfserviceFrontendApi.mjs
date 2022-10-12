@@ -123,6 +123,9 @@ export class StudiesSelfserviceFrontendApi {
 
         this.#label_service ??= this.#getLabelService();
 
+        await this.#css_api.importCss(
+            `${__dirname}/../style.css`
+        );
         this.#css_api.importCssToRoot(
             document,
             `${__dirname}/../style.css`
@@ -131,6 +134,10 @@ export class StudiesSelfserviceFrontendApi {
         this.#css_api.importCss(
             `${__dirname.substring(0, __dirname.lastIndexOf("/"))}/FormInvalid/FormInvalidElement.css`
         );
+
+        this.#color_scheme_api.renderColorScheme();
+
+        this.#accent_color_api.renderAccentColor();
 
         await this.#selectLanguage();
     }
@@ -212,7 +219,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getAccentColorApi() {
         const accent_color_api = AccentColorApi.new(
             [
-                "#e3003d"
+                "red"
             ],
             this.#css_api,
             this.#localization_api,
@@ -552,7 +559,7 @@ export class StudiesSelfserviceFrontendApi {
             ),
             () => this.#localization_api.getDirection(),
             () => this.#localization_api.getLanguage(),
-            () => this.#accent_color_api.getAccentColor(),
+            () => this.#accent_color_api.getAccentColorValue(),
             text => this.#localization_api.translate(
                 text
             )
