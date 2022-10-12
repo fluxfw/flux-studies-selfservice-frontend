@@ -44,6 +44,16 @@ export class LabelService {
     }
 
     /**
+     * @param {Choice[]} choices
+     * @returns {string}
+     */
+    getChoicesLabel(choices) {
+        return choices.map(choice => this.getChoiceLabel(
+            choice
+        )).join("\n");
+    }
+
+    /**
      * @param {Combination} combination
      * @returns {string}
      */

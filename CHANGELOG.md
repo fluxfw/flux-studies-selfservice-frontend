@@ -6,6 +6,14 @@ Changes:
 
 \-
 
+## v2022-10-12-1-alpha
+
+Changes:
+
+- Dark mode
+- Improved small screen width
+- Improved legal page
+
 ## v2022-10-11-2-alpha
 
 Changes:

@@ -1,5 +1,5 @@
 :host {
-    background-color: var(--form-buttons-color);
+    background-color: var(--form-buttons-background-color);
     border: var(--form-border-size) solid var(--form-border-color);
     border-top: none;
     display: block;
@@ -15,7 +15,7 @@
 
 button {
     all: initial;
-    background-color: var(--form-button-color);
+    background-color: var(--form-button-background-color);
     color: var(--form-button-text-color);
     cursor: pointer;
     display: block;
