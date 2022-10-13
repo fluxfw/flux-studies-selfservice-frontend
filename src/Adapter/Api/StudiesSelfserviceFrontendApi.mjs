@@ -1,4 +1,3 @@
-import { AccentColorApi } from "../../Libs/flux-accent-color-api/src/Adapter/Api/AccentColorApi.mjs";
 import { ColorSchemeApi } from "../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs";
 import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
 import { FetchApi } from "../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
@@ -12,7 +11,6 @@ import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD
 import { PwaApi } from "../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs";
 import { SettingsApi } from "../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs";
 import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
-import { VARIABLE_BACKGROUND } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/VARIABLE.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
 
@@ -40,10 +38,6 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
 export class StudiesSelfserviceFrontendApi {
-    /**
-     * @type {AccentColorApi | null}
-     */
-    #accent_color_api = null;
     /**
      * @type {ColorSchemeApi | null}
      */
@@ -115,8 +109,6 @@ export class StudiesSelfserviceFrontendApi {
 
         this.#color_scheme_api ??= await this.#getColorSchemeApi();
 
-        this.#accent_color_api ??= await this.#getAccentColorApi();
-
         this.#loading_api ??= await this.#getLoadingApi();
 
         this.#pwa_api ??= await this.#getPwaApi();
@@ -136,8 +128,6 @@ export class StudiesSelfserviceFrontendApi {
         );
 
         this.#color_scheme_api.renderColorScheme();
-
-        this.#accent_color_api.renderAccentColor();
 
         await this.#selectLanguage();
     }
@@ -211,25 +201,6 @@ export class StudiesSelfserviceFrontendApi {
                 }
             };
         }
-    }
-
-    /**
-     * @returns {Promise<AccentColorApi>}
-     */
-    async #getAccentColorApi() {
-        const accent_color_api = AccentColorApi.new(
-            [
-                "red"
-            ],
-            this.#css_api,
-            this.#localization_api,
-            this.#settings_api,
-            false
-        );
-
-        await accent_color_api.init();
-
-        return accent_color_api;
     }
 
     /**
@@ -554,12 +525,10 @@ export class StudiesSelfserviceFrontendApi {
             this.#css_api,
             this.#json_api,
             `${__dirname}/../Pwa/manifest.json`,
-            () => this.#color_scheme_api.getVariable(
-                VARIABLE_BACKGROUND
-            ),
+            () => this.#color_scheme_api.getBackground(),
             () => this.#localization_api.getDirection(),
             () => this.#localization_api.getLanguage(),
-            () => this.#accent_color_api.getAccentColorValue(),
+            () => this.#color_scheme_api.getAccent(),
             text => this.#localization_api.translate(
                 text
             )
