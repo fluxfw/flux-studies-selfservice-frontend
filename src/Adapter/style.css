@@ -1,9 +1,11 @@
 :root {
-    --accent-color-red: #e3003d;
+    --accent: #e3003d;
+    --color-scheme-dark-accent: var(--accent);
     --color-scheme-dark-background: #000000;
     --color-scheme-dark-foreground: #ffffff;
     --color-scheme-dark-form-background-color: #080808;
     --color-scheme-dark-form-buttons-background-color: #151515;
+    --color-scheme-light-accent: var(--accent);
     --color-scheme-light-background: #ffffff;
     --color-scheme-light-foreground: #000000;
     --color-scheme-light-form-background-color: #f7f7f7;
