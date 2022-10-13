@@ -1,46 +1,55 @@
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 
+/** @typedef {import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs").ColorSchemeApi} ColorSchemeApi */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
-/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/SelectLanguage/SelectLanguageButtonElement.mjs").SelectLanguageButtonElement} SelectLanguageButtonElement */
+/** @typedef {import("../Api/StudiesSelfserviceFrontendApi.mjs").StudiesSelfserviceFrontendApi} StudiesSelfserviceFrontendApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
 export class MainElement extends HTMLElement {
     /**
+     * @type {ColorSchemeApi}
+     */
+    #color_scheme_api;
+    /**
      * @type {CssApi}
      */
     #css_api;
     /**
-     * @type {SelectLanguageButtonElement}
+     * @type {StudiesSelfserviceFrontendApi}
      */
-    #select_language_button_element;
+    #studies_selfservice_frontend_api;
     /**
      * @type {ShadowRoot}
      */
     #shadow;
 
     /**
+     * @param {ColorSchemeApi} color_scheme_api
      * @param {CssApi} css_api
-     * @param {SelectLanguageButtonElement} select_language_button_element
+     * @param {StudiesSelfserviceFrontendApi} studies_selfservice_frontend_api
      * @returns {MainElement}
      */
-    static new(css_api, select_language_button_element) {
+    static new(color_scheme_api, css_api, studies_selfservice_frontend_api) {
         return new this(
+            color_scheme_api,
             css_api,
-            select_language_button_element
+            studies_selfservice_frontend_api
         );
     }
 
     /**
+     * @param {ColorSchemeApi} color_scheme_api
      * @param {CssApi} css_api
-     * @param {SelectLanguageButtonElement} select_language_button_element
+     * @param {StudiesSelfserviceFrontendApi} studies_selfservice_frontend_api
      * @private
      */
-    constructor(css_api, select_language_button_element) {
+    constructor(color_scheme_api, css_api, studies_selfservice_frontend_api) {
         super();
 
+        this.#color_scheme_api = color_scheme_api;
         this.#css_api = css_api;
-        this.#select_language_button_element = select_language_button_element;
+        this.#studies_selfservice_frontend_api = studies_selfservice_frontend_api;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -63,7 +72,11 @@ export class MainElement extends HTMLElement {
      * @returns {void}
      */
     #render() {
-        this.#shadow.appendChild(this.#select_language_button_element);
+        const settings_element = document.createElement("div");
+        settings_element.classList.add("settings");
+        settings_element.appendChild(this.#studies_selfservice_frontend_api.getSelectLanguageButtonElement());
+        settings_element.appendChild(this.#color_scheme_api.getSelectColorSchemeElement());
+        this.#shadow.appendChild(settings_element);
 
         this.#shadow.appendChild(document.createElement("div"));
     }

@@ -234,8 +234,9 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             subject_element.dispatchEvent(new Event("input"));
 
             combination_element.value = this.#intended_degree_program.values.combination;
-            combination_element.dispatchEvent(new Event("input"));
         }
+
+        combination_element.dispatchEvent(new Event("input"));
     }
 
     /**
