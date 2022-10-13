@@ -137,11 +137,28 @@ export class StudiesSelfserviceFrontendApi {
      */
     async showFrontend() {
         document.body.appendChild(this.#main_element = MainElement.new(
+            this.#color_scheme_api,
             this.#css_api,
-            this.#getSelectLanguageButtonElement()
+            this
         ));
 
         await this.#next();
+    }
+
+    /**
+     * @returns {SelectLanguageButtonElement}
+     */
+    getSelectLanguageButtonElement() {
+        const select_language_parameters = this.#getSelectLanguageParameters();
+
+        return this.#localization_api.getSelectLanguageButtonElement(
+            select_language_parameters.localization_folder,
+            select_language_parameters.module,
+            select_language_parameters.ensure,
+            () => {
+                this.#afterSelectLanguage();
+            }
+        );
     }
 
     /**
@@ -537,22 +554,6 @@ export class StudiesSelfserviceFrontendApi {
         await pwa_api.init();
 
         return pwa_api;
-    }
-
-    /**
-     * @returns {SelectLanguageButtonElement}
-     */
-    #getSelectLanguageButtonElement() {
-        const select_language_parameters = this.#getSelectLanguageParameters();
-
-        return this.#localization_api.getSelectLanguageButtonElement(
-            select_language_parameters.localization_folder,
-            select_language_parameters.module,
-            select_language_parameters.ensure,
-            () => {
-                this.#afterSelectLanguage();
-            }
-        );
     }
 
     /**

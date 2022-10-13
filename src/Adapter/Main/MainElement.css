@@ -3,6 +3,24 @@
     margin: 50px;
 }
 
-flux-select-language-button {
+.settings {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     margin-bottom: 20px;
+}
+
+.settings > * {
+    width: 50%;
+}
+
+@media (max-width: 800px) {
+    .settings {
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
+    .settings > * {
+        width: 100%;
+    }
 }
