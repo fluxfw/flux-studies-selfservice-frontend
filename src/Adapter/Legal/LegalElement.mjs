@@ -132,7 +132,7 @@ export class LegalElement extends HTMLElement {
             return;
         }
 
-        if (post_result.network) {
+        if (post_result["network-error"]) {
             this.#comments_form_element.addInvalidMessage(
                 this.#localization_api.translate(
                     "Network error!"
@@ -141,7 +141,7 @@ export class LegalElement extends HTMLElement {
             return;
         }
 
-        if (post_result.server) {
+        if (post_result["server-error"]) {
             this.#comments_form_element.addInvalidMessage(
                 this.#localization_api.translate(
                     "Server error!"

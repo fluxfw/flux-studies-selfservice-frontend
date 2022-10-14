@@ -6,6 +6,12 @@ Changes:
 
 \-
 
+## v2022-10-14-1-alpha
+
+Changes:
+
+- University entrance qualification page
+
 ## v2022-10-13-2-alpha
 
 Changes:
