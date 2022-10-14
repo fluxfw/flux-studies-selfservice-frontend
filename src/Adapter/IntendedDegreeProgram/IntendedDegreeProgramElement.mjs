@@ -123,7 +123,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             return;
         }
 
-        if (post_result.network) {
+        if (post_result["network-error"]) {
             this.#form_element.addInvalidMessage(
                 this.#localization_api.translate(
                     "Network error!"
@@ -132,7 +132,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             return;
         }
 
-        if (post_result.server) {
+        if (post_result["server-error"]) {
             this.#form_element.addInvalidMessage(
                 this.#localization_api.translate(
                     "Server error!"

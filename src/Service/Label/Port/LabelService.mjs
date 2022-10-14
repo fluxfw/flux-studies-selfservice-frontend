@@ -1,11 +1,17 @@
+/** @typedef {import("../../../Adapter/Canton/Canton.mjs").Canton} Canton */
+/** @typedef {import("../../../Adapter/Certificate/Certificate.mjs").Certificate} Certificate */
+/** @typedef {import("../../../Adapter/CertificateType/CertificateType.mjs").CertificateType} CertificateType */
 /** @typedef {import("../../../Adapter/Combination/Choice.mjs").Choice} Choice */
 /** @typedef {import("../../../Adapter/Combination/Combination.mjs").Combination} Combination */
+/** @typedef {import("../../../Adapter/Country/Country.mjs").Country} Country */
 /** @typedef {import("../../../Adapter/DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
 /** @typedef {import("../../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../../../Adapter/Combination/Mandatory.mjs").Mandatory} Mandatory */
 /** @typedef {import("../../../Adapter/Combination/MultipleChoice.mjs").MultipleChoice} MultipleChoice */
+/** @typedef {import("../../../Adapter/Place/Place.mjs").Place} Place */
 /** @typedef {import("../../../Adapter/Qualification/Qualification.mjs").Qualification} Qualification */
 /** @typedef {import("../../../Adapter/Combination/SingleChoice.mjs").SingleChoice} SingleChoice */
+/** @typedef {import("../../../Adapter/School/School.mjs").School} School */
 /** @typedef {import("../../../Adapter/Semester/Semester.mjs").Semester} Semester */
 /** @typedef {import("../../../Adapter/Subject/Subject.mjs").Subject} Subject */
 
@@ -31,6 +37,36 @@ export class LabelService {
      */
     constructor(localization_api) {
         this.#localization_api = localization_api;
+    }
+
+    /**
+     * @param {Canton} canton
+     * @returns {string}
+     */
+    getCantonLabel(canton) {
+        return this.#localization_api.translate(
+            canton.label
+        );
+    }
+
+    /**
+     * @param {Certificate} certificate
+     * @returns {string}
+     */
+    getCertificateLabel(certificate) {
+        return this.#localization_api.translate(
+            certificate.label
+        );
+    }
+
+    /**
+     * @param {CertificateType} certificate_type
+     * @returns {string}
+     */
+    getCertificateTypeLabel(certificate_type) {
+        return this.#localization_api.translate(
+            certificate_type.label
+        );
     }
 
     /**
@@ -73,6 +109,16 @@ export class LabelService {
                     combination.label
                 )
             }
+        );
+    }
+
+    /**
+     * @param {Country} country
+     * @returns {string}
+     */
+    getCountryLabel(country) {
+        return this.#localization_api.translate(
+            country.label
         );
     }
 
@@ -138,12 +184,32 @@ export class LabelService {
     }
 
     /**
+     * @param {Place} place
+     * @returns {string}
+     */
+    getPlaceLabel(place) {
+        return this.#localization_api.translate(
+            place.label
+        );
+    }
+
+    /**
      * @param {Qualification} qualification
      * @returns {string}
      */
     getQualificationLabel(qualification) {
         return this.#localization_api.translate(
             qualification.label
+        );
+    }
+
+    /**
+     * @param {School} school
+     * @returns {string}
+     */
+    getSchoolLabel(school) {
+        return this.#localization_api.translate(
+            school.label
         );
     }
 

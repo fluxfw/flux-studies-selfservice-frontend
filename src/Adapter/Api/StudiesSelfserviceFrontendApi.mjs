@@ -12,7 +12,7 @@ import { PwaApi } from "../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs";
 import { SettingsApi } from "../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs";
 import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
-import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_RESUME, PAGE_START } from "../Page/PAGE.mjs";
+import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
@@ -34,6 +34,8 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/SelectLanguage/SelectLanguageButtonElement.mjs").SelectLanguageButtonElement} SelectLanguageButtonElement */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 /** @typedef {import("../Start/StartElement.mjs").StartElement} StartElement */
+/** @typedef {import("../UniversityEntranceQualification/UniversityEntranceQualification.mjs").UniversityEntranceQualification} UniversityEntranceQualification */
+/** @typedef {import("../UniversityEntranceQualification/UniversityEntranceQualificationElement.mjs").UniversityEntranceQualificationElement} UniversityEntranceQualificationElement */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -190,9 +192,9 @@ export class StudiesSelfserviceFrontendApi {
             return {
                 ok: false,
                 ...error instanceof Response ? {
-                    server: true
+                    "server-error": true
                 } : {
-                    network: true
+                    "network-error": true
                 }
             };
         }
@@ -212,9 +214,9 @@ export class StudiesSelfserviceFrontendApi {
             return {
                 ok: false,
                 ...error instanceof Response ? {
-                    server: true
+                    "server-error": true
                 } : {
-                    network: true
+                    "network-error": true
                 }
             };
         }
@@ -333,10 +335,10 @@ export class StudiesSelfserviceFrontendApi {
             this.#css_api,
             this.#localization_api,
             identification_number,
-            async () => post_function(
+            async confirmed_identification_number => post_function(
                 {
                     page: PAGE_IDENTIFICATION_NUMBER,
-                    data: {}
+                    data: confirmed_identification_number
                 }
             ),
             back_function
@@ -475,62 +477,79 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<HTMLElement>}
      */
     async #getPage(get_result, post_function, back_function) {
-        const _back_function = get_result.can_back ? back_function : null;
+        try {
+            const _back_function = get_result["can-back"] ? back_function : null;
 
-        switch (get_result.page) {
-            case PAGE_CHOICE_SUBJECT:
-                return this.#getChoiceSubjectElement(
-                    get_result.data,
-                    post_function,
-                    _back_function
-                );
+            switch (get_result.page) {
+                case PAGE_CHOICE_SUBJECT:
+                    return await this.#getChoiceSubjectElement(
+                        get_result.data,
+                        post_function,
+                        _back_function
+                    );
 
-            case PAGE_COMPLETED:
-                return this.#getCompletedElement(
-                    _back_function
-                );
+                case PAGE_COMPLETED:
+                    return await this.#getCompletedElement(
+                        _back_function
+                    );
 
-            case PAGE_CREATE:
-            case PAGE_RESUME:
-            case PAGE_START:
-                return this.#getStartElement(
-                    get_result.data,
-                    post_function,
-                    _back_function
-                );
+                case PAGE_CREATE:
+                case PAGE_RESUME:
+                case PAGE_START:
+                    return await this.#getStartElement(
+                        get_result.data,
+                        post_function,
+                        _back_function
+                    );
 
-            case PAGE_IDENTIFICATION_NUMBER:
-                return this.#getIdentificationNumberElement(
-                    get_result.data,
-                    post_function,
-                    _back_function
-                );
+                case PAGE_IDENTIFICATION_NUMBER:
+                    return await this.#getIdentificationNumberElement(
+                        get_result.data,
+                        post_function,
+                        _back_function
+                    );
 
-            case PAGE_INTENDED_DEGREE_PROGRAM:
-                return this.#getIntendedDegreeProgramElement(
-                    get_result.data,
-                    post_function,
-                    _back_function
-                );
+                case PAGE_INTENDED_DEGREE_PROGRAM:
+                    return await this.#getIntendedDegreeProgramElement(
+                        get_result.data,
+                        post_function,
+                        _back_function
+                    );
 
-            case PAGE_INTENDED_DEGREE_PROGRAM_2:
-                return this.#getIntendedDegreeProgram2Element(
-                    get_result.data,
-                    post_function,
-                    _back_function
-                );
+                case PAGE_INTENDED_DEGREE_PROGRAM_2:
+                    return await this.#getIntendedDegreeProgram2Element(
+                        get_result.data,
+                        post_function,
+                        _back_function
+                    );
 
-            case PAGE_LEGAL:
-                return this.#getLegalElement(
-                    get_result.data,
-                    post_function,
-                    _back_function
-                );
+                case PAGE_LEGAL:
+                    return await this.#getLegalElement(
+                        get_result.data,
+                        post_function,
+                        _back_function
+                    );
 
-            default:
-                return this.#getFormInvalidElement(
-                    `Unsupported page ${get_result.page}`
-                );
+                case PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION:
+                    return await this.#getUniversityEntranceQualificationElement(
+                        get_result.data,
+                        post_function,
+                        _back_function
+                    );
+
+                default:
+                    return this.#getFormInvalidElement(
+                        `Unsupported page ${get_result.page}`
+                    );
+            }
+        } catch (error) {
+            console.error(error);
+
+            return this.#getFormInvalidElement(
+                this.#localization_api.translate(
+                    "Page error!"
+                )
+            );
         }
     }
 
@@ -611,6 +630,28 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
+     * @param {UniversityEntranceQualification} university_entrance_qualification
+     * @param {postFunction} post_function
+     * @param {backFunction | null} back_function
+     * @returns {Promise<IntendedDegreeProgramElement>}
+     */
+    async #getUniversityEntranceQualificationElement(university_entrance_qualification, post_function, back_function = null) {
+        return (await import("../UniversityEntranceQualification/UniversityEntranceQualificationElement.mjs")).UniversityEntranceQualificationElement.new(
+            this.#css_api,
+            this.#label_service,
+            this.#localization_api,
+            university_entrance_qualification,
+            async chosen_university_entrance_qualification => post_function(
+                {
+                    page: PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION,
+                    data: chosen_university_entrance_qualification
+                }
+            ),
+            back_function
+        );
+    }
+
+    /**
      * @returns {Promise<void>}
      */
     async #next() {
@@ -654,7 +695,7 @@ export class StudiesSelfserviceFrontendApi {
                         this.#main_element.replaceContent(
                             this.#getFormInvalidElement(
                                 this.#localization_api.translate(
-                                    back_result.server ? "Server error!" : "Network error!"
+                                    back_result["network-error"] ? "Network error!" : back_result["server-error"] ? "Server error!" : ""
                                 )
                             )
                         );
@@ -667,7 +708,7 @@ export class StudiesSelfserviceFrontendApi {
         } else {
             page = this.#getFormInvalidElement(
                 this.#localization_api.translate(
-                    get_result.server ? "Server error!" : "Network error!"
+                    get_result["network-error"] ? "Network error!" : get_result["server-error"] ? "Server error!" : ""
                 )
             );
         }
@@ -694,9 +735,9 @@ export class StudiesSelfserviceFrontendApi {
             return {
                 ok: false,
                 ...error instanceof Response ? {
-                    server: true
+                    "server-error": true
                 } : {
-                    network: true
+                    "network-error": true
                 }
             };
         }
