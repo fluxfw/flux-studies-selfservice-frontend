@@ -1,5 +1,3 @@
-import { StudiesSelfserviceFrontendApi } from "./Api/StudiesSelfserviceFrontendApi.mjs";
-
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
 try {
@@ -9,7 +7,7 @@ try {
 }
 
 try {
-    const studies_selfservice_frontend_api = StudiesSelfserviceFrontendApi.new();
+    const studies_selfservice_frontend_api = (await import("./Api/StudiesSelfserviceFrontendApi.mjs")).StudiesSelfserviceFrontendApi.new();
 
     await studies_selfservice_frontend_api.init();
 
