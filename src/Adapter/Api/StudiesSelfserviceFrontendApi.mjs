@@ -1,15 +1,5 @@
-import { ColorSchemeApi } from "../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs";
-import { CssApi } from "../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs";
-import { FetchApi } from "../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs";
 import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
-import { JsonApi } from "../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs";
-import { LabelService } from "../../Service/Label/Port/LabelService.mjs";
-import { LoadingApi } from "../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs";
-import { LocalizationApi } from "../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs";
-import { MainElement } from "../Main/MainElement.mjs";
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
-import { PwaApi } from "../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs";
-import { SettingsApi } from "../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs";
 import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
@@ -17,7 +7,10 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("../ChoiceSubject/ChoiceSubjectElement.mjs").ChoiceSubjectElement} ChoiceSubjectElement */
+/** @typedef {import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs").ColorSchemeApi} ColorSchemeApi */
 /** @typedef {import("../Completed/CompletedElement.mjs").CompletedElement} CompletedElement */
+/** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
+/** @typedef {import("../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs").FetchApi} FetchApi */
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Loading/FullscreenLoadingElement.mjs").FullscreenLoadingElement} FullscreenLoadingElement */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
 /** @typedef {import("../IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
@@ -26,12 +19,18 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs").IntendedDegreeProgramElement} IntendedDegreeProgramElement */
 /** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2.mjs").IntendedDegreeProgram2} IntendedDegreeProgram2 */
 /** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs").IntendedDegreeProgram2Element} IntendedDegreeProgram2Element */
+/** @typedef {import("../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs").JsonApi} JsonApi */
+/** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../Legal/Legal.mjs").Legal} Legal */
 /** @typedef {import("../Legal/LegalElement.mjs").LegalElement} LegalElement */
+/** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs").LoadingApi} LoadingApi */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
+/** @typedef {import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs").PwaApi} PwaApi */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/SelectLanguage/SelectLanguageButtonElement.mjs").SelectLanguageButtonElement} SelectLanguageButtonElement */
+/** @typedef {import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs").SettingsApi} SettingsApi */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 /** @typedef {import("../Start/StartElement.mjs").StartElement} StartElement */
 /** @typedef {import("../UniversityEntranceQualification/UniversityEntranceQualification.mjs").UniversityEntranceQualification} UniversityEntranceQualification */
@@ -115,7 +114,7 @@ export class StudiesSelfserviceFrontendApi {
 
         this.#pwa_api ??= await this.#getPwaApi();
 
-        this.#label_service ??= this.#getLabelService();
+        this.#label_service ??= await this.#getLabelService();
 
         await this.#css_api.importCss(
             `${__dirname}/../style.css`
@@ -138,7 +137,7 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<void>}
      */
     async showFrontend() {
-        document.body.appendChild(this.#main_element = MainElement.new(
+        document.body.appendChild(this.#main_element = (await import("../Main/MainElement.mjs")).MainElement.new(
             this.#color_scheme_api,
             this.#css_api,
             this
@@ -248,7 +247,7 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<ColorSchemeApi>}
      */
     async #getColorSchemeApi() {
-        const color_scheme_api = ColorSchemeApi.new(
+        const color_scheme_api = (await import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs")).ColorSchemeApi.new(
             [
                 {
                     color_scheme: COLOR_SCHEME_LIGHT,
@@ -293,7 +292,7 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<CssApi>}
      */
     async #getCssApi() {
-        const css_api = CssApi.new(
+        const css_api = (await import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs")).CssApi.new(
             this.#fetch_api
         );
 
@@ -306,7 +305,7 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<FetchApi>}
      */
     async #getFetchApi() {
-        const fetch_api = FetchApi.new();
+        const fetch_api = (await import("../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs")).FetchApi.new();
 
         await fetch_api.init();
 
@@ -393,7 +392,7 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<JsonApi>}
      */
     async #getJsonApi() {
-        const json_api = JsonApi.new(
+        const json_api = (await import("../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new(
             this.#fetch_api
         );
 
@@ -403,10 +402,10 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
-     * @returns {LabelService}
+     * @returns {Promise<LabelService>}
      */
-    #getLabelService() {
-        return LabelService.new(
+    async #getLabelService() {
+        return (await import("../../Service/Label/Port/LabelService.mjs")).LabelService.new(
             this.#localization_api
         );
     }
@@ -437,7 +436,7 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<LoadingApi>}
      */
     async #getLoadingApi() {
-        const loading_api = LoadingApi.new(
+        const loading_api = (await import("../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs")).LoadingApi.new(
             this.#css_api
         );
 
@@ -459,7 +458,7 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<LocalizationApi>}
      */
     async #getLocalizationApi() {
-        const localization_api = LocalizationApi.new(
+        const localization_api = (await import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs")).LocalizationApi.new(
             this.#css_api,
             this.#json_api,
             this.#settings_api
@@ -557,7 +556,7 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<PwaApi>}
      */
     async #getPwaApi() {
-        const pwa_api = PwaApi.new(
+        const pwa_api = (await import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs")).PwaApi.new(
             this.#css_api,
             this.#json_api,
             `${__dirname}/../Pwa/manifest.json`,
@@ -592,7 +591,7 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<SettingsApi>}
      */
     async #getSettingsApi() {
-        const settings_api = SettingsApi.newWithAutoSettings(
+        const settings_api = await (await import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs")).SettingsApi.newWithAutoSettings(
             STORAGE_SETTINGS_PREFIX
         );
 
