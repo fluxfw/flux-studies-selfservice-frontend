@@ -39,6 +39,10 @@ label {
     border-radius: 3px;
 }
 
+.input_select {
+    appearance: auto;
+}
+
 .input:required + .text::after,
 .input_select:required + .text::after,
 .input_textarea:required + .text::after {

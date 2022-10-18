@@ -5,11 +5,13 @@
 /** @typedef {import("../../../Adapter/Combination/Combination.mjs").Combination} Combination */
 /** @typedef {import("../../../Adapter/Country/Country.mjs").Country} Country */
 /** @typedef {import("../../../Adapter/DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
+/** @typedef {import("../../../Adapter/Language/Language.mjs").Language} Language */
 /** @typedef {import("../../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../../../Adapter/Combination/Mandatory.mjs").Mandatory} Mandatory */
 /** @typedef {import("../../../Adapter/Combination/MultipleChoice.mjs").MultipleChoice} MultipleChoice */
 /** @typedef {import("../../../Adapter/Place/Place.mjs").Place} Place */
 /** @typedef {import("../../../Adapter/Qualification/Qualification.mjs").Qualification} Qualification */
+/** @typedef {import("../../../Adapter/Salutation/Salutation.mjs").Salutation} Salutation */
 /** @typedef {import("../../../Adapter/Combination/SingleChoice.mjs").SingleChoice} SingleChoice */
 /** @typedef {import("../../../Adapter/School/School.mjs").School} School */
 /** @typedef {import("../../../Adapter/Semester/Semester.mjs").Semester} Semester */
@@ -154,6 +156,16 @@ export class LabelService {
     }
 
     /**
+     * @param {Language} language
+     * @returns {string}
+     */
+    getLanguageLabel(language) {
+        return this.#localization_api.translate(
+            language.label
+        );
+    }
+
+    /**
      * @param {Mandatory} mandatory
      * @returns {string}
      */
@@ -200,6 +212,16 @@ export class LabelService {
     getQualificationLabel(qualification) {
         return this.#localization_api.translate(
             qualification.label
+        );
+    }
+
+    /**
+     * @param {Salutation} salutation
+     * @returns {string}
+     */
+    getSalutationLabel(salutation) {
+        return this.#localization_api.translate(
+            salutation.label
         );
     }
 

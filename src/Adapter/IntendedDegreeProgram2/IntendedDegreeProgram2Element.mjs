@@ -125,7 +125,9 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                             ...input_element.selectedOptions
                         ].map(option_element => option_element.value)
                     ])) : null,
-                "further-information": this.#form_element.inputs["further-information"].value.replaceAll("\r\n", "\n").replaceAll("\r", "\n")
+                "further-information": this.#form_element.getTextareaValue(
+                    "further-information"
+                )
             }
         );
 
@@ -165,7 +167,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             this.#localization_api.translate(
-                "Intended Degree Program"
+                "Intended degree program"
             )
         ));
 
@@ -230,7 +232,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         this.#form_element.addTitle(
             this.#localization_api.translate(
-                "Choice of Subjects"
+                "Choice of subjects"
             )
         );
 
@@ -246,7 +248,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         const combination_element = this.#form_element.addInput(
             this.#localization_api.translate(
-                "Combination of Subjects"
+                "Combination of subjects"
             ),
             "readonly"
         );
@@ -256,7 +258,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         const mandatory_element = this.#form_element.addInput(
             this.#localization_api.translate(
-                "Mandatory Subjects"
+                "Mandatory subjects"
             ),
             "readonly"
         );

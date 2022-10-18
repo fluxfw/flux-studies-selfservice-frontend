@@ -2,7 +2,7 @@ import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
 import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
-import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
+import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
@@ -25,6 +25,8 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../Legal/LegalElement.mjs").LegalElement} LegalElement */
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs").LoadingApi} LoadingApi */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
+/** @typedef {import("../PersonalData/PersonalData.mjs").PersonalData} PersonalData */
+/** @typedef {import("../PersonalData/PersonalDataElement.mjs").PersonalDataElement} PersonalDataElement */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
@@ -529,6 +531,13 @@ export class StudiesSelfserviceFrontendApi {
                         _back_function
                     );
 
+                case PAGE_PERSONAL_DATA:
+                    return await this.#getPersonalDataElement(
+                        get_result.data,
+                        post_function,
+                        _back_function
+                    );
+
                 case PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION:
                     return await this.#getUniversityEntranceQualificationElement(
                         get_result.data,
@@ -550,6 +559,28 @@ export class StudiesSelfserviceFrontendApi {
                 )
             );
         }
+    }
+
+    /**
+     * @param {PersonalData} personal_data
+     * @param {postFunction} post_function
+     * @param {backFunction | null} back_function
+     * @returns {Promise<IntendedDegreeProgramElement>}
+     */
+    async #getPersonalDataElement(personal_data, post_function, back_function = null) {
+        return (await import("../PersonalData/PersonalDataElement.mjs")).PersonalDataElement.new(
+            this.#css_api,
+            this.#label_service,
+            this.#localization_api,
+            personal_data,
+            async filled_personal_data => post_function(
+                {
+                    page: PAGE_PERSONAL_DATA,
+                    data: filled_personal_data
+                }
+            ),
+            back_function
+        );
     }
 
     /**

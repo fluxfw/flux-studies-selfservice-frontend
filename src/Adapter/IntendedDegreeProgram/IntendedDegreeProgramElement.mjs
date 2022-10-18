@@ -155,7 +155,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             this.#localization_api.translate(
-                "Intended Degree Program"
+                "Intended degree program"
             )
         ));
 
@@ -166,7 +166,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         this.#form_element.addTitle(
             this.#localization_api.translate(
-                "Degree Program"
+                "Degree program"
             )
         );
 
@@ -194,7 +194,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         const combination_element = this.#form_element.addInput(
             this.#localization_api.translate(
-                "Combination of Subjects"
+                "Combination of subjects"
             ),
             "select",
             "combination"
@@ -207,7 +207,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         this.#mandatory_element = this.#form_element.addInput(
             this.#localization_api.translate(
-                "Mandatory Subjects"
+                "Mandatory subjects"
             ),
             "readonly"
         );

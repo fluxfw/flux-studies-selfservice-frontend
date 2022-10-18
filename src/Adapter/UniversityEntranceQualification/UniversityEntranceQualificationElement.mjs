@@ -193,7 +193,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         const issue_date_element = this.#form_element.addInput(
             this.#localization_api.translate(
-                "Date of issue"
+                "Date of issue (Year)"
             ),
             "number",
             "issue-date"
