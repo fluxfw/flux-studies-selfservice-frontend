@@ -124,7 +124,9 @@ export class LegalElement extends HTMLElement {
                 "not-disqualified": this.#disqualification_form_element.inputs["not-disqualified"].checked,
                 agb: this.#agb_form_element.inputs.agb.checked,
                 complete: this.#complete_form_element.inputs.complete.checked,
-                comments: this.#comments_form_element.inputs.comments.value.replaceAll("\r\n", "\n").replaceAll("\r", "\n")
+                comments: this.#comments_form_element.getTextareaValue(
+                    "comments"
+                )
             }
         );
 
@@ -175,7 +177,7 @@ export class LegalElement extends HTMLElement {
 
         this.#degree_program_form_element.addTitle(
             this.#localization_api.translate(
-                "Intended Degree Program"
+                "Intended degree program"
             )
         );
 
@@ -191,7 +193,7 @@ export class LegalElement extends HTMLElement {
 
         const combination_element = this.#degree_program_form_element.addInput(
             this.#localization_api.translate(
-                "Combination of Subjects"
+                "Combination of subjects"
             ),
             "readonly"
         );
@@ -201,7 +203,7 @@ export class LegalElement extends HTMLElement {
 
         const mandatory_element = this.#degree_program_form_element.addInput(
             this.#localization_api.translate(
-                "Mandatory Subjects"
+                "Mandatory subjects"
             ),
             "readonly"
         );
