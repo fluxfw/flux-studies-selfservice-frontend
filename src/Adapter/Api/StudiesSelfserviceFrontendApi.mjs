@@ -25,6 +25,7 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../Legal/LegalElement.mjs").LegalElement} LegalElement */
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs").LoadingApi} LoadingApi */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
+/** @typedef {import("../Main/MainElement.mjs").MainElement} MainElement */
 /** @typedef {import("../PersonalData/PersonalData.mjs").PersonalData} PersonalData */
 /** @typedef {import("../PersonalData/PersonalDataElement.mjs").PersonalDataElement} PersonalDataElement */
 /** @typedef {import("../Post/Post.mjs").Post} Post */

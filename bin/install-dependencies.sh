@@ -10,15 +10,15 @@ fi
 
 (mkdir -p $node_modules/flux-color-scheme-api && cd $node_modules/flux-color-scheme-api && wget -O - https://github.com/fluxfw/flux-color-scheme-api/archive/refs/tags/v2022-10-17-1.tar.gz | tar -xz --strip-components=1)
 
-(mkdir -p $node_modules/flux-css-api && cd $node_modules/flux-css-api && wget -O - https://github.com/fluxfw/flux-css-api/archive/refs/tags/v2022-10-17-1.tar.gz | tar -xz --strip-components=1)
+(mkdir -p $node_modules/flux-css-api && cd $node_modules/flux-css-api && wget -O - https://github.com/fluxfw/flux-css-api/archive/refs/tags/v2022-10-19-1.tar.gz | tar -xz --strip-components=1)
 
 (mkdir -p $node_modules/flux-fetch-api && cd $node_modules/flux-fetch-api && wget -O - https://github.com/fluxfw/flux-fetch-api/archive/refs/tags/v2022-10-17-1.tar.gz | tar -xz --strip-components=1)
 
-(mkdir -p $node_modules/flux-json-api && cd $node_modules/flux-json-api && wget -O - https://github.com/fluxfw/flux-json-api/archive/refs/tags/v2022-10-17-1.tar.gz | tar -xz --strip-components=1)
+(mkdir -p $node_modules/flux-json-api && cd $node_modules/flux-json-api && wget -O - https://github.com/fluxfw/flux-json-api/archive/refs/tags/v2022-10-19-1.tar.gz | tar -xz --strip-components=1)
 
 (mkdir -p $node_modules/flux-loading-api && cd $node_modules/flux-loading-api && wget -O - https://github.com/fluxfw/flux-loading-api/archive/refs/tags/v2022-10-17-1.tar.gz | tar -xz --strip-components=1)
 
-(mkdir -p $node_modules/flux-localization-api && cd $node_modules/flux-localization-api && wget -O - https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2022-10-17-1.tar.gz | tar -xz --strip-components=1)
+(mkdir -p $node_modules/flux-localization-api && cd $node_modules/flux-localization-api && wget -O - https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2022-10-19-1.tar.gz | tar -xz --strip-components=1)
 
 (mkdir -p $node_modules/flux-pwa-api && cd $node_modules/flux-pwa-api && wget -O - https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2022-10-17-1.tar.gz | tar -xz --strip-components=1)
 
