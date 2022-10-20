@@ -2,7 +2,7 @@ import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
 import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
-import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
+import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
@@ -28,6 +28,8 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../Main/MainElement.mjs").MainElement} MainElement */
 /** @typedef {import("../PersonalData/PersonalData.mjs").PersonalData} PersonalData */
 /** @typedef {import("../PersonalData/PersonalDataElement.mjs").PersonalDataElement} PersonalDataElement */
+/** @typedef {import("../Portrait/Portrait.mjs").Portrait} Portrait */
+/** @typedef {import("../Portrait/PortraitElement.mjs").PortraitElement} PortraitElement */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
@@ -539,6 +541,13 @@ export class StudiesSelfserviceFrontendApi {
                         _back_function
                     );
 
+                case PAGE_PORTRAIT:
+                    return await this.#getPortraitElement(
+                        get_result.data,
+                        post_function,
+                        _back_function
+                    );
+
                 case PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION:
                     return await this.#getUniversityEntranceQualificationElement(
                         get_result.data,
@@ -578,6 +587,27 @@ export class StudiesSelfserviceFrontendApi {
                 {
                     page: PAGE_PERSONAL_DATA,
                     data: filled_personal_data
+                }
+            ),
+            back_function
+        );
+    }
+
+    /**
+     * @param {Portrait} portrait
+     * @param {postFunction} post_function
+     * @param {backFunction | null} back_function
+     * @returns {Promise<IntendedDegreeProgramElement>}
+     */
+    async #getPortraitElement(portrait, post_function, back_function = null) {
+        return (await import("../Portrait/PortraitElement.mjs")).PortraitElement.new(
+            this.#css_api,
+            this.#localization_api,
+            portrait,
+            async chosen_portrait => post_function(
+                {
+                    page: PAGE_PORTRAIT,
+                    data: chosen_portrait
                 }
             ),
             back_function
