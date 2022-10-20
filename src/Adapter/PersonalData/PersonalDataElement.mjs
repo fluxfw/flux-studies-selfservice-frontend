@@ -153,7 +153,7 @@ export class PersonalDataElement extends HTMLElement {
         }
 
         if (post_result["network-error"]) {
-            this.#address_form_element.addInvalidMessage(
+            this.#parent_address_form_element.addInvalidMessage(
                 this.#localization_api.translate(
                     "Network error!"
                 )
@@ -162,7 +162,7 @@ export class PersonalDataElement extends HTMLElement {
         }
 
         if (post_result["server-error"]) {
-            this.#address_form_element.addInvalidMessage(
+            this.#parent_address_form_element.addInvalidMessage(
                 this.#localization_api.translate(
                     "Server error!"
                 )
@@ -170,7 +170,7 @@ export class PersonalDataElement extends HTMLElement {
             return;
         }
 
-        this.#address_form_element.addInvalidMessage(
+        this.#parent_address_form_element.addInvalidMessage(
             this.#localization_api.translate(
                 "Please check your data!"
             )

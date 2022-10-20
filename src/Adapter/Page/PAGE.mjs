@@ -14,6 +14,8 @@ export const PAGE_LEGAL = "legal";
 
 export const PAGE_PERSONAL_DATA = "personal-data";
 
+export const PAGE_PORTRAIT = "portrait";
+
 export const PAGE_RESUME = "resume";
 
 export const PAGE_START = "start";
