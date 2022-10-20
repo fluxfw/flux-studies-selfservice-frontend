@@ -1,3 +1,4 @@
+/** @typedef {import("../../../Adapter/AreaCode/AreaCode.mjs").AreaCode} AreaCode */
 /** @typedef {import("../../../Adapter/Canton/Canton.mjs").Canton} Canton */
 /** @typedef {import("../../../Adapter/Certificate/Certificate.mjs").Certificate} Certificate */
 /** @typedef {import("../../../Adapter/CertificateType/CertificateType.mjs").CertificateType} CertificateType */
@@ -39,6 +40,16 @@ export class LabelService {
      */
     constructor(localization_api) {
         this.#localization_api = localization_api;
+    }
+
+    /**
+     * @param {AreaCode} area_code
+     * @returns {string}
+     */
+    getAreaCodeLabel(area_code) {
+        return this.#localization_api.translate(
+            area_code.label
+        );
     }
 
     /**

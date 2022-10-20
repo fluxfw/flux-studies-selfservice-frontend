@@ -137,6 +137,10 @@ export class PersonalDataElement extends HTMLElement {
                 "postal-office-box": this.#address_form_element.inputs["postal-office-box"].value,
                 "postal-code": this.#address_form_element.inputs["postal-code"].valueAsNumber,
                 place: this.#address_form_element.inputs.place.value,
+                "phone-area-code": this.#contact_form_element.inputs["phone-area-code"].value,
+                phone: this.#contact_form_element.inputs.phone.value,
+                "mobile-area-code": this.#contact_form_element.inputs["mobile-area-code"].value,
+                mobile: this.#contact_form_element.inputs.mobile.value,
                 email: this.#contact_form_element.inputs.email.value,
                 "mother-language": this.#contact_form_element.inputs["mother-language"].value,
                 "correspondence-language": this.#contact_form_element.inputs["correspondence-language"].value,
@@ -207,6 +211,46 @@ export class PersonalDataElement extends HTMLElement {
                         this.#address_form_element.inputs["additional-first-names"],
                         this.#localization_api.translate(
                             "Some line contains no name"
+                        )
+                    );
+                    return false;
+                }
+
+                if (this.#contact_form_element.inputs["phone-area-code"].value === "" && this.#contact_form_element.inputs.phone.value !== "") {
+                    this.#contact_form_element.setCustomValidationMessage(
+                        this.#contact_form_element.inputs["phone-area-code"],
+                        this.#localization_api.translate(
+                            "Please either enter both phone area code/phone or neither of them"
+                        )
+                    );
+                    return false;
+                }
+
+                if (this.#contact_form_element.inputs["phone-area-code"].value !== "" && this.#contact_form_element.inputs.phone.value === "") {
+                    this.#contact_form_element.setCustomValidationMessage(
+                        this.#contact_form_element.inputs.phone,
+                        this.#localization_api.translate(
+                            "Please either enter both phone area code/phone or neither of them"
+                        )
+                    );
+                    return false;
+                }
+
+                if (this.#contact_form_element.inputs["mobile-area-code"].value === "" && this.#contact_form_element.inputs.mobile.value !== "") {
+                    this.#contact_form_element.setCustomValidationMessage(
+                        this.#contact_form_element.inputs["mobile-area-code"],
+                        this.#localization_api.translate(
+                            "Please either enter both mobile area code/mobile or neither of them"
+                        )
+                    );
+                    return false;
+                }
+
+                if (this.#contact_form_element.inputs["mobile-area-code"].value !== "" && this.#contact_form_element.inputs.mobile.value === "") {
+                    this.#contact_form_element.setCustomValidationMessage(
+                        this.#contact_form_element.inputs.mobile,
+                        this.#localization_api.translate(
+                            "Please either enter both mobile area code/mobile or neither of them"
                         )
                     );
                     return false;
@@ -391,13 +435,65 @@ export class PersonalDataElement extends HTMLElement {
             )
         );
 
+        const phone_area_code_element = this.#contact_form_element.addInput(
+            this.#localization_api.translate(
+                "Phone area code"
+            ),
+            "select",
+            "phone-area-code"
+        );
+
+        for (const area_code of this.#personal_data["area-codes"]) {
+            const option_element = document.createElement("option");
+            option_element.text = this.#label_service.getAreaCodeLabel(
+                area_code
+            );
+            option_element.value = area_code.id;
+            phone_area_code_element.appendChild(option_element);
+        }
+
         const phone_element = this.#contact_form_element.addInput(
             this.#localization_api.translate(
-                "Phone / Mobile"
+                "Phone (Format {example})",
+                null,
+                {
+                    example: this.#personal_data["phone-example"]
+                }
             ),
-            "readonly"
+            "text",
+            "phone"
         );
-        phone_element.innerText = "TODO";
+        phone_element.pattern = this.#personal_data["phone-format"].substring(1, this.#personal_data["phone-format"].length - 2);
+
+        const mobile_area_code_element = this.#contact_form_element.addInput(
+            this.#localization_api.translate(
+                "Mobile area code"
+            ),
+            "select",
+            "mobile-area-code"
+        );
+
+        for (const area_code of this.#personal_data["area-codes"]) {
+            const option_element = document.createElement("option");
+            option_element.text = this.#label_service.getAreaCodeLabel(
+                area_code
+            );
+            option_element.value = area_code.id;
+            mobile_area_code_element.appendChild(option_element);
+        }
+
+        const mobile_element = this.#contact_form_element.addInput(
+            this.#localization_api.translate(
+                "Mobile (Format {example})",
+                null,
+                {
+                    example: this.#personal_data["phone-example"]
+                }
+            ),
+            "text",
+            "mobile"
+        );
+        mobile_element.pattern = this.#personal_data["phone-format"].substring(1, this.#personal_data["phone-format"].length - 2);
 
         const email_element = this.#contact_form_element.addInput(
             this.#localization_api.translate(
@@ -406,7 +502,6 @@ export class PersonalDataElement extends HTMLElement {
             "email",
             "email"
         );
-        email_element.required = true;
 
         const mother_language_element = this.#contact_form_element.addInput(
             this.#localization_api.translate(
@@ -593,6 +688,14 @@ export class PersonalDataElement extends HTMLElement {
             postal_code_element.valueAsNumber = this.#personal_data.values["postal-code"];
 
             place_element.value = this.#personal_data.values.place;
+
+            phone_area_code_element.value = this.#personal_data.values["phone-area-code"];
+
+            phone_element.value = this.#personal_data.values.phone;
+
+            mobile_area_code_element.value = this.#personal_data.values["mobile-area-code"];
+
+            mobile_element.value = this.#personal_data.values.mobile;
 
             email_element.value = this.#personal_data.values.email;
 
