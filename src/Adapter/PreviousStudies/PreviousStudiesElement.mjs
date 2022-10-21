@@ -1,0 +1,188 @@
+import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
+import { FormElement } from "../Form/FormElement.mjs";
+import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
+import { PAGE_PREVIOUS_STUDIES } from "../Page/PAGE.mjs";
+import { TitleElement } from "../Title/TitleElement.mjs";
+
+/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
+/** @typedef {import("./chosenPreviousStudiesFunction.mjs").chosenPreviousStudiesFunction} chosenPreviousStudiesFunction */
+/** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
+/** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
+/** @typedef {import("./PreviousStudies.mjs").PreviousStudies} PreviousStudies */
+
+const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
+
+export class PreviousStudiesElement extends HTMLElement {
+    /**
+     * @type {backFunction | null}
+     */
+    #back_function;
+    /**
+     * @type {chosenPreviousStudiesFunction}
+     */
+    #chosen_previous_studies_function;
+    /**
+     * @type {CssApi}
+     */
+    #css_api;
+    /**
+     * @type {FormElement}
+     */
+    #form_element;
+    /**
+     * @type {LabelService}
+     */
+    #label_service;
+    /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+    /**
+     * @type {PreviousStudies}
+     */
+    #previous_studies;
+    /**
+     * @type {ShadowRoot}
+     */
+    #shadow;
+
+    /**
+     * @param {CssApi} css_api
+     * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
+     * @param {PreviousStudies} previous_studies
+     * @param {chosenPreviousStudiesFunction} chosen_previous_studies
+     * @param {backFunction | null} back_function
+     * @returns {PreviousStudiesElement}
+     */
+    static new(css_api, label_service, localization_api, previous_studies, chosen_previous_studies, back_function = null) {
+        return new this(
+            css_api,
+            label_service,
+            localization_api,
+            previous_studies,
+            chosen_previous_studies,
+            back_function
+        );
+    }
+
+    /**
+     * @param {CssApi} css_api
+     * @param {LabelService} label_service
+     * @param {LocalizationApi} localization_api
+     * @param {PreviousStudies} previous_studies
+     * @param {chosenPreviousStudiesFunction} chosen_previous_studies
+     * @param {backFunction | null} back_function
+     * @private
+     */
+    constructor(css_api, label_service, localization_api, previous_studies, chosen_previous_studies, back_function) {
+        super();
+
+        this.#css_api = css_api;
+        this.#label_service = label_service;
+        this.#localization_api = localization_api;
+        this.#previous_studies = previous_studies;
+        this.#chosen_previous_studies_function = chosen_previous_studies;
+        this.#back_function = back_function;
+
+        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#css_api.importCssToRoot(
+            this.#shadow,
+            `${__dirname}/${this.constructor.name}.css`
+        );
+
+        this.#render();
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #chosenPreviousStudies() {
+        if (!this.#form_element.validate()) {
+            return;
+        }
+
+        const post_result = await this.#chosen_previous_studies_function(
+            {}
+        );
+
+        if (post_result.ok) {
+            return;
+        }
+
+        if (post_result["network-error"]) {
+            this.#form_element.addInvalidMessage(
+                this.#localization_api.translate(
+                    "Network error!"
+                )
+            );
+            return;
+        }
+
+        if (post_result["server-error"]) {
+            this.#form_element.addInvalidMessage(
+                this.#localization_api.translate(
+                    "Server error!"
+                )
+            );
+            return;
+        }
+
+        this.#form_element.addInvalidMessage(
+            this.#localization_api.translate(
+                "Please check your data!"
+            )
+        );
+    }
+
+    /**
+     * @returns {void}
+     */
+    #render() {
+        this.#shadow.appendChild(TitleElement.new(
+            this.#css_api,
+            this.#localization_api.translate(
+                "Previous studies"
+            )
+        ));
+
+        this.#form_element = FormElement.new(
+            this.#css_api,
+            this.#localization_api
+        );
+
+        this.#form_element.addTitle(
+            this.#localization_api.translate(
+                "Previous studies"
+            )
+        );
+
+        this.#form_element.addInput(
+            "TODO",
+            "readonly"
+        );
+
+        this.#form_element.addButtons(
+            () => {
+                this.#chosenPreviousStudies();
+            },
+            this.#back_function
+        );
+
+        this.#shadow.appendChild(this.#form_element);
+
+        this.#shadow.appendChild(MandatoryElement.new(
+            this.#css_api,
+            this.#localization_api
+        ));
+
+        if (this.#previous_studies.values !== null) {
+
+        }
+    }
+}
+
+export const PREVIOUS_STUDIES_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_PREVIOUS_STUDIES}`;
+
+customElements.define(PREVIOUS_STUDIES_ELEMENT_TAG_NAME, PreviousStudiesElement);

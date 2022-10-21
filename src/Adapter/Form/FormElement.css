@@ -21,7 +21,8 @@ label {
 .input:not([type="checkbox"]):not([type="radio"]),
 .input_readonly,
 .input_select,
-.input_textarea {
+.input_textarea,
+.input_container {
     all: initial;
     color: var(--input-text-color);
     font-family: inherit;
@@ -43,9 +44,7 @@ label {
     appearance: auto;
 }
 
-.input:required + .text::after,
-.input_select:required + .text::after,
-.input_textarea:required + .text::after {
+:where(.input:required, .input_container:has(.input:required), .input_select:required, .input_container:has(.input_select:required), .input_textarea:required, .input_container:has(.input_textarea:required)) + .text::after {
     color: var(--mandatory-color);
     content: " *";
 }
@@ -59,6 +58,12 @@ label {
 .input_textarea {
     min-height: 120px;
     resize: vertical;
+}
+
+.input[type=file]:not(:disabled),
+.input[type=file]:not(:disabled)::file-selector-button,
+button:not(:disabled) {
+    cursor: pointer;
 }
 
 .text {

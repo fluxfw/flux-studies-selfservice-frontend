@@ -210,7 +210,7 @@ export class PersonalDataElement extends HTMLElement {
                     this.#address_form_element.setCustomValidationMessage(
                         this.#address_form_element.inputs["additional-first-names"],
                         this.#localization_api.translate(
-                            "Some line contains no name"
+                            "Some line contains no name!"
                         )
                     );
                     return false;
@@ -220,7 +220,7 @@ export class PersonalDataElement extends HTMLElement {
                     this.#contact_form_element.setCustomValidationMessage(
                         this.#contact_form_element.inputs["phone-area-code"],
                         this.#localization_api.translate(
-                            "Please either enter both phone area code/phone or neither of them"
+                            "Please either enter both area code/number or neither of them!"
                         )
                     );
                     return false;
@@ -230,7 +230,7 @@ export class PersonalDataElement extends HTMLElement {
                     this.#contact_form_element.setCustomValidationMessage(
                         this.#contact_form_element.inputs.phone,
                         this.#localization_api.translate(
-                            "Please either enter both phone area code/phone or neither of them"
+                            "Please either enter both area code/number or neither of them!"
                         )
                     );
                     return false;
@@ -240,7 +240,7 @@ export class PersonalDataElement extends HTMLElement {
                     this.#contact_form_element.setCustomValidationMessage(
                         this.#contact_form_element.inputs["mobile-area-code"],
                         this.#localization_api.translate(
-                            "Please either enter both mobile area code/mobile or neither of them"
+                            "Please either enter both area code/number or neither of them!"
                         )
                     );
                     return false;
@@ -250,7 +250,7 @@ export class PersonalDataElement extends HTMLElement {
                     this.#contact_form_element.setCustomValidationMessage(
                         this.#contact_form_element.inputs.mobile,
                         this.#localization_api.translate(
-                            "Please either enter both mobile area code/mobile or neither of them"
+                            "Please either enter both area code/number or neither of them!"
                         )
                     );
                     return false;
