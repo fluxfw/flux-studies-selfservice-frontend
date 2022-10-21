@@ -11,9 +11,14 @@
     "Network error!": "Netzwerk-Fehler!",
     "On desktop operating systems/browsers may use {ctrl} + {click} for select multiple options": "Auf Desktop-Betriebsysteme/-Browser benutze ev. {ctrl} + {click} um mehrere Optionen auszuwählen",
     "Page error!": "Seiten-Fehler!",
+    "Photo": "Foto",
     "Please check your data!": "Bitte überprüfe deine Daten!",
+    "Please either enter both area code/number or neither of them!": "Bitte entweder beide Vorwahl/Nummer eingeben oder keine von beiden!",
     "Please select less {ect}!": "Bitte wähle {ect} weniger aus!",
     "Please select more {ect}!": "Bitte wähle {ect} mehr aus!",
+    "Portrait": "Portrait",
     "Server error!": "Server-Fehler!",
-    "Studies selfservice": "Studium-Selfservice"
+    "Some line contains no name!": "Eine Zeile enthält keinen Namen!",
+    "Studies selfservice": "Studium-Selfservice",
+    "The photo could not been loaded!": "Das Foto konnte nicht geladen werden!"
 }

@@ -150,7 +150,32 @@ export class FormElement extends HTMLElement {
             input_element.appendChild(option_element);
         }
 
-        label_element.appendChild(input_element);
+        if (type === "file") {
+            const container_element = document.createElement("div");
+            container_element.classList.add("input_container");
+
+            const remove_element = document.createElement("button");
+            remove_element.disabled = true;
+            remove_element.innerText = this.#localization_api.translate(
+                "X"
+            );
+            remove_element.type = "button";
+            remove_element.addEventListener("click", () => {
+                input_element.value = "";
+                input_element.dispatchEvent(new Event("input"));
+            });
+
+            input_element.addEventListener("input", () => {
+                remove_element.disabled = input_element.files.length < 1;
+            });
+
+            container_element.appendChild(input_element);
+            container_element.appendChild(remove_element);
+
+            label_element.appendChild(container_element);
+        } else {
+            label_element.appendChild(input_element);
+        }
 
         const text_element = document.createElement("div");
         text_element.classList.add("text");

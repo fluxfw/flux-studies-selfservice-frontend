@@ -1,3 +1,5 @@
+/** @typedef {import("../Photo/Photo.mjs").Photo} Photo */
+
 /**
- * @typedef {{}} ChosenPortrait
+ * @typedef {{photo: Photo | null}} ChosenPortrait
  */

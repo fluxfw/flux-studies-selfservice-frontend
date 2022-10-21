@@ -2,7 +2,7 @@ import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
 import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
-import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
+import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_PREVIOUS_STUDIES, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
@@ -30,6 +30,8 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../PersonalData/PersonalDataElement.mjs").PersonalDataElement} PersonalDataElement */
 /** @typedef {import("../Portrait/Portrait.mjs").Portrait} Portrait */
 /** @typedef {import("../Portrait/PortraitElement.mjs").PortraitElement} PortraitElement */
+/** @typedef {import("../PreviousStudies/PreviousStudies.mjs").PreviousStudies} PreviousStudies */
+/** @typedef {import("../PreviousStudies/PreviousStudiesElement.mjs").PreviousStudiesElement} PreviousStudiesElement */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
@@ -548,6 +550,13 @@ export class StudiesSelfserviceFrontendApi {
                         _back_function
                     );
 
+                case PAGE_PREVIOUS_STUDIES:
+                    return await this.#getPreviousStudiesElement(
+                        get_result.data,
+                        post_function,
+                        _back_function
+                    );
+
                 case PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION:
                     return await this.#getUniversityEntranceQualificationElement(
                         get_result.data,
@@ -597,17 +606,40 @@ export class StudiesSelfserviceFrontendApi {
      * @param {Portrait} portrait
      * @param {postFunction} post_function
      * @param {backFunction | null} back_function
-     * @returns {Promise<IntendedDegreeProgramElement>}
+     * @returns {Promise<PortraitElement>}
      */
     async #getPortraitElement(portrait, post_function, back_function = null) {
         return (await import("../Portrait/PortraitElement.mjs")).PortraitElement.new(
             this.#css_api,
+            () => this.#getLoadingElement(),
             this.#localization_api,
             portrait,
             async chosen_portrait => post_function(
                 {
                     page: PAGE_PORTRAIT,
                     data: chosen_portrait
+                }
+            ),
+            back_function
+        );
+    }
+
+    /**
+     * @param {PreviousStudies} previous_studies
+     * @param {postFunction} post_function
+     * @param {backFunction | null} back_function
+     * @returns {Promise<PreviousStudiesElement>}
+     */
+    async #getPreviousStudiesElement(previous_studies, post_function, back_function = null) {
+        return (await import("../PreviousStudies/PreviousStudiesElement.mjs")).PreviousStudiesElement.new(
+            this.#css_api,
+            this.#label_service,
+            this.#localization_api,
+            previous_studies,
+            async chosen_previous_studies => post_function(
+                {
+                    page: PAGE_PREVIOUS_STUDIES,
+                    data: chosen_previous_studies
                 }
             ),
             back_function
