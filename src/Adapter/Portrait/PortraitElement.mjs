@@ -10,6 +10,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("./getLoadingElement.mjs").getLoadingElement} getLoadingElement */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../Photo/Photo.mjs").Photo} Photo */
+/** @typedef {import("../Photo/PhotoCrop.mjs").PhotoCrop} PhotoCrop */
+/** @typedef {import("../../Service/Photo/Port/PhotoService.mjs").PhotoService} PhotoService */
 /** @typedef {import("./Portrait.mjs").Portrait} Portrait */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -23,6 +25,10 @@ export class PortraitElement extends HTMLElement {
      * @type {chosenPortraitFunction}
      */
     #chosen_portrait_function;
+    /**
+     * @type {PhotoCrop | null}
+     */
+    #crop = null;
     /**
      * @type {CssApi}
      */
@@ -48,6 +54,10 @@ export class PortraitElement extends HTMLElement {
      */
     #photo = null;
     /**
+     * @type {PhotoService}
+     */
+    #photo_service;
+    /**
      * @type {Portrait}
      */
     #portrait;
@@ -60,16 +70,18 @@ export class PortraitElement extends HTMLElement {
      * @param {CssApi} css_api
      * @param {getLoadingElement} get_loading_element
      * @param {LocalizationApi} localization_api
+     * @param {PhotoService} photo_service
      * @param {Portrait} portrait
      * @param {chosenPortraitFunction} chosen_portrait
      * @param {backFunction | null} back_function
      * @returns {PortraitElement}
      */
-    static new(css_api, get_loading_element, localization_api, portrait, chosen_portrait, back_function = null) {
+    static new(css_api, get_loading_element, localization_api, photo_service, portrait, chosen_portrait, back_function = null) {
         return new this(
             css_api,
             get_loading_element,
             localization_api,
+            photo_service,
             portrait,
             chosen_portrait,
             back_function
@@ -80,17 +92,19 @@ export class PortraitElement extends HTMLElement {
      * @param {CssApi} css_api
      * @param {getLoadingElement} get_loading_element
      * @param {LocalizationApi} localization_api
+     * @param {PhotoService} photo_service
      * @param {Portrait} portrait
      * @param {chosenPortraitFunction} chosen_portrait
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, get_loading_element, localization_api, portrait, chosen_portrait, back_function) {
+    constructor(css_api, get_loading_element, localization_api, photo_service, portrait, chosen_portrait, back_function) {
         super();
 
         this.#css_api = css_api;
         this.#get_loading_element = get_loading_element;
         this.#localization_api = localization_api;
+        this.#photo_service = photo_service;
         this.#portrait = portrait;
         this.#chosen_portrait_function = chosen_portrait;
         this.#back_function = back_function;
@@ -105,22 +119,16 @@ export class PortraitElement extends HTMLElement {
     }
 
     /**
-     * @param {Blob} blob
-     * @returns {Promise<Photo>}
-     */
-    async #blobToPhoto(blob) {
-        return [
-            ...new Uint8Array(await blob.arrayBuffer())
-        ];
-    }
-
-    /**
      * @returns {Promise<void>}
      */
     async #chosenPortrait() {
         if (!this.#form_element.validate()) {
             return;
         }
+
+        await this.#setPhoto(
+            true
+        );
 
         const post_result = await this.#chosen_portrait_function(
             {
@@ -155,116 +163,6 @@ export class PortraitElement extends HTMLElement {
                 "Please check your data!"
             )
         );
-    }
-
-    /**
-     * @param {number} original_width
-     * @param {number} original_height
-     * @param {number | null} max_width
-     * @param {number | null} max_height
-     * @returns {CanvasRenderingContext2D}
-     */
-    #createCtx(original_width, original_height, max_width = null, max_height = null) {
-        const _max_width = max_width ?? 200;
-        const _max_height = max_height ?? 200;
-
-        const ctx = document.createElement("canvas").getContext("2d");
-
-        const ratio = original_width / original_height;
-
-        let width, height;
-        if (ratio >= 1) {
-            width = _max_width > original_width ? original_width : _max_width;
-            height = width / ratio;
-        } else {
-            height = _max_height > original_height ? original_height : _max_height;
-            width = height * ratio;
-        }
-
-        ctx.canvas.width = width;
-        ctx.canvas.height = height;
-
-        return ctx;
-    }
-
-    /**
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {string | null} type
-     * @param {number | null} quality
-     * @returns {Promise<Photo>}
-     */
-    async #ctxToPhoto(ctx, type = null, quality = null) {
-        return this.#blobToPhoto(
-            await new Promise(resolve => ctx.canvas.toBlob(resolve, type ?? "image/webp", quality ?? 0.1))
-        );
-    }
-
-    /**
-     * @param {Photo} photo
-     * @param {string | null} type
-     * @returns {string}
-     */
-    #photoToDataUrl(photo, type = null) {
-        return `data:${type ?? "image/webp"};base64,${btoa(photo.map(char => String.fromCharCode(char)).join(""))}`;
-    }
-
-    /**
-     * @param {Photo} photo
-     * @param {string | null} name
-     * @param {string | null} type
-     * @returns {File}
-     */
-    #photoToFile(photo, name = null, type = null) {
-        const _type = type ?? "image/webp";
-
-        return new File([
-            new Uint8Array(photo).buffer
-        ], name ?? `${this.#localization_api.translate(
-            "Photo"
-        )}.${_type.split("/")[1]}`, {
-            type: _type
-        });
-    }
-
-    /**
-     * @param {Photo} photo
-     * @param {string | null} type
-     * @returns {Promise<HTMLImageElement>}
-     */
-    async #photoToImageElement(photo, type = null) {
-        return new Promise((resolve, reject) => {
-            const image_element = new Image();
-
-            image_element.addEventListener("load", () => {
-                resolve(image_element);
-            });
-
-            image_element.addEventListener("error", e => {
-                reject(e);
-            });
-
-            image_element.src = this.#photoToDataUrl(
-                photo,
-                type
-            );
-        });
-    }
-
-    /**
-     * @param {HTMLInputElement} input_element
-     * @param {Photo} photo
-     * @param {string | null} name
-     * @param {string | null} type
-     * @returns {void}
-     */
-    #photoToInputElement(input_element, photo, name = null, type = null) {
-        const data_transfer = new DataTransfer();
-        data_transfer.items.add(this.#photoToFile(
-            photo,
-            name,
-            type
-        ));
-        input_element.files = data_transfer.files;
     }
 
     /**
@@ -307,13 +205,15 @@ export class PortraitElement extends HTMLElement {
         );
         input_element.accept = "image/*";
         input_element.addEventListener("input", () => {
-            this.#setPhoto(
-                input_element.files[0] ?? null
-            );
+            this.#setPhoto();
         });
+        input_element.required = this.#portrait["required-photo"];
 
         this.#image_element = new Image();
+        this.#image_element.style.display = "block";
+        this.#image_element.style.margin = "5px auto";
         this.#image_element.style.maxWidth = "100%";
+        this.#image_element.style.width = "1000px";
         input_element.parentElement.parentElement.parentElement.appendChild(this.#image_element);
 
         this.#form_element.addButtons(
@@ -332,9 +232,9 @@ export class PortraitElement extends HTMLElement {
 
         if (this.#portrait.values !== null) {
             if (this.#portrait.values.photo !== null) {
-                this.#photoToInputElement(
-                    input_element,
-                    this.#portrait.values.photo
+                this.#photo_service.toInputElement(
+                    this.#portrait.values.photo,
+                    input_element
                 );
                 input_element.dispatchEvent(new Event("input"));
             }
@@ -342,62 +242,52 @@ export class PortraitElement extends HTMLElement {
     }
 
     /**
-     * @param {Photo | Blob | null} photo
+     * @param {boolean} final
      * @returns {Promise<void>}
      */
-    async #setPhoto(photo = null) {
-        this.#removePhoto();
-
-        if (photo === null) {
-            return;
-        }
-
+    async #setPhoto(final = false) {
         const loading_element = this.#get_loading_element();
 
         try {
-            let type = null;
+            const photo = await this.#photo_service.fromInputElement(
+                this.#form_element.inputs.photo
+            );
 
-            let _photo;
-            if (photo instanceof Blob) {
-                ({
-                    type
-                } = photo);
-
-                _photo = await this.#blobToPhoto(
-                    photo
-                );
-            } else {
-                _photo = photo;
+            if (photo === null) {
+                this.#removePhoto();
+                return;
             }
 
-            const image_element = await this.#photoToImageElement(
-                _photo,
-                type
+            this.#photo = await this.#photo_service.optimize(
+                photo.photo,
+                photo.type,
+                this.#crop,
+                !final ? 1000 : null,
+                !final ? 1000 : null,
+                null,
+                null,
+                !final ? 1 : null
             );
 
-            const ctx = this.#createCtx(
-                image_element.naturalWidth,
-                image_element.naturalHeight
-            );
+            this.#crop = null;
 
-            ctx.filter = "grayscale(1)";
-            ctx.drawImage(image_element, 0, 0, image_element.naturalWidth, image_element.naturalHeight, 0, 0, ctx.canvas.width, ctx.canvas.height);
-            this.#photo = await this.#ctxToPhoto(
-                ctx
-            );
+            if (final) {
+                return;
+            }
 
-            this.#image_element.src = this.#photoToDataUrl(
+            this.#image_element.src = this.#photo_service.toDataUrl(
                 this.#photo
             );
 
-            this.#photoToInputElement(
-                this.#form_element.inputs.photo,
-                this.#photo
+            this.#photo_service.toInputElement(
+                this.#photo,
+                this.#form_element.inputs.photo
             );
         } catch (error) {
             console.error(error);
 
             this.#removePhoto();
+            this.#form_element.inputs.photo.dispatchEvent(new Event("input"));
 
             this.#form_element.setCustomValidationMessage(
                 this.#form_element.inputs.photo,

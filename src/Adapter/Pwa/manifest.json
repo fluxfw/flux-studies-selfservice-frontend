@@ -5,7 +5,7 @@
     ],
     "description": "",
     "dir": null,
-    "display": "standalone",
+    "display": "browser",
     "icons": [
         {
             "sizes": "any",

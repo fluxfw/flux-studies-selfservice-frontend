@@ -442,6 +442,7 @@ export class PersonalDataElement extends HTMLElement {
             "select",
             "phone-area-code"
         );
+        phone_area_code_element.required = this.#personal_data["required-phone"];
 
         for (const area_code of this.#personal_data["area-codes"]) {
             const option_element = document.createElement("option");
@@ -464,6 +465,7 @@ export class PersonalDataElement extends HTMLElement {
             "phone"
         );
         phone_element.pattern = this.#personal_data["phone-format"].substring(1, this.#personal_data["phone-format"].length - 2);
+        phone_element.required = this.#personal_data["required-phone"];
 
         const mobile_area_code_element = this.#contact_form_element.addInput(
             this.#localization_api.translate(
@@ -472,6 +474,7 @@ export class PersonalDataElement extends HTMLElement {
             "select",
             "mobile-area-code"
         );
+        mobile_area_code_element.required = this.#personal_data["required-mobile"];
 
         for (const area_code of this.#personal_data["area-codes"]) {
             const option_element = document.createElement("option");
@@ -494,6 +497,7 @@ export class PersonalDataElement extends HTMLElement {
             "mobile"
         );
         mobile_element.pattern = this.#personal_data["phone-format"].substring(1, this.#personal_data["phone-format"].length - 2);
+        mobile_element.required = this.#personal_data["required-mobile"];
 
         const email_element = this.#contact_form_element.addInput(
             this.#localization_api.translate(
@@ -502,6 +506,7 @@ export class PersonalDataElement extends HTMLElement {
             "email",
             "email"
         );
+        email_element.required = this.#personal_data["required-email"];
 
         const mother_language_element = this.#contact_form_element.addInput(
             this.#localization_api.translate(

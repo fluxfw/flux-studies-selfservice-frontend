@@ -1,4 +1,4 @@
-FROM node:18-alpine AS build
+FROM node:19-alpine AS build
 
 COPY package*.json /build/flux-studies-selfservice-frontend/
 COPY bin/install-dependencies.sh /build/flux-studies-selfservice-frontend/bin/install-dependencies.sh
