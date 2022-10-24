@@ -28,6 +28,7 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../Main/MainElement.mjs").MainElement} MainElement */
 /** @typedef {import("../PersonalData/PersonalData.mjs").PersonalData} PersonalData */
 /** @typedef {import("../PersonalData/PersonalDataElement.mjs").PersonalDataElement} PersonalDataElement */
+/** @typedef {import("../../Service/Photo/Port/PhotoService.mjs").PhotoService} PhotoService */
 /** @typedef {import("../Portrait/Portrait.mjs").Portrait} Portrait */
 /** @typedef {import("../Portrait/PortraitElement.mjs").PortraitElement} PortraitElement */
 /** @typedef {import("../PreviousStudies/PreviousStudies.mjs").PreviousStudies} PreviousStudies */
@@ -79,6 +80,10 @@ export class StudiesSelfserviceFrontendApi {
      */
     #main_element = null;
     /**
+     * @type {PhotoService | null}
+     */
+    #photo_service = null;
+    /**
      * @type {PwaApi | null}
      */
     #pwa_api = null;
@@ -122,6 +127,8 @@ export class StudiesSelfserviceFrontendApi {
         this.#pwa_api ??= await this.#getPwaApi();
 
         this.#label_service ??= await this.#getLabelService();
+
+        this.#photo_service ??= await this.#getPhotoService();
 
         await this.#css_api.importCss(
             `${__dirname}/../style.css`
@@ -603,6 +610,15 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
+     * @returns {Promise<PhotoService>}
+     */
+    async #getPhotoService() {
+        return (await import("../../Service/Photo/Port/PhotoService.mjs")).PhotoService.new(
+            this.#localization_api
+        );
+    }
+
+    /**
      * @param {Portrait} portrait
      * @param {postFunction} post_function
      * @param {backFunction | null} back_function
@@ -613,6 +629,7 @@ export class StudiesSelfserviceFrontendApi {
             this.#css_api,
             () => this.#getLoadingElement(),
             this.#localization_api,
+            this.#photo_service,
             portrait,
             async chosen_portrait => post_function(
                 {
