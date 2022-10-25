@@ -201,7 +201,9 @@ export class PortraitElement extends HTMLElement {
                 "Photo"
             ),
             "file",
-            "photo"
+            "photo",
+            false,
+            true
         );
         input_element.accept = "image/*";
         input_element.addEventListener("input", () => {
@@ -215,6 +217,16 @@ export class PortraitElement extends HTMLElement {
         this.#image_element.style.maxWidth = "100%";
         this.#image_element.style.width = "1000px";
         input_element.parentElement.parentElement.parentElement.appendChild(this.#image_element);
+
+        this.#form_element.addSubtitle(
+            this.#localization_api.translate(
+                "Photo criteria {criteria}",
+                null,
+                {
+                    criteria: this.#portrait.criteria
+                }
+            )
+        );
 
         this.#form_element.addButtons(
             () => {

@@ -18,7 +18,7 @@ label {
     padding: 5px 0;
 }
 
-.input:not([type="checkbox"]):not([type="radio"]),
+.input_field,
 .input_readonly,
 .input_select,
 .input_textarea,
@@ -32,21 +32,12 @@ label {
     width: calc(60% - 14px);
 }
 
-.input:not([type="checkbox"]):not([type="radio"]),
+.input_field,
 .input_select,
 .input_textarea {
     background-color: var(--input-background-color);
     border: var(--input-border-size) solid var(--input-border-color);
     border-radius: 3px;
-}
-
-.input_select {
-    appearance: auto;
-}
-
-:where(.input:required, .input_container:has(.input:required), .input_select:required, .input_container:has(.input_select:required), .input_textarea:required, .input_container:has(.input_textarea:required)) + .text::after {
-    color: var(--mandatory-color);
-    content: " *";
 }
 
 .input:invalid,
@@ -55,9 +46,47 @@ label {
     --input-border-color: var(--mandatory-color)
 }
 
+.input_select {
+    appearance: auto;
+}
+
+.input_select[data-small] {
+    width: fit-content;
+}
+
 .input_textarea {
     min-height: 120px;
     resize: vertical;
+}
+
+.input_container {
+    column-gap: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 0;
+    width: calc(60% - 4px);
+}
+
+.input_container :where(
+    .input_field,
+    .input_readonly,
+    .input_select,
+    .input_textarea,
+    .input_container
+) {
+    order: unset;
+}
+
+.input_container :where(
+    .input_field,
+    .input_readonly,
+    .input_select:not([data-small]),
+    .input_textarea,
+    .input_container
+) {
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 .input[type=file]:not(:disabled),
@@ -71,8 +100,20 @@ button:not(:disabled) {
     width: 40%;
 }
 
-.input[type="checkbox"] + .text,
-.input[type="radio"] + .text {
+:where(
+    .input:required,
+    .input_container:has(.input:required),
+    .input_select:required,
+    .input_container:has(.input_select:required),
+    .input_textarea:required,
+    .input_container:has(.input_textarea:required)
+) + .text::after {
+    color: var(--mandatory-color);
+    content: " *";
+}
+
+.input[type=checkbox] + .text,
+.input[type=radio] + .text {
     width: calc(100% - 30px);
 }
 
@@ -82,12 +123,18 @@ label[data-seperate] {
     flex-wrap: nowrap;
 }
 
-label[data-seperate] .input:not([type="checkbox"]):not([type="radio"]),
-label[data-seperate] .input_readonly,
-label[data-seperate] .input_select,
-label[data-seperate] .input_textarea,
-label[data-seperate] .text {
+label[data-seperate] :where(
+    .input_field,
+    .input_readonly,
+    .input_select:not([data-small]),
+    .input_textarea,
+    .text
+) {
     width: calc(100% - 14px);
+}
+
+label[data-seperate] .input_container {
+    width: calc(100% - 4px);
 }
 
 @media (max-width: 800px) {
@@ -97,11 +144,15 @@ label[data-seperate] .text {
         flex-wrap: nowrap;
     }
 
-    .input:not([type="checkbox"]):not([type="radio"]),
+    .input_field,
     .input_readonly,
-    .input_select,
+    .input_select:not([data-small]),
     .input_textarea,
     .text {
         width: calc(100% - 14px);
+    }
+
+    .input_container {
+        width: calc(100% - 4px);
     }
 }

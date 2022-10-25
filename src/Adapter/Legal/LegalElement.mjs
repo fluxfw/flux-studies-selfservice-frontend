@@ -181,6 +181,16 @@ export class LegalElement extends HTMLElement {
             )
         );
 
+        const degree_program_element = this.#degree_program_form_element.addInput(
+            this.#localization_api.translate(
+                "Degree program"
+            ),
+            "readonly"
+        );
+        degree_program_element.innerText = this.#label_service.getDegreeProgramLabel(
+            this.#legal["degree-program"]
+        );
+
         const subject_element = this.#degree_program_form_element.addInput(
             this.#localization_api.translate(
                 "Subject"

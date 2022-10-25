@@ -118,9 +118,10 @@ export class FormElement extends HTMLElement {
      * @param {string} type
      * @param {string | null} name
      * @param {boolean} seperate
+     * @param {boolean} container
      * @returns {InputElement}
      */
-    addInput(label, type, name = null, seperate = false) {
+    addInput(label, type, name = null, seperate = false, container = false) {
         const label_element = document.createElement("label");
 
         if (seperate) {
@@ -138,6 +139,9 @@ export class FormElement extends HTMLElement {
             } else {
                 input_element = document.createElement("input");
                 input_element.classList.add("input");
+                if (type !== "checkbox" && type !== "radio") {
+                    input_element.classList.add("input_field");
+                }
                 input_element.type = type;
             }
             input_element.name = name ?? "";
@@ -150,27 +154,30 @@ export class FormElement extends HTMLElement {
             input_element.appendChild(option_element);
         }
 
-        if (type === "file") {
+        if (container) {
             const container_element = document.createElement("div");
             container_element.classList.add("input_container");
 
-            const remove_element = document.createElement("button");
-            remove_element.disabled = true;
-            remove_element.innerText = this.#localization_api.translate(
-                "X"
-            );
-            remove_element.type = "button";
-            remove_element.addEventListener("click", () => {
-                input_element.value = "";
-                input_element.dispatchEvent(new Event("input"));
-            });
-
-            input_element.addEventListener("input", () => {
-                remove_element.disabled = input_element.files.length < 1;
-            });
-
             container_element.appendChild(input_element);
-            container_element.appendChild(remove_element);
+
+            if (type === "file") {
+                const remove_element = document.createElement("button");
+                remove_element.disabled = true;
+                remove_element.innerText = this.#localization_api.translate(
+                    "X"
+                );
+                remove_element.type = "button";
+                remove_element.addEventListener("click", () => {
+                    input_element.value = "";
+                    input_element.dispatchEvent(new Event("input"));
+                });
+
+                input_element.addEventListener("input", () => {
+                    remove_element.disabled = input_element.files.length < 1;
+                });
+
+                container_element.appendChild(remove_element);
+            }
 
             label_element.appendChild(container_element);
         } else {
