@@ -365,7 +365,7 @@ export class PreviousStudiesElement extends HTMLElement {
 
         this.#shadow.appendChild(SubtitleElement.new(
             this.#css_api,
-            "TODO multiple"
+            "TODO multiple +/-"
         ));
 
         if (this.#previous_studies.values !== null) {
