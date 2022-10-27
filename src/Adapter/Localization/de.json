@@ -20,5 +20,6 @@
     "Server error!": "Server-Fehler!",
     "Some line contains no name!": "Eine Zeile enthält keinen Namen!",
     "Studies selfservice": "Studium-Selfservice",
-    "The photo could not been loaded!": "Das Foto konnte nicht geladen werden!"
+    "The photo could not been loaded!": "Das Foto konnte nicht geladen werden!",
+    "The end date can not be before the start date!": "Das End-Datum kann nicht vor dem Start-Datum liegen!"
 }

@@ -1,3 +1,5 @@
+/** @typedef {import("./ChosenPreviousStudy.mjs").ChosenPreviousStudy} ChosenPreviousStudy */
+
 /**
- * @typedef {{}} ChosenPreviousStudies
+ * @typedef {{"previous-studies": ChosenPreviousStudy[]}} ChosenPreviousStudies
  */

@@ -126,10 +126,6 @@ export class StudiesSelfserviceFrontendApi {
 
         this.#pwa_api ??= await this.#getPwaApi();
 
-        this.#label_service ??= await this.#getLabelService();
-
-        this.#photo_service ??= await this.#getPhotoService();
-
         await this.#css_api.importCss(
             `${__dirname}/../style.css`
         );
@@ -244,7 +240,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getChoiceSubjectElement(choice_subject, post_function, back_function = null) {
         return (await import("../ChoiceSubject/ChoiceSubjectElement.mjs")).ChoiceSubjectElement.new(
             this.#css_api,
-            this.#label_service,
+            await this.#getLabelService(),
             this.#localization_api,
             choice_subject,
             async chosen_subject => post_function(
@@ -367,7 +363,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getIntendedDegreeProgramElement(intended_degree_program, post_function, back_function = null) {
         return (await import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs")).IntendedDegreeProgramElement.new(
             this.#css_api,
-            this.#label_service,
+            await this.#getLabelService(),
             this.#localization_api,
             intended_degree_program,
             async chosen_intended_degree_program => post_function(
@@ -389,7 +385,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getIntendedDegreeProgram2Element(intended_degree_program_2, post_function, back_function = null) {
         return (await import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs")).IntendedDegreeProgram2Element.new(
             this.#css_api,
-            this.#label_service,
+            await this.#getLabelService(),
             this.#localization_api,
             intended_degree_program_2,
             async chosen_intended_degree_program_2 => post_function(
@@ -419,9 +415,11 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<LabelService>}
      */
     async #getLabelService() {
-        return (await import("../../Service/Label/Port/LabelService.mjs")).LabelService.new(
+        this.#label_service ??= (await import("../../Service/Label/Port/LabelService.mjs")).LabelService.new(
             this.#localization_api
         );
+
+        return this.#label_service;
     }
 
     /**
@@ -433,7 +431,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getLegalElement(legal, post_function, back_function = null) {
         return (await import("../Legal/LegalElement.mjs")).LegalElement.new(
             this.#css_api,
-            this.#label_service,
+            await this.#getLabelService(),
             this.#localization_api,
             legal,
             async accepted_legal => post_function(
@@ -596,7 +594,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getPersonalDataElement(personal_data, post_function, back_function = null) {
         return (await import("../PersonalData/PersonalDataElement.mjs")).PersonalDataElement.new(
             this.#css_api,
-            this.#label_service,
+            await this.#getLabelService(),
             this.#localization_api,
             personal_data,
             async filled_personal_data => post_function(
@@ -613,9 +611,11 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<PhotoService>}
      */
     async #getPhotoService() {
-        return (await import("../../Service/Photo/Port/PhotoService.mjs")).PhotoService.new(
+        this.#photo_service ??= (await import("../../Service/Photo/Port/PhotoService.mjs")).PhotoService.new(
             this.#localization_api
         );
+
+        return this.#photo_service;
     }
 
     /**
@@ -629,7 +629,7 @@ export class StudiesSelfserviceFrontendApi {
             this.#css_api,
             () => this.#getLoadingElement(),
             this.#localization_api,
-            this.#photo_service,
+            await this.#getPhotoService(),
             portrait,
             async chosen_portrait => post_function(
                 {
@@ -650,7 +650,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getPreviousStudiesElement(previous_studies, post_function, back_function = null) {
         return (await import("../PreviousStudies/PreviousStudiesElement.mjs")).PreviousStudiesElement.new(
             this.#css_api,
-            this.#label_service,
+            await this.#getLabelService(),
             this.#localization_api,
             previous_studies,
             async chosen_previous_studies => post_function(
@@ -720,7 +720,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getStartElement(start, post_function, back_function = null) {
         return (await import("../Start/StartElement.mjs")).StartElement.new(
             this.#css_api,
-            this.#label_service,
+            await this.#getLabelService(),
             this.#localization_api,
             start,
             async create => post_function(
@@ -748,7 +748,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getUniversityEntranceQualificationElement(university_entrance_qualification, post_function, back_function = null) {
         return (await import("../UniversityEntranceQualification/UniversityEntranceQualificationElement.mjs")).UniversityEntranceQualificationElement.new(
             this.#css_api,
-            this.#label_service,
+            await this.#getLabelService(),
             this.#localization_api,
             university_entrance_qualification,
             async chosen_university_entrance_qualification => post_function(
