@@ -219,6 +219,10 @@ export class PortraitElement extends HTMLElement {
         input_element.parentElement.parentElement.parentElement.appendChild(this.#image_element);
 
         this.#form_element.addSubtitle(
+            "TODO crop"
+        );
+
+        this.#form_element.addSubtitle(
             this.#localization_api.translate(
                 "Photo criteria {criteria}",
                 null,

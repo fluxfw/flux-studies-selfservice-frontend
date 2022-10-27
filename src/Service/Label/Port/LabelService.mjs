@@ -5,6 +5,7 @@
 /** @typedef {import("../../../Adapter/Combination/Choice.mjs").Choice} Choice */
 /** @typedef {import("../../../Adapter/Combination/Combination.mjs").Combination} Combination */
 /** @typedef {import("../../../Adapter/Country/Country.mjs").Country} Country */
+/** @typedef {import("../../../Adapter/Degree/Degree.mjs").Degree} Degree */
 /** @typedef {import("../../../Adapter/DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
 /** @typedef {import("../../../Adapter/Language/Language.mjs").Language} Language */
 /** @typedef {import("../../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
@@ -132,6 +133,16 @@ export class LabelService {
     getCountryLabel(country) {
         return this.#localization_api.translate(
             country.label
+        );
+    }
+
+    /**
+     * @param {Degree} degree
+     * @returns {string}
+     */
+    getDegreeLabel(degree) {
+        return this.#localization_api.translate(
+            degree.label
         );
     }
 
