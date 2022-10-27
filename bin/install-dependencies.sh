@@ -14,7 +14,7 @@ fi
 
 (mkdir -p $node_modules/flux-fetch-api && cd $node_modules/flux-fetch-api && wget -O - https://github.com/fluxfw/flux-fetch-api/archive/refs/tags/v2022-10-17-1.tar.gz | tar -xz --strip-components=1)
 
-(mkdir -p $node_modules/flux-json-api && cd $node_modules/flux-json-api && wget -O - https://github.com/fluxfw/flux-json-api/archive/refs/tags/v2022-10-19-1.tar.gz | tar -xz --strip-components=1)
+(mkdir -p $node_modules/flux-json-api && cd $node_modules/flux-json-api && wget -O - https://github.com/fluxfw/flux-json-api/archive/refs/tags/v2022-10-27-1.tar.gz | tar -xz --strip-components=1)
 
 (mkdir -p $node_modules/flux-loading-api && cd $node_modules/flux-loading-api && wget -O - https://github.com/fluxfw/flux-loading-api/archive/refs/tags/v2022-10-17-1.tar.gz | tar -xz --strip-components=1)
 
