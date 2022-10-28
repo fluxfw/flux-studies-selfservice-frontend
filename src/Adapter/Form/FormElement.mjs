@@ -1,4 +1,5 @@
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
+import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormButtonsElement } from "../FormButtons/FormButtonsElement.mjs";
 import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
 import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
@@ -161,19 +162,20 @@ export class FormElement extends HTMLElement {
             container_element.appendChild(input_element);
 
             if (type === "file") {
-                const remove_element = document.createElement("button");
-                remove_element.disabled = true;
-                remove_element.innerText = this.#localization_api.translate(
-                    "X"
+                const remove_element = FormButtonElement.new(
+                    this.#css_api,
+                    this.#localization_api.translate(
+                        "X"
+                    )
                 );
-                remove_element.type = "button";
-                remove_element.addEventListener("click", () => {
+                remove_element.button.disabled = true;
+                remove_element.button.addEventListener("click", () => {
                     input_element.value = "";
                     input_element.dispatchEvent(new Event("input"));
                 });
 
                 input_element.addEventListener("input", () => {
-                    remove_element.disabled = input_element.files.length < 1;
+                    remove_element.button.disabled = input_element.files.length < 1;
                 });
 
                 container_element.appendChild(remove_element);

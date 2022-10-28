@@ -4,42 +4,46 @@ import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs"
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
-export class FormSubtitleElement extends HTMLElement {
+export class FormButtonElement extends HTMLElement {
+    /**
+     * @type {HTMLButtonElement}
+     */
+    #button_element;
     /**
      * @type {CssApi}
      */
     #css_api;
     /**
+     * @type {string}
+     */
+    #label;
+    /**
      * @type {ShadowRoot}
      */
     #shadow;
-    /**
-     * @type {string}
-     */
-    #subtitle;
 
     /**
      * @param {CssApi} css_api
-     * @param {string} subtitle
-     * @returns {FormSubtitleElement}
+     * @param {string} label
+     * @returns {FormButtonElement}
      */
-    static new(css_api, subtitle) {
+    static new(css_api, label) {
         return new this(
             css_api,
-            subtitle
+            label
         );
     }
 
     /**
      * @param {CssApi} css_api
-     * @param {string} subtitle
+     * @param {string} label
      * @private
      */
-    constructor(css_api, subtitle) {
+    constructor(css_api, label) {
         super();
 
         this.#css_api = css_api;
-        this.#subtitle = subtitle;
+        this.#label = label;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -51,23 +55,23 @@ export class FormSubtitleElement extends HTMLElement {
     }
 
     /**
-     * @param {HTMLElement} element
-     * @returns {void}
+     * @returns {HTMLButtonElement}
      */
-    addElement(element) {
-        this.#shadow.appendChild(element);
+    get button() {
+        return this.#button_element;
     }
 
     /**
      * @returns {void}
      */
     #render() {
-        const subtitle_element = document.createElement("span");
-        subtitle_element.innerText = this.#subtitle;
-        this.#shadow.appendChild(subtitle_element);
+        this.#button_element = document.createElement("button");
+        this.#button_element.innerText = this.#label;
+        this.#button_element.type = "button";
+        this.#shadow.appendChild(this.#button_element);
     }
 }
 
-export const FORM_SUBTITLE_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}form-subtitle`;
+export const FORM_BUTTON_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}form-button`;
 
-customElements.define(FORM_SUBTITLE_ELEMENT_TAG_NAME, FormSubtitleElement);
+customElements.define(FORM_BUTTON_ELEMENT_TAG_NAME, FormButtonElement);

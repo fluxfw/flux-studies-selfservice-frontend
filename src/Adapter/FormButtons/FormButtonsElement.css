@@ -13,18 +13,11 @@
     flex-wrap: wrap;
 }
 
-button {
-    all: initial;
-    background-color: var(--form-button-background-color);
-    color: var(--form-button-text-color);
-    cursor: pointer;
-    display: block;
-    font-family: inherit;
+studies-selfservice-form-button {
     margin: 0 5px;
-    padding: 10px;
 }
 
-button[data-right] {
+studies-selfservice-form-button[data-right] {
     margin-left: auto;
     order: 2;
 }
