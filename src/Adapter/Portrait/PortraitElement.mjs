@@ -262,7 +262,7 @@ export class PortraitElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #setPhoto(final = false) {
-        const loading_element = this.#get_loading_element();
+        const loading_element = await this.#get_loading_element();
 
         try {
             const photo = await this.#photo_service.fromInputElement(

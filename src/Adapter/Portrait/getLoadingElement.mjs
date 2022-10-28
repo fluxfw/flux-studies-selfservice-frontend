@@ -1,3 +1,3 @@
 /**
- * @typedef {() => HTMLElement} getLoadingElement
+ * @typedef {() => Promise<HTMLElement>} getLoadingElement
  */

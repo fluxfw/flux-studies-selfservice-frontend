@@ -69,13 +69,13 @@ export class MainElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         const settings_element = document.createElement("div");
         settings_element.classList.add("settings");
-        settings_element.appendChild(this.#studies_selfservice_frontend_api.getSelectLanguageButtonElement());
-        settings_element.appendChild(this.#color_scheme_api.getSelectColorSchemeElement());
+        settings_element.appendChild(await this.#studies_selfservice_frontend_api.getSelectLanguageButtonElement());
+        settings_element.appendChild(await this.#color_scheme_api.getSelectColorSchemeElement());
         this.#shadow.appendChild(settings_element);
 
         this.#shadow.appendChild(document.createElement("div"));

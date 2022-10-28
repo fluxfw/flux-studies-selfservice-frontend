@@ -1,4 +1,3 @@
-import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
 import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
@@ -11,6 +10,7 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../Completed/CompletedElement.mjs").CompletedElement} CompletedElement */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs").FetchApi} FetchApi */
+/** @typedef {import("../FormInvalid/FormInvalidElement.mjs").FormInvalidElement} FormInvalidElement */
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Loading/FullscreenLoadingElement.mjs").FullscreenLoadingElement} FullscreenLoadingElement */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
 /** @typedef {import("../IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
@@ -110,35 +110,27 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<void>}
      */
     async init() {
-        this.#fetch_api ??= await this.#getFetchApi();
+        const color_scheme_api = await this.#getColorSchemeApi();
+        const css_api = await this.#getCssApi();
+        await this.#getLoadingApi();
+        await this.#getLocalizationApi();
+        await this.#getPwaApi();
 
-        this.#css_api ??= await this.#getCssApi();
-
-        this.#json_api ??= await this.#getJsonApi();
-
-        this.#settings_api ??= await this.#getSettingsApi();
-
-        this.#localization_api ??= await this.#getLocalizationApi();
-
-        this.#color_scheme_api ??= await this.#getColorSchemeApi();
-
-        this.#loading_api ??= await this.#getLoadingApi();
-
-        this.#pwa_api ??= await this.#getPwaApi();
-
-        await this.#css_api.importCss(
+        await css_api.importCss(
             `${__dirname}/../style.css`
         );
-        this.#css_api.importCssToRoot(
+        css_api.importCssToRoot(
             document,
             `${__dirname}/../style.css`
         );
 
-        this.#css_api.importCss(
+        css_api.importCss(
             `${__dirname.substring(0, __dirname.lastIndexOf("/"))}/FormInvalid/FormInvalidElement.css`
         );
 
-        this.#color_scheme_api.renderColorScheme();
+        await import("../FormInvalid/FormInvalidElement.mjs");
+
+        color_scheme_api.renderColorScheme();
 
         await this.#selectLanguage();
     }
@@ -148,8 +140,8 @@ export class StudiesSelfserviceFrontendApi {
      */
     async showFrontend() {
         document.body.appendChild(this.#main_element = (await import("../Main/MainElement.mjs")).MainElement.new(
-            this.#color_scheme_api,
-            this.#css_api,
+            await this.#getColorSchemeApi(),
+            await this.#getCssApi(),
             this
         ));
 
@@ -157,12 +149,12 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
-     * @returns {SelectLanguageButtonElement}
+     * @returns {Promise<SelectLanguageButtonElement>}
      */
-    getSelectLanguageButtonElement() {
+    async getSelectLanguageButtonElement() {
         const select_language_parameters = this.#getSelectLanguageParameters();
 
-        return this.#localization_api.getSelectLanguageButtonElement(
+        return (await this.#getLocalizationApi()).getSelectLanguageButtonElement(
             select_language_parameters.localization_folder,
             select_language_parameters.module,
             select_language_parameters.ensure,
@@ -187,7 +179,7 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #back() {
         try {
-            await this.#fetch_api.fetch({
+            await (await this.#getFetchApi()).fetch({
                 url: "/api/back",
                 method: METHOD_POST
             });
@@ -214,7 +206,7 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #get() {
         try {
-            return await this.#fetch_api.fetch({
+            return await (await this.#getFetchApi()).fetch({
                 url: "/api/get"
             });
         } catch (error) {
@@ -239,9 +231,9 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getChoiceSubjectElement(choice_subject, post_function, back_function = null) {
         return (await import("../ChoiceSubject/ChoiceSubjectElement.mjs")).ChoiceSubjectElement.new(
-            this.#css_api,
+            await this.#getCssApi(),
             await this.#getLabelService(),
-            this.#localization_api,
+            await this.#getLocalizationApi(),
             choice_subject,
             async chosen_subject => post_function(
                 {
@@ -257,33 +249,35 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<ColorSchemeApi>}
      */
     async #getColorSchemeApi() {
-        const color_scheme_api = (await import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs")).ColorSchemeApi.new(
-            [
+        if (this.#color_scheme_api === null) {
+            this.#color_scheme_api ??= (await import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs")).ColorSchemeApi.new(
+                [
+                    {
+                        color_scheme: COLOR_SCHEME_LIGHT,
+                        name: "light"
+                    },
+                    {
+                        color_scheme: COLOR_SCHEME_DARK,
+                        name: "dark"
+                    }
+                ],
+                await this.#getCssApi(),
+                await this.#getLocalizationApi(),
+                await this.#getSettingsApi(),
                 {
-                    color_scheme: COLOR_SCHEME_LIGHT,
-                    name: "light"
+                    [COLOR_SCHEME_LIGHT]: "light",
+                    [COLOR_SCHEME_DARK]: "dark"
                 },
-                {
-                    color_scheme: COLOR_SCHEME_DARK,
-                    name: "dark"
-                }
-            ],
-            this.#css_api,
-            this.#localization_api,
-            this.#settings_api,
-            {
-                [COLOR_SCHEME_LIGHT]: "light",
-                [COLOR_SCHEME_DARK]: "dark"
-            },
-            [
-                "form-background-color",
-                "form-buttons-background-color"
-            ]
-        );
+                [
+                    "form-background-color",
+                    "form-buttons-background-color"
+                ]
+            );
 
-        await color_scheme_api.init();
+            await this.#color_scheme_api.init();
+        }
 
-        return color_scheme_api;
+        return this.#color_scheme_api;
     }
 
     /**
@@ -292,8 +286,8 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getCompletedElement(back_function = null) {
         return (await import("../Completed/CompletedElement.mjs")).CompletedElement.new(
-            this.#css_api,
-            this.#localization_api,
+            await this.#getCssApi(),
+            await this.#getLocalizationApi(),
             back_function
         );
     }
@@ -302,33 +296,37 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<CssApi>}
      */
     async #getCssApi() {
-        const css_api = (await import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs")).CssApi.new(
-            this.#fetch_api
-        );
+        if (this.#css_api === null) {
+            this.#css_api ??= (await import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs")).CssApi.new(
+                await this.#getFetchApi()
+            );
 
-        await css_api.init();
+            await this.#css_api.init();
+        }
 
-        return css_api;
+        return this.#css_api;
     }
 
     /**
      * @returns {Promise<FetchApi>}
      */
     async #getFetchApi() {
-        const fetch_api = (await import("../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs")).FetchApi.new();
+        if (this.#fetch_api === null) {
+            this.#fetch_api ??= (await import("../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs")).FetchApi.new();
 
-        await fetch_api.init();
+            await this.#fetch_api.init();
+        }
 
-        return fetch_api;
+        return this.#fetch_api;
     }
 
     /**
      * @param {string} message
-     * @returns {FormInvalidElement}
+     * @returns {Promise<FormInvalidElement>}
      */
-    #getFormInvalidElement(message) {
-        return FormInvalidElement.new(
-            this.#css_api,
+    async #getFormInvalidElement(message) {
+        return (await import("../FormInvalid/FormInvalidElement.mjs")).FormInvalidElement.new(
+            await this.#getCssApi(),
             message
         );
     }
@@ -341,8 +339,8 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getIdentificationNumberElement(identification_number, post_function, back_function = null) {
         return (await import("../IdentificationNumber/IdentificationNumberElement.mjs")).IdentificationNumberElement.new(
-            this.#css_api,
-            this.#localization_api,
+            await this.#getCssApi(),
+            await this.#getLocalizationApi(),
             identification_number,
             async confirmed_identification_number => post_function(
                 {
@@ -362,9 +360,9 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getIntendedDegreeProgramElement(intended_degree_program, post_function, back_function = null) {
         return (await import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs")).IntendedDegreeProgramElement.new(
-            this.#css_api,
+            await this.#getCssApi(),
             await this.#getLabelService(),
-            this.#localization_api,
+            await this.#getLocalizationApi(),
             intended_degree_program,
             async chosen_intended_degree_program => post_function(
                 {
@@ -384,9 +382,9 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getIntendedDegreeProgram2Element(intended_degree_program_2, post_function, back_function = null) {
         return (await import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs")).IntendedDegreeProgram2Element.new(
-            this.#css_api,
+            await this.#getCssApi(),
             await this.#getLabelService(),
-            this.#localization_api,
+            await this.#getLocalizationApi(),
             intended_degree_program_2,
             async chosen_intended_degree_program_2 => post_function(
                 {
@@ -402,13 +400,15 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<JsonApi>}
      */
     async #getJsonApi() {
-        const json_api = (await import("../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new(
-            this.#fetch_api
-        );
+        if (this.#json_api === null) {
+            this.#json_api ??= (await import("../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new(
+                await this.#getFetchApi()
+            );
 
-        await json_api.init();
+            await this.#json_api.init();
+        }
 
-        return json_api;
+        return this.#json_api;
     }
 
     /**
@@ -416,7 +416,7 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getLabelService() {
         this.#label_service ??= (await import("../../Service/Label/Port/LabelService.mjs")).LabelService.new(
-            this.#localization_api
+            await this.#getLocalizationApi()
         );
 
         return this.#label_service;
@@ -430,9 +430,9 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getLegalElement(legal, post_function, back_function = null) {
         return (await import("../Legal/LegalElement.mjs")).LegalElement.new(
-            this.#css_api,
+            await this.#getCssApi(),
             await this.#getLabelService(),
-            this.#localization_api,
+            await this.#getLocalizationApi(),
             legal,
             async accepted_legal => post_function(
                 {
@@ -448,20 +448,22 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<LoadingApi>}
      */
     async #getLoadingApi() {
-        const loading_api = (await import("../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs")).LoadingApi.new(
-            this.#css_api
-        );
+        if (this.#loading_api === null) {
+            this.#loading_api ??= (await import("../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs")).LoadingApi.new(
+                await this.#getCssApi()
+            );
 
-        await loading_api.init();
+            await this.#loading_api.init();
+        }
 
-        return loading_api;
+        return this.#loading_api;
     }
 
     /**
-     * @returns {FullscreenLoadingElement}
+     * @returns {Promise<FullscreenLoadingElement>}
      */
-    #getLoadingElement() {
-        const loading_element = this.#loading_api.getFullscreenLoadingElement();
+    async #getLoadingElement() {
+        const loading_element = await (await this.#getLoadingApi()).getFullscreenLoadingElement();
         document.body.appendChild(loading_element);
         return loading_element;
     }
@@ -470,15 +472,17 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<LocalizationApi>}
      */
     async #getLocalizationApi() {
-        const localization_api = (await import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs")).LocalizationApi.new(
-            this.#css_api,
-            this.#json_api,
-            this.#settings_api
-        );
+        if (this.#localization_api === null) {
+            this.#localization_api ??= (await import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs")).LocalizationApi.new(
+                await this.#getCssApi(),
+                await this.#getJsonApi(),
+                await this.#getSettingsApi()
+            );
 
-        await localization_api.init();
+            await this.#localization_api.init();
+        }
 
-        return localization_api;
+        return this.#localization_api;
     }
 
     /**
@@ -578,7 +582,7 @@ export class StudiesSelfserviceFrontendApi {
             console.error(error);
 
             return this.#getFormInvalidElement(
-                this.#localization_api.translate(
+                (await this.#getLocalizationApi()).translate(
                     "Page error!"
                 )
             );
@@ -593,9 +597,9 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getPersonalDataElement(personal_data, post_function, back_function = null) {
         return (await import("../PersonalData/PersonalDataElement.mjs")).PersonalDataElement.new(
-            this.#css_api,
+            await this.#getCssApi(),
             await this.#getLabelService(),
-            this.#localization_api,
+            await this.#getLocalizationApi(),
             personal_data,
             async filled_personal_data => post_function(
                 {
@@ -612,7 +616,7 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getPhotoService() {
         this.#photo_service ??= (await import("../../Service/Photo/Port/PhotoService.mjs")).PhotoService.new(
-            this.#localization_api
+            await this.#getLocalizationApi()
         );
 
         return this.#photo_service;
@@ -626,9 +630,9 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getPortraitElement(portrait, post_function, back_function = null) {
         return (await import("../Portrait/PortraitElement.mjs")).PortraitElement.new(
-            this.#css_api,
-            () => this.#getLoadingElement(),
-            this.#localization_api,
+            await this.#getCssApi(),
+            async () => this.#getLoadingElement(),
+            await this.#getLocalizationApi(),
             await this.#getPhotoService(),
             portrait,
             async chosen_portrait => post_function(
@@ -649,9 +653,9 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getPreviousStudiesElement(previous_studies, post_function, back_function = null) {
         return (await import("../PreviousStudies/PreviousStudiesElement.mjs")).PreviousStudiesElement.new(
-            this.#css_api,
+            await this.#getCssApi(),
             await this.#getLabelService(),
-            this.#localization_api,
+            await this.#getLocalizationApi(),
             previous_studies,
             async chosen_previous_studies => post_function(
                 {
@@ -667,22 +671,24 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<PwaApi>}
      */
     async #getPwaApi() {
-        const pwa_api = (await import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs")).PwaApi.new(
-            this.#css_api,
-            this.#json_api,
-            `${__dirname}/../Pwa/manifest.json`,
-            () => this.#color_scheme_api.getBackground(),
-            () => this.#localization_api.getDirection(),
-            () => this.#localization_api.getLanguage(),
-            () => this.#color_scheme_api.getAccent(),
-            text => this.#localization_api.translate(
-                text
-            )
-        );
+        if (this.#pwa_api === null) {
+            this.#pwa_api ??= (await import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs")).PwaApi.new(
+                await this.#getCssApi(),
+                await this.#getJsonApi(),
+                `${__dirname}/../Pwa/manifest.json`,
+                async () => (await this.#getColorSchemeApi()).getBackground(),
+                async () => (await this.#getLocalizationApi()).getDirection(),
+                async () => (await this.#getLocalizationApi()).getLanguage(),
+                async () => (await this.#getColorSchemeApi()).getAccent(),
+                async text => (await this.#getLocalizationApi()).translate(
+                    text
+                )
+            );
 
-        await pwa_api.init();
+            await this.#pwa_api.init();
+        }
 
-        return pwa_api;
+        return this.#pwa_api;
     }
 
     /**
@@ -693,7 +699,7 @@ export class StudiesSelfserviceFrontendApi {
             localization_folder: `${__dirname}/../Localization`,
             module: null,
             ensure: async () => {
-                this.#pwa_api.initPwa();
+                await (await this.#getPwaApi()).initPwa();
             }
         };
     }
@@ -702,13 +708,15 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<SettingsApi>}
      */
     async #getSettingsApi() {
-        const settings_api = await (await import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs")).SettingsApi.newWithAutoSettings(
-            STORAGE_SETTINGS_PREFIX
-        );
+        if (this.#settings_api === null) {
+            this.#settings_api ??= await (await import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs")).SettingsApi.newWithAutoSettings(
+                STORAGE_SETTINGS_PREFIX
+            );
 
-        await settings_api.init();
+            await this.#settings_api.init();
+        }
 
-        return settings_api;
+        return this.#settings_api;
     }
 
     /**
@@ -719,9 +727,9 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getStartElement(start, post_function, back_function = null) {
         return (await import("../Start/StartElement.mjs")).StartElement.new(
-            this.#css_api,
+            await this.#getCssApi(),
             await this.#getLabelService(),
-            this.#localization_api,
+            await this.#getLocalizationApi(),
             start,
             async create => post_function(
                 {
@@ -747,9 +755,9 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #getUniversityEntranceQualificationElement(university_entrance_qualification, post_function, back_function = null) {
         return (await import("../UniversityEntranceQualification/UniversityEntranceQualificationElement.mjs")).UniversityEntranceQualificationElement.new(
-            this.#css_api,
+            await this.#getCssApi(),
             await this.#getLabelService(),
-            this.#localization_api,
+            await this.#getLocalizationApi(),
             university_entrance_qualification,
             async chosen_university_entrance_qualification => post_function(
                 {
@@ -767,7 +775,7 @@ export class StudiesSelfserviceFrontendApi {
     async #next() {
         scroll(0, 0);
 
-        const get_loading_element = this.#getLoadingElement();
+        const get_loading_element = await this.#getLoadingElement();
 
         const get_result = await this.#get();
 
@@ -778,7 +786,7 @@ export class StudiesSelfserviceFrontendApi {
             page = await this.#getPage(
                 get_result,
                 async post => {
-                    const post_loading_element = this.#getLoadingElement();
+                    const post_loading_element = await this.#getLoadingElement();
 
                     const post_result = await this.#post(
                         post
@@ -795,7 +803,7 @@ export class StudiesSelfserviceFrontendApi {
                     return post_result;
                 },
                 async () => {
-                    const back_loading_element = this.#getLoadingElement();
+                    const back_loading_element = await this.#getLoadingElement();
 
                     const back_result = await this.#back();
 
@@ -803,8 +811,8 @@ export class StudiesSelfserviceFrontendApi {
 
                     if (!back_result.ok) {
                         this.#main_element.replaceContent(
-                            this.#getFormInvalidElement(
-                                this.#localization_api.translate(
+                            await this.#getFormInvalidElement(
+                                (await this.#getLocalizationApi()).translate(
                                     back_result["network-error"] ? "Network error!" : back_result["server-error"] ? "Server error!" : ""
                                 )
                             )
@@ -816,8 +824,8 @@ export class StudiesSelfserviceFrontendApi {
                 }
             );
         } else {
-            page = this.#getFormInvalidElement(
-                this.#localization_api.translate(
+            page = await this.#getFormInvalidElement(
+                (await this.#getLocalizationApi()).translate(
                     get_result["network-error"] ? "Network error!" : get_result["server-error"] ? "Server error!" : ""
                 )
             );
@@ -834,7 +842,7 @@ export class StudiesSelfserviceFrontendApi {
      */
     async #post(post) {
         try {
-            return await this.#fetch_api.fetch({
+            return await (await this.#getFetchApi()).fetch({
                 url: "/api/post",
                 method: METHOD_POST,
                 data: post
@@ -859,7 +867,7 @@ export class StudiesSelfserviceFrontendApi {
     async #selectLanguage() {
         const select_language_parameters = this.#getSelectLanguageParameters();
 
-        await this.#localization_api.selectLanguage(
+        await (await this.#getLocalizationApi()).selectLanguage(
             select_language_parameters.localization_folder,
             select_language_parameters.module,
             select_language_parameters.ensure
