@@ -1,4 +1,5 @@
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
+import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
@@ -75,13 +76,14 @@ export class FormButtonsElement extends HTMLElement {
         buttons_element.classList.add("buttons");
 
         for (const button of this.#buttons) {
-            const button_element = document.createElement("button");
+            const button_element = FormButtonElement.new(
+                this.#css_api,
+                button.label
+            );
             if (button.right ?? false) {
                 button_element.dataset.right = true;
             }
-            button_element.innerText = button.label;
-            button_element.type = "button";
-            button_element.addEventListener("click", () => {
+            button_element.button.addEventListener("click", () => {
                 button.action();
             });
             buttons_element.appendChild(button_element);

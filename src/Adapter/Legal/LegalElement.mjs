@@ -301,16 +301,23 @@ export class LegalElement extends HTMLElement {
 
         const agb_element = this.#agb_form_element.addInput(
             this.#localization_api.translate(
-                "I accept the terms and conditions of {agb}",
-                null,
-                {
-                    agb: this.#legal.agb
-                }
+                "I accept the terms and conditions of"
             ),
             "checkbox",
             "agb"
         );
         agb_element.required = true;
+
+        const agb_link_element = document.createElement("a");
+        const link = this.#legal["agb-links"][this.#localization_api.getLanguage()] ?? this.#legal["agb-links"].en ?? "";
+        if (link !== "") {
+            agb_link_element.href = link;
+        }
+        agb_link_element.innerText = this.#legal["agb-title"];
+        agb_link_element.rel = "noopener noreferrer";
+        agb_link_element.target = "__blank";
+        agb_element.nextElementSibling.append(" ");
+        agb_element.nextElementSibling.appendChild(agb_link_element);
 
         this.#shadow.appendChild(this.#agb_form_element);
 

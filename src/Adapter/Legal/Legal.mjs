@@ -4,5 +4,5 @@
 /** @typedef {import("../Subject/Subject.mjs").Subject} Subject */
 
 /**
- * @typedef {{"degree-program": DegreeProgram, subject: Subject, combination: Combination, "single-choice": {[key: string]: string} | null, "multiple-choice": {[key: string]: string[]} | null, agb: string, "max-comments-length": number, values: AcceptedLegal | null}} Legal
+ * @typedef {{"degree-program": DegreeProgram, subject: Subject, combination: Combination, "single-choice": {[key: string]: string} | null, "multiple-choice": {[key: string]: string[]} | null, "agb-title": string, "agb-links": {[key: string]: string}, "max-comments-length": number, values: AcceptedLegal | null}} Legal
  */

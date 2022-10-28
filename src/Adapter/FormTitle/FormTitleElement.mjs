@@ -51,6 +51,14 @@ export class FormTitleElement extends HTMLElement {
     }
 
     /**
+     * @param {HTMLElement} element
+     * @returns {void}
+     */
+    addElement(element) {
+        this.#shadow.appendChild(element);
+    }
+
+    /**
      * @returns {void}
      */
     #render() {

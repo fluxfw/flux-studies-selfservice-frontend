@@ -222,15 +222,20 @@ export class PortraitElement extends HTMLElement {
             "TODO crop"
         );
 
-        this.#form_element.addSubtitle(
-            this.#localization_api.translate(
-                "Photo criteria {criteria}",
-                null,
-                {
-                    criteria: this.#portrait.criteria
-                }
-            )
+        const criteria_element = this.#form_element.addSubtitle(
+            ""
         );
+        const criteria_link_element = document.createElement("a");
+        const link = this.#portrait["photo-criteria-links"][this.#localization_api.getLanguage()] ?? this.#portrait["photo-criteria-links"].en ?? "";
+        if (link !== "") {
+            criteria_link_element.href = link;
+        }
+        criteria_link_element.innerText = this.#localization_api.translate(
+            "Photo criteria"
+        );
+        criteria_link_element.rel = "noopener noreferrer";
+        criteria_link_element.target = "__blank";
+        criteria_element.addElement(criteria_link_element);
 
         this.#form_element.addButtons(
             () => {
