@@ -1,12 +1,14 @@
 FROM node:19-alpine AS build
 
-COPY package*.json /build/flux-studies-selfservice-frontend/
-COPY bin/install-dependencies.sh /build/flux-studies-selfservice-frontend/bin/install-dependencies.sh
-RUN (cd /build/flux-studies-selfservice-frontend && npm ci --omit=dev)
+COPY package*.json /build/flux-studies-selfservice-frontend-build/
+COPY bin/install-dependencies.sh /build/flux-studies-selfservice-frontend-build/bin/install-dependencies.sh
+RUN (cd /build/flux-studies-selfservice-frontend-build && npm ci --omit=dev)
 
-COPY . /build/flux-studies-selfservice-frontend
+COPY . /build/flux-studies-selfservice-frontend-build/node_modules/flux-studies-selfservice-frontend
 
-RUN mkdir -p /build/flux-studies-selfservice-frontend/node_modules/flux-studies-selfservice-frontend && mv /build/flux-studies-selfservice-frontend/src /build/flux-studies-selfservice-frontend/node_modules/flux-studies-selfservice-frontend/src
+RUN /build/flux-studies-selfservice-frontend-build/node_modules/flux-studies-selfservice-frontend/bin/generate-pwa.mjs
+
+RUN cp -L -R /build/flux-studies-selfservice-frontend-build/node_modules/flux-studies-selfservice-frontend/src /build/flux-studies-selfservice-frontend && rm -rf /build/flux-studies-selfservice-frontend-build
 
 FROM nginx:mainline-alpine
 
@@ -22,7 +24,7 @@ server {\n\
 	index index.html;\n\
 \n\
     location / {\n\
-        root /flux-studies-selfservice-frontend/node_modules/flux-studies-selfservice-frontend/src;\n\
+        root /flux-studies-selfservice-frontend;\n\
     }\n\
 }" > /etc/nginx/conf.d/flux-studies-selfservice-frontend.conf
 

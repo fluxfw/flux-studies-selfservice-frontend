@@ -6,6 +6,13 @@ Changes:
 
 \-
 
+## v2022-10-31-1-alpha
+
+Changes:
+
+- Web root build
+- Generate `index.html` and multilang `manifest.json`'s
+
 ## v2022-10-28-2-alpha
 
 Changes:
