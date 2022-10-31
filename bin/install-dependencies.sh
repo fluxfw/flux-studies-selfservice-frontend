@@ -20,6 +20,10 @@ fi
 
 (mkdir -p $node_modules/flux-localization-api && cd $node_modules/flux-localization-api && wget -O - https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2022-10-28-1.tar.gz | tar -xz --strip-components=1)
 
-(mkdir -p $node_modules/flux-pwa-api && cd $node_modules/flux-pwa-api && wget -O - https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2022-10-28-1.tar.gz | tar -xz --strip-components=1)
+(mkdir -p $node_modules/flux-pwa-api && cd $node_modules/flux-pwa-api && wget -O - https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2022-10-31-1.tar.gz | tar -xz --strip-components=1)
+
+(mkdir -p $node_modules/flux-pwa-generator-api && cd $node_modules/flux-pwa-generator-api && wget -O - https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2022-10-31-1.tar.gz | tar -xz --strip-components=1)
 
 (mkdir -p $node_modules/flux-settings-api && cd $node_modules/flux-settings-api && wget -O - https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2022-10-17-1.tar.gz | tar -xz --strip-components=1)
+
+(mkdir -p $node_modules/flux-shutdown-handler-api && cd $node_modules/flux-shutdown-handler-api && wget -O - https://github.com/fluxfw/flux-shutdown-handler-api/archive/refs/tags/v2022-10-28-1.tar.gz | tar -xz --strip-components=1)

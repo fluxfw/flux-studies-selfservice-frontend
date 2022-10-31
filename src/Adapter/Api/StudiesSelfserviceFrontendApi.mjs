@@ -675,14 +675,7 @@ export class StudiesSelfserviceFrontendApi {
             this.#pwa_api ??= (await import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs")).PwaApi.new(
                 await this.#getCssApi(),
                 await this.#getJsonApi(),
-                `${__dirname}/../Pwa/manifest.json`,
-                async () => (await this.#getColorSchemeApi()).getBackground(),
-                async () => (await this.#getLocalizationApi()).getDirection(),
-                async () => (await this.#getLocalizationApi()).getLanguage(),
-                async () => (await this.#getColorSchemeApi()).getAccent(),
-                async text => (await this.#getLocalizationApi()).translate(
-                    text
-                )
+                await this.#getLocalizationApi()
             );
 
             await this.#pwa_api.init();
@@ -699,7 +692,9 @@ export class StudiesSelfserviceFrontendApi {
             localization_folder: `${__dirname}/../Localization`,
             module: null,
             ensure: async () => {
-                await (await this.#getPwaApi()).initPwa();
+                await (await this.#getPwaApi()).initPwa(
+                    `${__dirname}/../Pwa/manifest.json`
+                );
             }
         };
     }

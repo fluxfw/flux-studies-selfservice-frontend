@@ -1,10 +1,10 @@
 {
-    "background_color": null,
+    "background_color": "#ffffff",
     "categories": [
         "education"
     ],
-    "description": "",
-    "dir": null,
+    "description": "Application / Login",
+    "dir": "ltr",
     "display": "browser",
     "icons": [
         {
@@ -16,14 +16,19 @@
             "sizes": "1024x1024",
             "src": "../Icon/icon.webp",
             "type": "image/webp"
+        },
+        {
+            "sizes": "32x32",
+            "src": "../Icon/icon.ico",
+            "type": "image/x-icon"
         }
     ],
     "id": "studies-selfservice",
-    "lang": null,
+    "lang": "en",
     "name": "Studies selfservice",
     "orientation": "any",
     "scope": "../..",
     "short_name": "Studies selfservice",
     "start_url": "../..",
-    "theme_color": null
+    "theme_color": "#e3003d"
 }
