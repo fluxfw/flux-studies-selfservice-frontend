@@ -6,12 +6,13 @@ Changes:
 
 \-
 
-## v2022-10-31-1-alpha
+## v2022-10-31-1
 
 Changes:
 
 - Web root build
 - Generate `index.html` and multilang `manifest.json`'s
+- Remove `alpha`
 
 ## v2022-10-28-2-alpha
 
