@@ -7,12 +7,7 @@ try {
     await shutdown_handler_api.init();
     await shutdown_handler_api.getShutdownHandler();
 
-    const fetch_api = (await import("../../flux-fetch-api/src/Adapter/Api/FetchApi.mjs")).FetchApi.new();
-    await fetch_api.init();
-
-    const json_api = (await import("../../flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new(
-        fetch_api
-    );
+    const json_api = (await import("../../flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new();
     await json_api.init();
 
     const pwa_generator_api = (await import("../../flux-pwa-generator-api/src/Adapter/Api/PwaGeneratorApi.mjs")).PwaGeneratorApi.new(

@@ -265,18 +265,6 @@ export class FormElement extends HTMLElement {
 
     /**
      * @param {string} name
-     * @returns {InputElement[]}
-     */
-    getGroupedInputs(name) {
-        return name in this.inputs ? this.inputs[name] instanceof RadioNodeList ? [
-            ...this.inputs[name]
-        ] : [
-            this.inputs[name]
-        ] : [];
-    }
-
-    /**
-     * @param {string} name
      * @returns {{[key: string]: InputElement}}
      */
     getStartsWithInputs(name) {

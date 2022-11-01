@@ -1,0 +1,22 @@
+:host {
+    display: block;
+    margin: 10px 0;
+}
+
+.container {
+    height: fit-content;
+    margin: 0 auto;
+    position: relative;
+    width: fit-content;
+}
+
+.rectangle {
+    background-color: rgba(var(--accent-rgb), 0.5);
+    position: absolute;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    width: 1000px;
+}

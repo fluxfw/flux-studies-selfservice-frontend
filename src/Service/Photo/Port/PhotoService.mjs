@@ -129,6 +129,35 @@ export class PhotoService {
             photo_type
         );
 
+        if (crop !== null) {
+            const crop_ctx = this.createCtx(
+                image_element.naturalWidth,
+                image_element.naturalHeight,
+                crop.width,
+                crop.height
+            );
+
+            crop_ctx.canvas.width = crop.width;
+            crop_ctx.canvas.height = crop.height;
+
+            crop_ctx.drawImage(image_element, crop.x, crop.y, crop.width, crop.height, 0, 0, crop_ctx.canvas.width, crop_ctx.canvas.height);
+
+            return this.optimize(
+                await this.fromCtx(
+                    crop_ctx,
+                    null,
+                    1
+                ),
+                null,
+                null,
+                max_width,
+                max_height,
+                grayscale,
+                type,
+                quality
+            );
+        }
+
         const ctx = this.createCtx(
             image_element.naturalWidth,
             image_element.naturalHeight,
@@ -136,26 +165,11 @@ export class PhotoService {
             max_height
         );
 
-        if (crop !== null) {
-            ctx.canvas.width = crop.width;
-            ctx.canvas.height = crop.height;
-        }
-
         if (grayscale ?? true) {
             ctx.filter = "grayscale(1)";
         }
 
-        ctx.drawImage(image_element, ...crop !== null ? [
-            crop.x,
-            crop.y,
-            crop.width,
-            crop.height
-        ] : [
-            0,
-            0,
-            image_element.naturalWidth,
-            image_element.naturalHeight
-        ], 0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.drawImage(image_element, 0, 0, image_element.naturalWidth, image_element.naturalHeight, 0, 0, ctx.canvas.width, ctx.canvas.height);
 
         return this.fromCtx(
             ctx,

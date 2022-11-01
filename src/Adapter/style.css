@@ -1,11 +1,14 @@
 :root {
     --accent: #e3003d;
+    --accent-rgb: 227, 0, 61;
     --color-scheme-dark-accent: var(--accent);
+    --color-scheme-dark-accent-rgb: var(--accent-rgb);
     --color-scheme-dark-background: #000000;
     --color-scheme-dark-foreground: #ffffff;
     --color-scheme-dark-form-background-color: #080808;
     --color-scheme-dark-form-buttons-background-color: #151515;
     --color-scheme-light-accent: var(--accent);
+    --color-scheme-light-accent-rgb: var(--accent-rgb);
     --color-scheme-light-background: #ffffff;
     --color-scheme-light-foreground: #000000;
     --color-scheme-light-form-background-color: #f7f7f7;

@@ -111,9 +111,9 @@ export class ChoiceSubjectElement extends HTMLElement {
         const post_result = await this.#chosen_subject_function(
             {
                 "degree-program": this.#degree_program_form_element.inputs["degree-program"].value,
-                qualifications: Object.fromEntries(this.#qualifications_form_element.getGroupedInputs(
-                    "qualification"
-                ).map(input_element => [
+                qualifications: Object.fromEntries(Object.values(this.#qualifications_form_element.getStartsWithInputs(
+                    "qualification_"
+                )).map(input_element => [
                     input_element.value,
                     input_element.checked
                 ]))
@@ -224,9 +224,9 @@ export class ChoiceSubjectElement extends HTMLElement {
                 }
             }
 
-            for (const input_element of this.#qualifications_form_element.getGroupedInputs(
-                "qualification"
-            )) {
+            for (const input_element of Object.values(this.#qualifications_form_element.getStartsWithInputs(
+                "qualification_"
+            ))) {
                 if (input_element.value in this.#choice_subject.values.qualifications) {
                     input_element.checked = this.#choice_subject.values.qualifications[input_element.value];
                 }
@@ -247,7 +247,7 @@ export class ChoiceSubjectElement extends HTMLElement {
                     qualification
                 ),
                 "checkbox",
-                "qualification"
+                `qualification_${qualification.id}`
             );
             input_element.required = qualification.required;
             input_element.value = qualification.id;
