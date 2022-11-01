@@ -180,7 +180,7 @@ export class StudiesSelfserviceFrontendApi {
     async #back() {
         try {
             await (await this.#getFetchApi()).fetch({
-                url: "/api/back",
+                url: `${__dirname}/../../api/back`,
                 method: METHOD_POST
             });
 
@@ -207,7 +207,7 @@ export class StudiesSelfserviceFrontendApi {
     async #get() {
         try {
             return await (await this.#getFetchApi()).fetch({
-                url: "/api/get"
+                url: `${__dirname}/../../api/get`
             });
         } catch (error) {
             console.error(error);
@@ -269,6 +269,7 @@ export class StudiesSelfserviceFrontendApi {
                     [COLOR_SCHEME_DARK]: "dark"
                 },
                 [
+                    "accent-rgb",
                     "form-background-color",
                     "form-buttons-background-color"
                 ]
@@ -838,7 +839,7 @@ export class StudiesSelfserviceFrontendApi {
     async #post(post) {
         try {
             return await (await this.#getFetchApi()).fetch({
-                url: "/api/post",
+                url: `${__dirname}/../../api/post`,
                 method: METHOD_POST,
                 data: post
             });

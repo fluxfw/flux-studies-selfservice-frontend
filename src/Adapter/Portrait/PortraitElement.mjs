@@ -2,6 +2,7 @@ import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs"
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_PORTRAIT } from "../Page/PAGE.mjs";
+import { PhotoElement } from "../Photo/PhotoElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
@@ -10,7 +11,6 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("./getLoadingElement.mjs").getLoadingElement} getLoadingElement */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../Photo/Photo.mjs").Photo} Photo */
-/** @typedef {import("../Photo/PhotoCrop.mjs").PhotoCrop} PhotoCrop */
 /** @typedef {import("../../Service/Photo/Port/PhotoService.mjs").PhotoService} PhotoService */
 /** @typedef {import("./Portrait.mjs").Portrait} Portrait */
 
@@ -26,10 +26,6 @@ export class PortraitElement extends HTMLElement {
      */
     #chosen_portrait_function;
     /**
-     * @type {PhotoCrop | null}
-     */
-    #crop = null;
-    /**
      * @type {CssApi}
      */
     #css_api;
@@ -42,10 +38,6 @@ export class PortraitElement extends HTMLElement {
      */
     #get_loading_element;
     /**
-     * @type {HTMLImageElement}
-     */
-    #image_element;
-    /**
      * @type {LocalizationApi}
      */
     #localization_api;
@@ -53,6 +45,10 @@ export class PortraitElement extends HTMLElement {
      * @type {Photo | null}
      */
     #photo = null;
+    /**
+     * @type {PhotoElement}
+     */
+    #photo_element;
     /**
      * @type {PhotoService}
      */
@@ -171,7 +167,7 @@ export class PortraitElement extends HTMLElement {
     #removePhoto() {
         this.#photo = null;
         this.#form_element.inputs.photo.value = "";
-        this.#image_element.src = "";
+        this.#photo_element.setImage();
     }
 
     /**
@@ -211,15 +207,14 @@ export class PortraitElement extends HTMLElement {
         });
         input_element.required = this.#portrait["required-photo"];
 
-        this.#image_element = new Image();
-        this.#image_element.style.display = "block";
-        this.#image_element.style.margin = "5px auto";
-        this.#image_element.style.maxWidth = "100%";
-        this.#image_element.style.width = "1000px";
-        input_element.parentElement.parentElement.parentElement.appendChild(this.#image_element);
+        input_element.parentElement.parentElement.parentElement.appendChild(this.#photo_element = PhotoElement.new(
+            this.#css_api
+        ));
 
         this.#form_element.addSubtitle(
-            "TODO crop"
+            this.#localization_api.translate(
+                "The photo can been crop by dragging a rectangle with holding primary mouse button or touchscreen"
+            )
         );
 
         const criteria_element = this.#form_element.addSubtitle(
@@ -282,7 +277,7 @@ export class PortraitElement extends HTMLElement {
             this.#photo = await this.#photo_service.optimize(
                 photo.photo,
                 photo.type,
-                this.#crop,
+                !final ? null : this.#photo_element.crop,
                 !final ? 1000 : null,
                 !final ? 1000 : null,
                 null,
@@ -290,14 +285,14 @@ export class PortraitElement extends HTMLElement {
                 !final ? 1 : null
             );
 
-            this.#crop = null;
-
             if (final) {
                 return;
             }
 
-            this.#image_element.src = this.#photo_service.toDataUrl(
-                this.#photo
+            this.#photo_element.setImage(
+                this.#photo_service.toDataUrl(
+                    this.#photo
+                )
             );
 
             this.#photo_service.toInputElement(
@@ -305,6 +300,17 @@ export class PortraitElement extends HTMLElement {
                 this.#form_element.inputs.photo
             );
         } catch (error) {
+            if (final) {
+                this.#form_element.setCustomValidationMessage(
+                    this.#form_element.inputs.photo,
+                    this.#localization_api.translate(
+                        "The photo could not been optimized!"
+                    )
+                );
+
+                throw error;
+            }
+
             console.error(error);
 
             this.#removePhoto();
