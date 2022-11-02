@@ -117,6 +117,11 @@ export class StudiesSelfserviceFrontendApi {
         await this.#getPwaApi();
 
         await css_api.importCss(
+            `${__dirname.substring(0, __dirname.lastIndexOf("/"))}/FormInvalid/FormInvalidElement.css`
+        );
+        await import("../FormInvalid/FormInvalidElement.mjs");
+
+        await css_api.importCss(
             `${__dirname}/../style.css`
         );
         css_api.importCssToRoot(
@@ -124,13 +129,7 @@ export class StudiesSelfserviceFrontendApi {
             `${__dirname}/../style.css`
         );
 
-        css_api.importCss(
-            `${__dirname.substring(0, __dirname.lastIndexOf("/"))}/FormInvalid/FormInvalidElement.css`
-        );
-
-        await import("../FormInvalid/FormInvalidElement.mjs");
-
-        color_scheme_api.renderColorScheme();
+        await color_scheme_api.renderColorScheme();
 
         await this.#selectLanguage();
     }
@@ -269,7 +268,6 @@ export class StudiesSelfserviceFrontendApi {
                     [COLOR_SCHEME_DARK]: "dark"
                 },
                 [
-                    "accent-rgb",
                     "form-background-color",
                     "form-buttons-background-color"
                 ]

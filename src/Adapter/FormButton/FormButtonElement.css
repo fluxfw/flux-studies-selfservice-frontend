@@ -3,11 +3,13 @@
 }
 
 button {
-    all: initial;
     background-color: var(--form-button-background-color);
+    border: none;
+    border-radius: 0;
     color: var(--form-button-text-color);
     display: block;
     font-family: inherit;
+    font-size: inherit;
     padding: 10px;
 }
 

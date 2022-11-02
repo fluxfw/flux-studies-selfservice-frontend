@@ -19,10 +19,11 @@
     "Please select less {ect}!": "Bitte wähle {ect} weniger aus!",
     "Please select more {ect}!": "Bitte wähle {ect} mehr aus!",
     "Portrait": "Portrait",
+    "Remove crop": "Zuschneidung entfernen",
     "Server error!": "Server-Fehler!",
     "Some line contains no name!": "Eine Zeile enthält keinen Namen!",
     "Studies selfservice": "Studium-Selfservice",
     "The end date can not be before the start date!": "Das End-Datum kann nicht vor dem Start-Datum liegen!",
-    "The photo could not been optimized!": "Das Foto konnte nicht optimiert werden!",
-    "The photo can been crop by dragging a rectangle with holding primary mouse button or touchscreen": "Das Foto kann durch Ziehen eines Rechtecks mit gedrückter primären Maustaste oder Touchscreen zugeschnitten werden"
+    "The photo can crop by dragging a rectangle with holding primary mouse button or touchscreen": "Das Foto kann durch Ziehen eines Rechtecks mit gedrückter primären Maustaste oder Touchscreen zugeschnitten werden",
+    "The photo could not been optimized!": "Das Foto konnte nicht optimiert werden!"
 }

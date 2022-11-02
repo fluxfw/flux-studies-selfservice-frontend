@@ -208,14 +208,9 @@ export class PortraitElement extends HTMLElement {
         input_element.required = this.#portrait["required-photo"];
 
         input_element.parentElement.parentElement.parentElement.appendChild(this.#photo_element = PhotoElement.new(
-            this.#css_api
+            this.#css_api,
+            this.#localization_api
         ));
-
-        this.#form_element.addSubtitle(
-            this.#localization_api.translate(
-                "The photo can been crop by dragging a rectangle with holding primary mouse button or touchscreen"
-            )
-        );
 
         const criteria_element = this.#form_element.addSubtitle(
             ""
