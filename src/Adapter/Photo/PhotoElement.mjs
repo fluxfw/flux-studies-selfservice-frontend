@@ -1,7 +1,10 @@
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
+import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
+import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 
 /** @typedef {import("./PhotoCrop.mjs").PhotoCrop} PhotoCrop */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -11,10 +14,6 @@ export class PhotoElement extends HTMLElement {
      */
     #container_element;
     /**
-     * @type {PhotoCrop | null}
-     */
-    #crop = null;
-    /**
      * @type {CssApi}
      */
     #css_api;
@@ -23,9 +22,21 @@ export class PhotoElement extends HTMLElement {
      */
     #image_element;
     /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
+    /**
+     * @type {PhotoCrop | null}
+     */
+    #rectangle = null;
+    /**
      * @type {HTMLDivElement | null}
      */
     #rectangle_element = null;
+    /**
+     * @type {FormButtonElement}
+     */
+    #remove_crop_element;
     /**
      * @type {ShadowRoot}
      */
@@ -37,22 +48,26 @@ export class PhotoElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
+     * @param {LocalizationApi} localization_api
      * @returns {PhotoElement}
      */
-    static new(css_api) {
+    static new(css_api, localization_api) {
         return new this(
-            css_api
+            css_api,
+            localization_api
         );
     }
 
     /**
      * @param {CssApi} css_api
+     * @param {LocalizationApi} localization_api
      * @private
      */
-    constructor(css_api) {
+    constructor(css_api, localization_api) {
         super();
 
         this.#css_api = css_api;
+        this.#localization_api = localization_api;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -77,28 +92,43 @@ export class PhotoElement extends HTMLElement {
     handleEvent(e) {
         switch (e.type) {
             case "mousedown":
-            case "touchstart":
-                this.#startCrop(
+                this.#mouseDown(
                     e
                 );
                 break;
 
             case "mousemove":
-            case "touchmove":
-                this.#moveCrop(
+                this.#mouseMove(
                     e
                 );
                 break;
 
             case "mouseup":
-            case "touchend":
-                this.#endCrop(
+                this.#mouseUp(
                     e
                 );
                 break;
 
             case "touchcancel":
-                this.#stopCrop();
+                this.#stopDrag();
+                break;
+
+            case "touchend":
+                this.#touchEnd(
+                    e
+                );
+                break;
+
+            case "touchmove":
+                this.#touchMove(
+                    e
+                );
+                break;
+
+            case "touchstart":
+                this.#touchStart(
+                    e
+                );
                 break;
 
             default:
@@ -110,15 +140,15 @@ export class PhotoElement extends HTMLElement {
      * @returns {PhotoCrop | null}
      */
     get crop() {
-        if (this.#crop === null) {
+        if (this.#rectangle === null) {
             return null;
         }
 
         return {
-            x: Math.floor(this.#crop.x * this.#image_element.naturalWidth / 100),
-            y: Math.floor(this.#crop.y * this.#image_element.naturalHeight / 100),
-            width: Math.ceil(this.#crop.width * this.#image_element.naturalWidth / 100),
-            height: Math.ceil(this.#crop.height * this.#image_element.naturalHeight / 100)
+            x: Math.floor(this.#rectangle.x * this.#image_element.naturalWidth / 100),
+            y: Math.floor(this.#rectangle.y * this.#image_element.naturalHeight / 100),
+            width: Math.ceil(this.#rectangle.width * this.#image_element.naturalWidth / 100),
+            height: Math.ceil(this.#rectangle.height * this.#image_element.naturalHeight / 100)
         };
     }
 
@@ -127,42 +157,16 @@ export class PhotoElement extends HTMLElement {
      * @returns {void}
      */
     setImage(src = null) {
-        this.#crop = null;
-
-        this.#stopCrop();
+        this.#removeRectangle();
 
         this.#image_element.src = src ?? "";
     }
 
     /**
-     * @param {MouseEvent | TouchEvent} e
-     * @returns {void}
-     */
-    #endCrop(e) {
-        e.preventDefault();
-
-        if (this.#image_element.src === "") {
-            this.#stopCrop();
-            return;
-        }
-
-        if (e instanceof MouseEvent && e.button !== 0) {
-            this.#stopCrop();
-            return;
-        }
-
-        this.#crop = this.#getCrop(
-            e
-        );
-
-        this.#stopCrop();
-    }
-
-    /**
-     * @param {MouseEvent | TouchEvent} e
+     * @param {MouseEvent | Touch} e
      * @returns {PhotoCrop | null}
      */
-    #getCrop(e) {
+    #getRectangle(e) {
         const container_rectangle = this.#container_element.getClientRects()[0] ?? null;
 
         if (container_rectangle === null) {
@@ -176,15 +180,11 @@ export class PhotoElement extends HTMLElement {
             return null;
         }
 
-        const _e = "TouchEvent" in globalThis && e instanceof TouchEvent ? [
-            ...e.touches
-        ].find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0] : e;
+        const startClientX = Math.max(container_rectangle.left, Math.min(container_rectangle.right, this.#start.clientX > e.clientX ? e.clientX : this.#start.clientX));
+        const clientX = Math.max(container_rectangle.left, Math.min(container_rectangle.right, this.#start.clientX < e.clientX ? e.clientX : this.#start.clientX));
 
-        const startClientX = Math.max(container_rectangle.left, Math.min(container_rectangle.right, this.#start.clientX > _e.clientX ? _e.clientX : this.#start.clientX));
-        const clientX = Math.max(container_rectangle.left, Math.min(container_rectangle.right, this.#start.clientX < _e.clientX ? _e.clientX : this.#start.clientX));
-
-        const startClientY = Math.max(container_rectangle.top, Math.min(container_rectangle.bottom, this.#start.clientY > _e.clientY ? _e.clientY : this.#start.clientY));
-        const clientY = Math.max(container_rectangle.top, Math.min(container_rectangle.bottom, this.#start.clientY < _e.clientY ? _e.clientY : this.#start.clientY));
+        const startClientY = Math.max(container_rectangle.top, Math.min(container_rectangle.bottom, this.#start.clientY > e.clientY ? e.clientY : this.#start.clientY));
+        const clientY = Math.max(container_rectangle.top, Math.min(container_rectangle.bottom, this.#start.clientY < e.clientY ? e.clientY : this.#start.clientY));
 
         const x = Math.max(0, startClientX - container_rectangle.left);
         const y = Math.max(0, startClientY - container_rectangle.top);
@@ -204,27 +204,77 @@ export class PhotoElement extends HTMLElement {
     }
 
     /**
-     * @param {MouseEvent | TouchEvent} e
+     * @param {MouseEvent} e
      * @returns {void}
      */
-    #moveCrop(e) {
+    #mouseDown(e) {
         e.preventDefault();
 
-        if (this.#image_element.src === "") {
-            this.#stopCrop();
+        this.#stopDrag();
+
+        if (this.#image_element.src === "" || e.button !== 0) {
             return;
         }
 
-        if (e instanceof MouseEvent && e.button !== 0) {
-            this.#stopCrop();
+        this.#start = e;
+
+        this.#rectangle = this.#getRectangle(
+            this.#start
+        );
+
+        this.#updateRectangle();
+
+        document.addEventListener("mousemove", this);
+        document.addEventListener("mouseup", this);
+    }
+
+    /**
+     * @param {MouseEvent} e
+     * @returns {void}
+     */
+    #mouseMove(e) {
+        e.preventDefault();
+
+        if (this.#start === null || this.#image_element.src === "" || e.button !== 0) {
+            this.#stopDrag();
             return;
         }
 
-        this.#crop = this.#getCrop(
+        this.#rectangle = this.#getRectangle(
             e
         );
 
-        this.#updateCrop();
+        this.#updateRectangle();
+    }
+
+    /**
+     * @param {MouseEvent} e
+     * @returns {void}
+     */
+    #mouseUp(e) {
+        e.preventDefault();
+
+        if (this.#start === null || this.#image_element.src === "" || e.button !== 0) {
+            this.#stopDrag();
+            return;
+        }
+
+        this.#rectangle = this.#getRectangle(
+            e
+        );
+
+        this.#updateRectangle();
+
+        this.#stopDrag();
+    }
+
+    /**
+     * @returns {void}
+     */
+    #removeRectangle() {
+        this.#rectangle = null;
+
+        this.#stopDrag();
     }
 
     /**
@@ -236,66 +286,124 @@ export class PhotoElement extends HTMLElement {
 
         this.#container_element.appendChild(this.#image_element = new Image());
 
-        this.addEventListener("mousedown", this);
-        this.addEventListener("touchstart", this);
+        this.#container_element.addEventListener("mousedown", this);
+        this.#container_element.addEventListener("touchcancel", this);
+        this.#container_element.addEventListener("touchend", this);
+        this.#container_element.addEventListener("touchmove", this);
+        this.#container_element.addEventListener("touchstart", this);
         this.#shadow.appendChild(this.#container_element);
+
+        this.#shadow.appendChild(
+            FormSubtitleElement.new(
+                this.#css_api,
+                this.#localization_api.translate(
+                    "The photo can crop by dragging a rectangle with holding primary mouse button or touchscreen"
+                )
+            )
+        );
+
+        this.#remove_crop_element = FormButtonElement.new(
+            this.#css_api,
+            this.#localization_api.translate(
+                "Remove crop"
+            )
+        );
+        this.#remove_crop_element.button.disabled = true;
+        this.#remove_crop_element.button.addEventListener("click", () => {
+            this.#removeRectangle();
+        });
+        this.#shadow.appendChild(this.#remove_crop_element);
     }
 
     /**
-     * @param {MouseEvent | TouchEvent} e
      * @returns {void}
      */
-    #startCrop(e) {
+    #stopDrag() {
+        document.removeEventListener("mousemove", this);
+        document.removeEventListener("mouseup", this);
+
+        this.#start = null;
+
+        this.#updateRectangle();
+    }
+
+    /**
+     * @param {TouchEvent} e
+     * @returns {void}
+     */
+    #touchEnd(e) {
         e.preventDefault();
 
-        this.#stopCrop();
+        if (this.#start === null || this.#image_element.src === "") {
+            this.#stopDrag();
+            return;
+        }
+
+        /*this.#rectangle = this.#getRectangle(
+            [
+                ...e.touches
+            ].find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0]
+        );
+
+        this.#updateRectangle();*/
+
+        this.#stopDrag();
+    }
+
+    /**
+     * @param {TouchEvent} e
+     * @returns {void}
+     */
+    #touchMove(e) {
+        e.preventDefault();
+
+        if (this.#start === null || this.#image_element.src === "") {
+            this.#stopDrag();
+            return;
+        }
+
+        this.#rectangle = this.#getRectangle(
+            [
+                ...e.touches
+            ].find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0]
+        );
+
+        this.#updateRectangle();
+    }
+
+    /**
+     * @param {TouchEvent} e
+     * @returns {void}
+     */
+    #touchStart(e) {
+        e.preventDefault();
+
+        this.#stopDrag();
 
         if (this.#image_element.src === "") {
             return;
         }
 
-        if (e instanceof MouseEvent && e.button !== 0) {
-            return;
-        }
+        [
+            this.#start
+        ] = e.touches;
 
-        this.#start = e instanceof TouchEvent ? e.touches[0] : e;
-
-        this.#crop = this.#getCrop(
+        /*this.#rectangle = this.#getRectangle(
             this.#start
         );
 
-        this.#updateCrop();
-
-        document.addEventListener("mousemove", this);
-        document.addEventListener("touchmove", this);
-
-        document.addEventListener("mouseup", this);
-        document.addEventListener("touchend", this);
+        this.#updateRectangle();*/
     }
 
     /**
      * @returns {void}
      */
-    #stopCrop() {
-        document.removeEventListener("mousemove", this);
-        document.removeEventListener("touchmove", this);
-
-        document.removeEventListener("mouseup", this);
-        document.removeEventListener("touchend", this);
-
-        this.#start = null;
-
-        this.#updateCrop();
-    }
-
-    /**
-     * @returns {void}
-     */
-    #updateCrop() {
-        if (this.#crop === null) {
+    #updateRectangle() {
+        if (this.#rectangle === null) {
             if (this.#rectangle_element !== null) {
                 this.#rectangle_element.remove();
                 this.#rectangle_element = null;
+                this.#remove_crop_element.button.disabled = true;
             }
             return;
         }
@@ -304,12 +412,13 @@ export class PhotoElement extends HTMLElement {
             this.#rectangle_element = document.createElement("div");
             this.#rectangle_element.classList.add("rectangle");
             this.#container_element.appendChild(this.#rectangle_element);
+            this.#remove_crop_element.button.disabled = false;
         }
 
-        this.#rectangle_element.style.left = `${this.#crop.x}%`;
-        this.#rectangle_element.style.top = `${this.#crop.y}%`;
-        this.#rectangle_element.style.width = `${this.#crop.width}%`;
-        this.#rectangle_element.style.height = `${this.#crop.height}%`;
+        this.#rectangle_element.style.left = `${this.#rectangle.x}%`;
+        this.#rectangle_element.style.top = `${this.#rectangle.y}%`;
+        this.#rectangle_element.style.width = `${this.#rectangle.width}%`;
+        this.#rectangle_element.style.height = `${this.#rectangle.height}%`;
     }
 }
 

@@ -106,7 +106,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         const post_result = await this.#chosen_intended_degree_program_2_function(
             {
                 "single-choice": this.#intended_degree_program_2.combination["single-choice"] !== null ? Object.fromEntries(Object.entries(this.#form_element.getStartsWithInputs(
-                    "single-choice_"
+                    "single-choice-"
                 )).map(([
                     id,
                     input_element
@@ -115,7 +115,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                         input_element.value
                     ])) : null,
                 "multiple-choice": this.#intended_degree_program_2.combination["multiple-choice"] !== null ? Object.fromEntries(Object.entries(this.#form_element.getStartsWithInputs(
-                    "multiple-choice_"
+                    "multiple-choice-"
                 )).map(([
                     id,
                     input_element
@@ -180,7 +180,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                 }
 
                 for (const multiple_choice of this.#intended_degree_program_2.combination["multiple-choice"]) {
-                    const input_element = this.#form_element.inputs[`multiple-choice_${multiple_choice.id}`];
+                    const input_element = this.#form_element.inputs[`multiple-choice-${multiple_choice.id}`];
 
                     const values = [
                         ...input_element.selectedOptions
@@ -280,7 +280,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                             single_choice
                         ),
                         "select",
-                        `single-choice_${single_choice.id}`,
+                        `single-choice-${single_choice.id}`,
                         true
                     );
                     single_choice_element.required = true;
@@ -303,7 +303,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                             multiple_choice
                         ),
                         "select",
-                        `multiple-choice_${multiple_choice.id}`,
+                        `multiple-choice-${multiple_choice.id}`,
                         true
                     );
                     multiple_choice_element.innerHTML = "";
@@ -367,7 +367,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                     id,
                     input_element
                 ] of Object.entries(this.#form_element.getStartsWithInputs(
-                    "single-choice_"
+                    "single-choice-"
                 ))) {
                     if (id in this.#intended_degree_program_2.values["single-choice"]) {
                         input_element.value = this.#intended_degree_program_2.values["single-choice"][id];
@@ -380,7 +380,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                     id,
                     input_element
                 ] of Object.entries(this.#form_element.getStartsWithInputs(
-                    "multiple-choice_"
+                    "multiple-choice-"
                 ))) {
                     if (id in this.#intended_degree_program_2.values["multiple-choice"]) {
                         for (const option_element of input_element.options) {
