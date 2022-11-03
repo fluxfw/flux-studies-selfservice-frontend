@@ -244,6 +244,9 @@ export class PhotoElement extends HTMLElement {
             e
         );
 
+        this.#container_element.dataset.no_cursor = true;
+        document.body.style.cursor = `${(e.clientX > this.#start.clientX && e.clientY < this.#start.clientY) || (e.clientX < this.#start.clientX && e.clientY > this.#start.clientY) ? "sw" : "nw"}-resize`;
+
         this.#updateRectangle();
     }
 
@@ -297,7 +300,7 @@ export class PhotoElement extends HTMLElement {
             FormSubtitleElement.new(
                 this.#css_api,
                 this.#localization_api.translate(
-                    "The photo can crop by dragging a rectangle with holding primary mouse button or touchscreen"
+                    "The photo can crop by dragging a rectangle with holding primary mouse button or touchscreen. The selection is croped on continue"
                 )
             )
         );
@@ -323,6 +326,9 @@ export class PhotoElement extends HTMLElement {
         document.removeEventListener("mouseup", this);
 
         this.#start = null;
+
+        delete this.#container_element.dataset.no_cursor;
+        document.body.style.cursor = "";
 
         this.#updateRectangle();
     }
