@@ -5,5 +5,5 @@ RUN (mkdir -p /path/to/web-root && cd /path/to/web-root && wget -O - https://git
 ```
 
 ```shell
-docker run --rm -p [%host_ip%:]80:80 fluxfw/flux-studies-selfservice-frontend:latest
+docker run --rm -p [%host_ip%:]80:80 fluxfw/flux-studies-selfservice-frontend:vYYYY-MM-DD-I
 ```
