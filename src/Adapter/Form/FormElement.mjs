@@ -164,9 +164,7 @@ export class FormElement extends HTMLElement {
             if (type === "file") {
                 const remove_element = FormButtonElement.new(
                     this.#css_api,
-                    this.#localization_api.translate(
-                        "X"
-                    )
+                    "X"
                 );
                 remove_element.button.disabled = true;
                 remove_element.button.addEventListener("click", () => {
@@ -265,9 +263,17 @@ export class FormElement extends HTMLElement {
 
     /**
      * @param {string} name
+     * @returns {InputElement[]}
+     */
+    getInputsByName(name) {
+        return Object.values(this.inputs).filter(input_element => input_element.name === name);
+    }
+
+    /**
+     * @param {string} name
      * @returns {{[key: string]: InputElement}}
      */
-    getStartsWithInputs(name) {
+    getInputsByNameStartsWith(name) {
         return Object.fromEntries(Object.values(this.inputs).filter(input_element => input_element.name.startsWith(name)).map(input_element => [
             input_element.name.substring(name.length),
             input_element

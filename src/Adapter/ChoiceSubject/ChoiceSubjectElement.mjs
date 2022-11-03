@@ -110,8 +110,10 @@ export class ChoiceSubjectElement extends HTMLElement {
 
         const post_result = await this.#chosen_subject_function(
             {
-                "degree-program": this.#degree_program_form_element.inputs["degree-program"].value,
-                qualifications: Object.fromEntries(Object.values(this.#qualifications_form_element.getStartsWithInputs(
+                "degree-program": this.#degree_program_form_element.getInputsByName(
+                    "degree-program"
+                ).find(input_element => input_element.checked).value,
+                qualifications: Object.fromEntries(Object.values(this.#qualifications_form_element.getInputsByNameStartsWith(
                     "qualification-"
                 )).map(input_element => [
                     input_element.value,
@@ -216,7 +218,9 @@ export class ChoiceSubjectElement extends HTMLElement {
         ));
 
         if (this.#choice_subject.values !== null) {
-            for (const input_element of this.#degree_program_form_element.inputs["degree-program"]) {
+            for (const input_element of this.#degree_program_form_element.getInputsByName(
+                "degree-program"
+            )) {
                 if (input_element.value === this.#choice_subject.values["degree-program"]) {
                     input_element.checked = true;
                     input_element.dispatchEvent(new Event("input"));
@@ -224,7 +228,7 @@ export class ChoiceSubjectElement extends HTMLElement {
                 }
             }
 
-            for (const input_element of Object.values(this.#qualifications_form_element.getStartsWithInputs(
+            for (const input_element of Object.values(this.#qualifications_form_element.getInputsByNameStartsWith(
                 "qualification-"
             ))) {
                 if (input_element.value in this.#choice_subject.values.qualifications) {

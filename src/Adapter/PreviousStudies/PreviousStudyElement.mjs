@@ -148,9 +148,7 @@ export class PreviousStudyElement extends HTMLElement {
 
         const remove_previous_study_element = FormButtonElement.new(
             this.#css_api,
-            this.#localization_api.translate(
-                "X"
-            )
+            "X"
         );
         remove_previous_study_element.button.addEventListener("click", () => {
             this.#remove_previous_study_function();
