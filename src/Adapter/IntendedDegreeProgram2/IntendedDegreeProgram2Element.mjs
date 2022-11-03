@@ -105,7 +105,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         const post_result = await this.#chosen_intended_degree_program_2_function(
             {
-                "single-choice": this.#intended_degree_program_2.combination["single-choice"] !== null ? Object.fromEntries(Object.entries(this.#form_element.getStartsWithInputs(
+                "single-choice": this.#intended_degree_program_2.combination["single-choice"] !== null ? Object.fromEntries(Object.entries(this.#form_element.getInputsByNameStartsWith(
                     "single-choice-"
                 )).map(([
                     id,
@@ -114,7 +114,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                         id,
                         input_element.value
                     ])) : null,
-                "multiple-choice": this.#intended_degree_program_2.combination["multiple-choice"] !== null ? Object.fromEntries(Object.entries(this.#form_element.getStartsWithInputs(
+                "multiple-choice": this.#intended_degree_program_2.combination["multiple-choice"] !== null ? Object.fromEntries(Object.entries(this.#form_element.getInputsByNameStartsWith(
                     "multiple-choice-"
                 )).map(([
                     id,
@@ -323,16 +323,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
                 this.#form_element.addSubtitle(
                     this.#localization_api.translate(
-                        "On desktop operating systems/browsers may use {ctrl} + {click} for select multiple options",
-                        null,
-                        {
-                            click: this.#localization_api.translate(
-                                "Click"
-                            ),
-                            ctrl: this.#localization_api.translate(
-                                "Ctrl"
-                            )
-                        }
+                        "On desktop operating systems/browsers may use Ctrl + Click for select multiple options"
                     )
                 );
             }
@@ -366,7 +357,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                 for (const [
                     id,
                     input_element
-                ] of Object.entries(this.#form_element.getStartsWithInputs(
+                ] of Object.entries(this.#form_element.getInputsByNameStartsWith(
                     "single-choice-"
                 ))) {
                     if (id in this.#intended_degree_program_2.values["single-choice"]) {
@@ -379,7 +370,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                 for (const [
                     id,
                     input_element
-                ] of Object.entries(this.#form_element.getStartsWithInputs(
+                ] of Object.entries(this.#form_element.getInputsByNameStartsWith(
                     "multiple-choice-"
                 ))) {
                     if (id in this.#intended_degree_program_2.values["multiple-choice"]) {

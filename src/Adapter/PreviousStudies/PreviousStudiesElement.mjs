@@ -216,9 +216,7 @@ export class PreviousStudiesElement extends HTMLElement {
 
         const add_previous_study_element = FormButtonElement.new(
             this.#css_api,
-            this.#localization_api.translate(
-                "+"
-            )
+            "+"
         );
         add_previous_study_element.button.addEventListener("click", () => {
             this.#addPreviousStudy();

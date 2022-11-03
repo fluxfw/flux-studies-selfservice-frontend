@@ -14,7 +14,7 @@ label {
     cursor: pointer;
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     padding: 5px 0;
 }
 
@@ -120,7 +120,6 @@ button:not(:disabled) {
 label[data-seperate] {
     align-items: start;
     flex-direction: column;
-    flex-wrap: nowrap;
 }
 
 label[data-seperate] :where(
@@ -141,7 +140,6 @@ label[data-seperate] .input_container {
     label {
         align-items: start;
         flex-direction: column;
-        flex-wrap: nowrap;
     }
 
     .input_field,

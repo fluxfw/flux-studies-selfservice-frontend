@@ -165,11 +165,24 @@ export class PhotoService {
             max_height
         );
 
-        if (grayscale ?? true) {
+        const _grayscale = grayscale ?? true;
+        if (_grayscale && "filter" in ctx) {
             ctx.filter = "grayscale(1)";
         }
 
         ctx.drawImage(image_element, 0, 0, image_element.naturalWidth, image_element.naturalHeight, 0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        if (_grayscale && !("filter" in ctx)) {
+            // https://stackoverflow.com/questions/53364140/how-can-i-grayscale-a-canvas-image-in-javascript#answer-53365073
+            const image_data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+            for (let i = 0; i < image_data.data.length; i += 4) {
+                const lightness = parseInt((image_data.data[i] + image_data.data[i + 1] + image_data.data[i + 2]) / 3);
+                image_data.data[i] = lightness;
+                image_data.data[i + 1] = lightness;
+                image_data.data[i + 2] = lightness;
+            }
+            ctx.putImageData(image_data, 0, 0);
+        }
 
         return this.fromCtx(
             ctx,

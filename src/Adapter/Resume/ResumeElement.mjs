@@ -101,7 +101,7 @@ export class ResumeElement extends HTMLElement {
 
         this.#form_element.addSubtitle(
             this.#localization_api.translate(
-                "Resume from where you left off!"
+                "Resume from where you left off"
             )
         );
 

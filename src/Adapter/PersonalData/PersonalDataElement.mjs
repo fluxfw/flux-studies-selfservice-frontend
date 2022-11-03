@@ -426,17 +426,14 @@ export class PersonalDataElement extends HTMLElement {
             )
         );
 
-        for (const [
-            phone_type,
-            phone_label
-        ] of Object.entries({
-            home: "Home",
-            mobile: "Mobile",
-            business: "Business"
-        })) {
+        for (const phone_type of [
+            "home",
+            "mobile",
+            "business"
+        ]) {
             const area_code_element = this.#contact_form_element.addInput(
                 this.#localization_api.translate(
-                    `${phone_label} (Format {example})`,
+                    `Phone ${phone_type} (Format {example})`,
                     null,
                     {
                         example: this.#personal_data["phone-number-example"]

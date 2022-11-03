@@ -171,9 +171,9 @@ export class PortraitElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             this.#localization_api.translate(
@@ -216,7 +216,7 @@ export class PortraitElement extends HTMLElement {
             ""
         );
         const criteria_link_element = document.createElement("a");
-        const link = this.#portrait["photo-criteria-links"][this.#localization_api.getLanguage()] ?? this.#portrait["photo-criteria-links"].en ?? "";
+        const link = this.#portrait["photo-criteria-links"][await this.#localization_api.getLanguage()] ?? this.#portrait["photo-criteria-links"].en ?? "";
         if (link !== "") {
             criteria_link_element.href = link;
         }

@@ -160,9 +160,9 @@ export class LegalElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             this.#localization_api.translate(
@@ -183,7 +183,7 @@ export class LegalElement extends HTMLElement {
 
         const degree_program_element = this.#degree_program_form_element.addInput(
             this.#localization_api.translate(
-                "Degree program"
+                "Choice of subject"
             ),
             "readonly"
         );
@@ -224,10 +224,8 @@ export class LegalElement extends HTMLElement {
         if (this.#legal.combination["single-choice"] !== null) {
             for (const single_choice of this.#legal.combination["single-choice"]) {
                 const single_choice_element = this.#degree_program_form_element.addInput(
-                    this.#localization_api.translate(
-                        this.#label_service.getSingleChoiceLabel(
-                            single_choice
-                        )
+                    this.#label_service.getSingleChoiceLabel(
+                        single_choice
                     ),
                     "readonly"
                 );
@@ -248,10 +246,8 @@ export class LegalElement extends HTMLElement {
         if (this.#legal.combination["multiple-choice"] !== null) {
             for (const multiple_choice of this.#legal.combination["multiple-choice"]) {
                 const multiple_choice_element = this.#degree_program_form_element.addInput(
-                    this.#localization_api.translate(
-                        this.#label_service.getMultipleChoiceLabel(
-                            multiple_choice
-                        )
+                    this.#label_service.getMultipleChoiceLabel(
+                        multiple_choice
                     ),
                     "readonly"
                 );
@@ -309,7 +305,7 @@ export class LegalElement extends HTMLElement {
         agb_element.required = true;
 
         const agb_link_element = document.createElement("a");
-        const link = this.#legal["agb-links"][this.#localization_api.getLanguage()] ?? this.#legal["agb-links"].en ?? "";
+        const link = this.#legal["agb-links"][await this.#localization_api.getLanguage()] ?? this.#legal["agb-links"].en ?? "";
         if (link !== "") {
             agb_link_element.href = link;
         }
@@ -356,7 +352,7 @@ export class LegalElement extends HTMLElement {
 
         const comments_element = this.#comments_form_element.addInput(
             this.#localization_api.translate(
-                "Did any problems during the application proccess occur or would you like to share any comments or suggestions with us, so please use the comment box below (max {max-comments-length} characters)",
+                "Did any problems during the application proccess occur or would you like to share any comments or suggestions with us, so please use the comment box below (Max {max-comments-length} characters)",
                 null,
                 {
                     "max-comments-length": this.#legal["max-comments-length"]

@@ -218,7 +218,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             },
             this.#back_function,
             this.#localization_api.translate(
-                "Please save your selection, in case you need to choose additional mandatory subjects for your course, they will be shown on the next page"
+                "Please save your selection. In case you need to choose additional mandatory subjects for your course, they will be shown on the next page"
             )
         );
 
