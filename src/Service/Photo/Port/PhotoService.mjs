@@ -257,10 +257,10 @@ export class PhotoService {
         let width, height;
         if (ratio >= 1) {
             width = max_width > original_width ? original_width : max_width;
-            height = max_width / ratio;
+            height = width / ratio;
         } else {
             height = max_height > original_height ? original_height : max_height;
-            width = max_height * ratio;
+            width = height * ratio;
         }
 
         return {
