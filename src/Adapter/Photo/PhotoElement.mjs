@@ -2,9 +2,10 @@ import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs"
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 
-/** @typedef {import("./PhotoCrop.mjs").PhotoCrop} PhotoCrop */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
+/** @typedef {import("./PhotoCrop.mjs").PhotoCrop} PhotoCrop */
+/** @typedef {import("../../Service/Photo/Port/PhotoService.mjs").PhotoService} PhotoService */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -25,6 +26,10 @@ export class PhotoElement extends HTMLElement {
      * @type {LocalizationApi}
      */
     #localization_api;
+    /**
+     * @type {PhotoService}
+     */
+    #photo_service;
     /**
      * @type {PhotoCrop | null}
      */
@@ -49,25 +54,29 @@ export class PhotoElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {LocalizationApi} localization_api
+     * @param {PhotoService} photo_service
      * @returns {PhotoElement}
      */
-    static new(css_api, localization_api) {
+    static new(css_api, localization_api, photo_service) {
         return new this(
             css_api,
-            localization_api
+            localization_api,
+            photo_service
         );
     }
 
     /**
      * @param {CssApi} css_api
      * @param {LocalizationApi} localization_api
+     * @param {PhotoService} photo_service
      * @private
      */
-    constructor(css_api, localization_api) {
+    constructor(css_api, localization_api, photo_service) {
         super();
 
         this.#css_api = css_api;
         this.#localization_api = localization_api;
+        this.#photo_service = photo_service;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -144,12 +153,10 @@ export class PhotoElement extends HTMLElement {
             return null;
         }
 
-        return {
-            x: Math.floor(this.#rectangle.x * this.#image_element.naturalWidth / 100),
-            y: Math.floor(this.#rectangle.y * this.#image_element.naturalHeight / 100),
-            width: Math.ceil(this.#rectangle.width * this.#image_element.naturalWidth / 100),
-            height: Math.ceil(this.#rectangle.height * this.#image_element.naturalHeight / 100)
-        };
+        return this.#photo_service.getCropFromRectangle(
+            this.#rectangle,
+            this.#image_element
+        );
     }
 
     /**
@@ -160,47 +167,6 @@ export class PhotoElement extends HTMLElement {
         this.#removeRectangle();
 
         this.#image_element.src = src ?? "";
-    }
-
-    /**
-     * @param {MouseEvent | Touch} e
-     * @returns {PhotoCrop | null}
-     */
-    #getRectangle(e) {
-        const container_rectangle = this.#container_element.getClientRects()[0] ?? null;
-
-        if (container_rectangle === null) {
-            return null;
-        }
-
-        if (this.#start.clientX < container_rectangle.left || this.#start.clientX > container_rectangle.right) {
-            return null;
-        }
-        if (this.#start.clientY < container_rectangle.top || this.#start.clientY > container_rectangle.bottom) {
-            return null;
-        }
-
-        const startClientX = Math.max(container_rectangle.left, Math.min(container_rectangle.right, this.#start.clientX > e.clientX ? e.clientX : this.#start.clientX));
-        const clientX = Math.max(container_rectangle.left, Math.min(container_rectangle.right, this.#start.clientX < e.clientX ? e.clientX : this.#start.clientX));
-
-        const startClientY = Math.max(container_rectangle.top, Math.min(container_rectangle.bottom, this.#start.clientY > e.clientY ? e.clientY : this.#start.clientY));
-        const clientY = Math.max(container_rectangle.top, Math.min(container_rectangle.bottom, this.#start.clientY < e.clientY ? e.clientY : this.#start.clientY));
-
-        const x = Math.max(0, startClientX - container_rectangle.left);
-        const y = Math.max(0, startClientY - container_rectangle.top);
-        const width = Math.min(container_rectangle.width - x, Math.max(0, clientX - startClientX));
-        const height = Math.min(container_rectangle.height - y, Math.max(0, clientY - startClientY));
-
-        if (width === 0 && height === 0) {
-            return null;
-        }
-
-        return {
-            x: x * 100 / container_rectangle.width,
-            y: y * 100 / container_rectangle.height,
-            width: width * 100 / container_rectangle.width,
-            height: height * 100 / container_rectangle.height
-        };
     }
 
     /**
@@ -218,7 +184,9 @@ export class PhotoElement extends HTMLElement {
 
         this.#start = e;
 
-        this.#rectangle = this.#getRectangle(
+        this.#rectangle = this.#photo_service.getRectangleFromEvent(
+            this.#container_element,
+            this.#start,
             this.#start
         );
 
@@ -240,7 +208,9 @@ export class PhotoElement extends HTMLElement {
             return;
         }
 
-        this.#rectangle = this.#getRectangle(
+        this.#rectangle = this.#photo_service.getRectangleFromEvent(
+            this.#container_element,
+            this.#start,
             e
         );
 
@@ -262,7 +232,9 @@ export class PhotoElement extends HTMLElement {
             return;
         }
 
-        this.#rectangle = this.#getRectangle(
+        this.#rectangle = this.#photo_service.getRectangleFromEvent(
+            this.#container_element,
+            this.#start,
             e
         );
 
@@ -345,7 +317,9 @@ export class PhotoElement extends HTMLElement {
             return;
         }
 
-        /*this.#rectangle = this.#getRectangle(
+        /*this.#rectangle = this.#photo_service.getRectangle(
+            this.#container_element,
+            this.#start,
             [
                 ...e.touches
             ].find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0]
@@ -368,7 +342,9 @@ export class PhotoElement extends HTMLElement {
             return;
         }
 
-        this.#rectangle = this.#getRectangle(
+        this.#rectangle = this.#photo_service.getRectangleFromEvent(
+            this.#container_element,
+            this.#start,
             [
                 ...e.touches
             ].find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0]
@@ -394,7 +370,9 @@ export class PhotoElement extends HTMLElement {
             this.#start
         ] = e.touches;
 
-        /*this.#rectangle = this.#getRectangle(
+        /*this.#rectangle = this.#photo_service.getRectangle(
+            this.#container_element,
+            this.#start,
             this.#start
         );
 

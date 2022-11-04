@@ -1,3 +1,3 @@
 /**
- * @typedef {{id: string, label: string}} Canton
+ * @typedef {{id: string, label: {[key: string]: string}}} Canton
  */

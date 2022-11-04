@@ -1,3 +1,3 @@
 /**
- * @typedef {{id: string, label: string}} Salutation
+ * @typedef {{id: string, label: {[key: string]: string}}} Salutation
  */

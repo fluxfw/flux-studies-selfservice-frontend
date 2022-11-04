@@ -1,5 +1,5 @@
 /** @typedef {import("./ChosenPortrait.mjs").ChosenPortrait} ChosenPortrait */
 
 /**
- * @typedef {{"required-photo": boolean, "photo-criteria-links": {[key: string]: string}, values: ChosenPortrait | null}} Portrait
+ * @typedef {{"photo-type": string, "photo-quality": number, "photo-max-width": string, "photo-max-height": string, "photo-grayscale": boolean, "required-photo": boolean, "photo-criteria-links": {[key: string]: string}, values: ChosenPortrait | null}} Portrait
  */

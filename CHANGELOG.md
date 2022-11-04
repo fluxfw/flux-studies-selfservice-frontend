@@ -6,6 +6,14 @@ Changes:
 
 \-
 
+## v2022-11-04-1
+
+Changes:
+
+- Localized data labels from backend
+- Photo type/quality/min height/max height from backend
+- Parent address
+
 ## v2022-11-03-2
 
 Changes:

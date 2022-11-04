@@ -187,7 +187,7 @@ export class LegalElement extends HTMLElement {
             ),
             "readonly"
         );
-        degree_program_element.innerText = this.#label_service.getDegreeProgramLabel(
+        degree_program_element.innerText = await this.#label_service.getDegreeProgramLabel(
             this.#legal["degree-program"]
         );
 
@@ -197,7 +197,7 @@ export class LegalElement extends HTMLElement {
             ),
             "readonly"
         );
-        subject_element.innerText = this.#label_service.getSubjectLabel(
+        subject_element.innerText = await this.#label_service.getSubjectLabel(
             this.#legal.subject
         );
 
@@ -207,7 +207,7 @@ export class LegalElement extends HTMLElement {
             ),
             "readonly"
         );
-        combination_element.innerText = this.#label_service.getCombinationLabel(
+        combination_element.innerText = await this.#label_service.getCombinationLabel(
             this.#legal.combination
         );
 
@@ -217,14 +217,14 @@ export class LegalElement extends HTMLElement {
             ),
             "readonly"
         );
-        mandatory_element.innerText = this.#label_service.getMultipleMandatoryLabel(
+        mandatory_element.innerText = await this.#label_service.getMultipleMandatoryLabel(
             this.#legal.combination
         );
 
         if (this.#legal.combination["single-choice"] !== null) {
             for (const single_choice of this.#legal.combination["single-choice"]) {
                 const single_choice_element = this.#degree_program_form_element.addInput(
-                    this.#label_service.getSingleChoiceLabel(
+                    await this.#label_service.getSingleChoiceLabel(
                         single_choice
                     ),
                     "readonly"
@@ -233,7 +233,7 @@ export class LegalElement extends HTMLElement {
                 if (this.#legal["single-choice"] !== null) {
                     for (const choice of single_choice.choices) {
                         if (choice.id === this.#legal["single-choice"][single_choice.id]) {
-                            single_choice_element.innerText = this.#label_service.getChoiceLabel(
+                            single_choice_element.innerText = await this.#label_service.getChoiceLabel(
                                 choice
                             );
                             break;
@@ -246,14 +246,14 @@ export class LegalElement extends HTMLElement {
         if (this.#legal.combination["multiple-choice"] !== null) {
             for (const multiple_choice of this.#legal.combination["multiple-choice"]) {
                 const multiple_choice_element = this.#degree_program_form_element.addInput(
-                    this.#label_service.getMultipleChoiceLabel(
+                    await this.#label_service.getMultipleChoiceLabel(
                         multiple_choice
                     ),
                     "readonly"
                 );
 
                 if (this.#legal["multiple-choice"] !== null) {
-                    multiple_choice_element.innerText = this.#label_service.getChoicesLabel(
+                    multiple_choice_element.innerText = await this.#label_service.getChoicesLabel(
                         multiple_choice.choices.filter(choice => this.#legal["multiple-choice"][multiple_choice.id].includes(choice.id))
                     );
                 }
@@ -305,11 +305,15 @@ export class LegalElement extends HTMLElement {
         agb_element.required = true;
 
         const agb_link_element = document.createElement("a");
-        const link = this.#legal["agb-links"][await this.#localization_api.getLanguage()] ?? this.#legal["agb-links"].en ?? "";
+        const link = await this.#label_service.getAgbLink(
+            this.#legal
+        );
         if (link !== "") {
             agb_link_element.href = link;
         }
-        agb_link_element.innerText = this.#legal["agb-title"];
+        agb_link_element.innerText = await this.#label_service.getAgbLabel(
+            this.#legal
+        );
         agb_link_element.rel = "noopener noreferrer";
         agb_link_element.target = "__blank";
         agb_element.nextElementSibling.append(" ");

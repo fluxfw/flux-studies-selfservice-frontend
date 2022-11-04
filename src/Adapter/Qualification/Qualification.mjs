@@ -1,3 +1,3 @@
 /**
- * @typedef {{id: string, label: string, required: boolean}} Qualification
+ * @typedef {{id: string, label: {[key: string]: string}, required: boolean}} Qualification
  */

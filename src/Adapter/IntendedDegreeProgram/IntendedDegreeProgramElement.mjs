@@ -149,9 +149,9 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             this.#localization_api.translate(
@@ -170,6 +170,12 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             )
         );
 
+        this.#form_element.addSubtitle(
+            this.#localization_api.translate(
+                "Please choose your intended degree program"
+            )
+        );
+
         const subject_element = this.#form_element.addInput(
             this.#localization_api.translate(
                 "Subject"
@@ -181,7 +187,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         for (const subject of this.#intended_degree_program.subjects) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getSubjectLabel(
+            option_element.text = await this.#label_service.getSubjectLabel(
                 subject
             );
             option_element.value = subject.id;
@@ -231,25 +237,25 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         if (this.#intended_degree_program.values !== null) {
             subject_element.value = this.#intended_degree_program.values.subject;
-            subject_element.dispatchEvent(new Event("input"));
+            await this.#renderCombinations();
 
             combination_element.value = this.#intended_degree_program.values.combination;
         }
 
-        combination_element.dispatchEvent(new Event("input"));
+        await this.#renderMandatory();
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #renderCombinations() {
+    async #renderCombinations() {
         this.#form_element.clearSelectOptions(
             this.#form_element.inputs.combination
         );
 
         this.#subject = this.#intended_degree_program.subjects.find(subject => subject.id === this.#form_element.inputs.subject.value) ?? null;
 
-        this.#form_element.inputs.combination.dispatchEvent(new Event("input"));
+        await this.#renderMandatory();
 
         if (this.#subject === null) {
             return;
@@ -257,7 +263,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         for (const combination of this.#subject.combinations) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCombinationLabel(
+            option_element.text = await this.#label_service.getCombinationLabel(
                 combination
             );
             option_element.value = combination.id;
@@ -266,10 +272,10 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #renderMandatory() {
-        this.#mandatory_element.innerText = this.#label_service.getMultipleMandatoryLabel(
+    async #renderMandatory() {
+        this.#mandatory_element.innerText = await this.#label_service.getMultipleMandatoryLabel(
             this.#subject?.combinations?.find(combination => combination.id === this.#form_element.inputs.combination.value) ?? null
         );
     }

@@ -146,9 +146,9 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             this.#localization_api.translate(
@@ -184,7 +184,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         for (const certificate_type of this.#university_entrance_qualification["certificate-types"]) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCertificateTypeLabel(
+            option_element.text = await this.#label_service.getCertificateTypeLabel(
                 certificate_type
             );
             option_element.value = certificate_type.id;
@@ -215,7 +215,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         for (const certificate of this.#university_entrance_qualification.certificates) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCertificateLabel(
+            option_element.text = await this.#label_service.getCertificateLabel(
                 certificate
             );
             option_element.value = certificate.id;
@@ -224,7 +224,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         const matura_canton_element = this.#form_element.addInput(
             this.#localization_api.translate(
-                "The canton, in which the school is located where you were awarded your Matura"
+                "The canton, in which the school is located where you were awarded your matura"
             ),
             "select",
             "matura-canton"
@@ -233,7 +233,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         for (const canton of this.#university_entrance_qualification.cantons) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCantonLabel(
+            option_element.text = await this.#label_service.getCantonLabel(
                 canton
             );
             option_element.value = canton.id;
@@ -251,7 +251,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         for (const school of this.#university_entrance_qualification.schools) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getSchoolLabel(
+            option_element.text = await this.#label_service.getSchoolLabel(
                 school
             );
             option_element.value = school.id;
@@ -269,7 +269,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         for (const country of this.#university_entrance_qualification.countries) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCountryLabel(
+            option_element.text = await this.#label_service.getCountryLabel(
                 country
             );
             option_element.value = country.id;
@@ -287,7 +287,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         for (const canton of this.#university_entrance_qualification.cantons) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCantonLabel(
+            option_element.text = await this.#label_service.getCantonLabel(
                 canton
             );
             option_element.value = canton.id;
@@ -305,7 +305,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         for (const place of this.#university_entrance_qualification.places) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getPlaceLabel(
+            option_element.text = await this.#label_service.getPlaceLabel(
                 place
             );
             option_element.value = place.id;

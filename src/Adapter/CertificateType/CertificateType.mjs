@@ -1,3 +1,3 @@
 /**
- * @typedef {{id: string, label: string}} CertificateType
+ * @typedef {{id: string, label: {[key: string]: string}}} CertificateType
  */

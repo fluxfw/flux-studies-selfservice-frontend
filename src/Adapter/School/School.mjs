@@ -1,3 +1,3 @@
 /**
- * @typedef {{id: string, label: string}} School
+ * @typedef {{id: string, label: {[key: string]: string}}} School
  */

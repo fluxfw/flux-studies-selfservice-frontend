@@ -104,7 +104,7 @@ export class PreviousStudyElement extends HTMLElement {
             university: this.#form_element.inputs.university.value,
             subject: this.#form_element.inputs.subject.value,
             semesters: this.#form_element.inputs.semesters.valueAsNumber,
-            degree: this.#form_element.inputs.degree.value,
+            "degree-title": this.#form_element.inputs["degree-title"].value,
             "certificate-country": this.#form_element.inputs["certificate-country"].value,
             "certificate-canton": this.#form_element.inputs["certificate-canton"].value,
             "certificate-place": this.#form_element.inputs["certificate-place"].value
@@ -119,9 +119,9 @@ export class PreviousStudyElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#form_element = FormElement.new(
             this.#css_api,
             this.#localization_api,
@@ -168,7 +168,7 @@ export class PreviousStudyElement extends HTMLElement {
 
         for (const certificate_type of this.#previous_studies["certificate-types"]) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCertificateTypeLabel(
+            option_element.text = await this.#label_service.getCertificateTypeLabel(
                 certificate_type
             );
             option_element.value = certificate_type.id;
@@ -212,7 +212,7 @@ export class PreviousStudyElement extends HTMLElement {
 
         for (const school of this.#previous_studies.schools) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getSchoolLabel(
+            option_element.text = await this.#label_service.getSchoolLabel(
                 school
             );
             option_element.value = school.id;
@@ -241,22 +241,22 @@ export class PreviousStudyElement extends HTMLElement {
         semesters_element.required = true;
         semesters_element.step = 1;
 
-        const degree_element = this.#form_element.addInput(
+        const degree_title_element = this.#form_element.addInput(
             this.#localization_api.translate(
                 "Title degree"
             ),
             "select",
-            "degree"
+            "degree-title"
         );
-        degree_element.required = true;
+        degree_title_element.required = true;
 
-        for (const degree of this.#previous_studies.degrees) {
+        for (const degree_title of this.#previous_studies["degree-titles"]) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getDegreeLabel(
-                degree
+            option_element.text = await this.#label_service.getDegreeTitleLabel(
+                degree_title
             );
-            option_element.value = degree.id;
-            degree_element.appendChild(option_element);
+            option_element.value = degree_title.id;
+            degree_title_element.appendChild(option_element);
         }
 
         const certificate_country_element = this.#form_element.addInput(
@@ -270,7 +270,7 @@ export class PreviousStudyElement extends HTMLElement {
 
         for (const country of this.#previous_studies.countries) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCountryLabel(
+            option_element.text = await this.#label_service.getCountryLabel(
                 country
             );
             option_element.value = country.id;
@@ -288,7 +288,7 @@ export class PreviousStudyElement extends HTMLElement {
 
         for (const canton of this.#previous_studies.cantons) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCantonLabel(
+            option_element.text = await this.#label_service.getCantonLabel(
                 canton
             );
             option_element.value = canton.id;
@@ -306,7 +306,7 @@ export class PreviousStudyElement extends HTMLElement {
 
         for (const place of this.#previous_studies.places) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getPlaceLabel(
+            option_element.text = await this.#label_service.getPlaceLabel(
                 place
             );
             option_element.value = place.id;
@@ -328,7 +328,7 @@ export class PreviousStudyElement extends HTMLElement {
 
             semesters_element.valueAsNumber = this.#values.semesters;
 
-            degree_element.value = this.#values.degree;
+            degree_title_element.value = this.#values["degree-title"];
 
             certificate_country_element.value = this.#values["certificate-country"];
 

@@ -1,3 +1,3 @@
 /**
- * @typedef {{id: string, label: string, ect: number}} Subject
+ * @typedef {{id: string, label: {[key: string]: string}, ect: number}} Subject
  */
