@@ -259,8 +259,8 @@ export class PhotoService {
             width = max_width > original_width ? original_width : max_width;
             height = max_width / ratio;
         } else {
-            width = max_height > original_height ? original_height : max_height;
-            height = max_height * ratio;
+            height = max_height > original_height ? original_height : max_height;
+            width = max_height * ratio;
         }
 
         return {
