@@ -879,7 +879,7 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#postal_address_form_element.addInput(
             this.#localization_api.translate(
-                "General post to parents address"
+                "General post to parents"
             ),
             "checkbox",
             "parents-address-general-post"
@@ -887,7 +887,7 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#postal_address_form_element.addInput(
             this.#localization_api.translate(
-                "Invoices to parents address"
+                "Invoices to parents"
             ),
             "checkbox",
             "parents-address-invoices"
