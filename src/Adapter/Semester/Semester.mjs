@@ -1,3 +1,3 @@
 /**
- * @typedef {{id: string, label: string}} Semester
+ * @typedef {{id: string, label: {[key: string]: string}}} Semester
  */

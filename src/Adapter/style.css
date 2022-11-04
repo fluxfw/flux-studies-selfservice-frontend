@@ -33,8 +33,6 @@
     --input-border-color: #e6e6e6;
     --input-border-size: 2px;
     --input-text-color: var(--color-scheme-foreground);
-    --loading-size: 100px;
-    --loading-width: 2px;
     --mandatory-color: #c12c2c;
     font-family: sans-serif;
     font-size: 16px;

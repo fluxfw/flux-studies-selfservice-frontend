@@ -1,3 +1,3 @@
 /**
- * @typedef {{id: string, label: string}} AreaCode
+ * @typedef {{id: string, label: {[key: string]: string}}} AreaCode
  */

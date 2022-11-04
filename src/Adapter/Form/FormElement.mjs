@@ -15,6 +15,10 @@ const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))
 
 export class FormElement extends HTMLElement {
     /**
+     * @type {FormButtonsElement | null}
+     */
+    #buttons_element = null;
+    /**
      * @type {CssApi}
      */
     #css_api;
@@ -87,7 +91,9 @@ export class FormElement extends HTMLElement {
      * @returns {FormButtonsElement}
      */
     addButtons(continue_function = null, back_function = null, subtitle = null) {
-        const buttons_element = FormButtonsElement.new(
+        this.removeButtons();
+
+        this.#buttons_element = FormButtonsElement.new(
             this.#css_api,
             [
                 ...continue_function !== null ? [
@@ -110,8 +116,8 @@ export class FormElement extends HTMLElement {
             ],
             subtitle
         );
-        this.#shadow.appendChild(buttons_element);
-        return buttons_element;
+        this.#shadow.appendChild(this.#buttons_element);
+        return this.#buttons_element;
     }
 
     /**
@@ -293,6 +299,16 @@ export class FormElement extends HTMLElement {
      */
     get inputs() {
         return this.#form_element.elements;
+    }
+
+    /**
+     * @returns {void}
+     */
+    removeButtons() {
+        if (this.#buttons_element !== null) {
+            this.#buttons_element.remove();
+            this.#buttons_element = null;
+        }
     }
 
     /**

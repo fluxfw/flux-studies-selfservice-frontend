@@ -1,5 +1,3 @@
-import { PHOTO_TYPE_WEBP } from "../../../Adapter/Photo/PhotoType.mjs";
-
 /** @typedef {import("../../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../../../Adapter/Photo/Photo.mjs").Photo} Photo */
 /** @typedef {import("../../../Adapter/Photo/PhotoCrop.mjs").PhotoCrop} PhotoCrop */
@@ -33,11 +31,11 @@ export class PhotoService {
     /**
      * @param {number} original_width
      * @param {number} original_height
-     * @param {number | null} max_width
-     * @param {number | null} max_height
+     * @param {number} max_width
+     * @param {number} max_height
      * @returns {CanvasRenderingContext2D}
      */
-    createCtx(original_width, original_height, max_width = null, max_height = null) {
+    createCtx(original_width, original_height, max_width, max_height) {
         const size = this.resize(
             original_width,
             original_height,
@@ -81,13 +79,13 @@ export class PhotoService {
 
     /**
      * @param {CanvasRenderingContext2D} ctx
-     * @param {string | null} type
-     * @param {number | null} quality
+     * @param {string} type
+     * @param {number} quality
      * @returns {Promise<Photo>}
      */
-    async fromCtx(ctx, type = null, quality = null) {
+    async fromCtx(ctx, type, quality) {
         return this.fromBlob(
-            await new Promise(resolve => ctx.canvas.toBlob(resolve, type ?? PHOTO_TYPE_WEBP, quality ?? 0.5))
+            await new Promise(resolve => ctx.canvas.toBlob(resolve, type, quality))
         );
     }
 
@@ -113,17 +111,74 @@ export class PhotoService {
     }
 
     /**
+     * @param {PhotoCrop} rectangle
+     * @param {HTMLImageElement} image_element
+     * @returns {PhotoCrop}
+     */
+    getCropFromRectangle(rectangle, image_element) {
+        return {
+            x: Math.floor(rectangle.x * image_element.naturalWidth / 100),
+            y: Math.floor(rectangle.y * image_element.naturalHeight / 100),
+            width: Math.ceil(rectangle.width * image_element.naturalWidth / 100),
+            height: Math.ceil(rectangle.height * image_element.naturalHeight / 100)
+        };
+    }
+
+    /**
+     * @param {HTMLElement} container_element
+     * @param {MouseEvent | Touch} start
+     * @param {MouseEvent | Touch} event
+     * @returns {PhotoCrop | null}
+     */
+    getRectangleFromEvent(container_element, start, event) {
+        const container_rectangle = container_element.getClientRects()[0] ?? null;
+
+        if (container_rectangle === null) {
+            return null;
+        }
+
+        if (start.clientX < container_rectangle.left || start.clientX > container_rectangle.right) {
+            return null;
+        }
+        if (start.clientY < container_rectangle.top || start.clientY > container_rectangle.bottom) {
+            return null;
+        }
+
+        const startClientX = Math.max(container_rectangle.left, Math.min(container_rectangle.right, start.clientX > event.clientX ? event.clientX : start.clientX));
+        const clientX = Math.max(container_rectangle.left, Math.min(container_rectangle.right, start.clientX < event.clientX ? event.clientX : start.clientX));
+
+        const startClientY = Math.max(container_rectangle.top, Math.min(container_rectangle.bottom, start.clientY > event.clientY ? event.clientY : start.clientY));
+        const clientY = Math.max(container_rectangle.top, Math.min(container_rectangle.bottom, start.clientY < event.clientY ? event.clientY : start.clientY));
+
+        const x = Math.max(0, startClientX - container_rectangle.left);
+        const y = Math.max(0, startClientY - container_rectangle.top);
+        const width = Math.min(container_rectangle.width - x, Math.max(0, clientX - startClientX));
+        const height = Math.min(container_rectangle.height - y, Math.max(0, clientY - startClientY));
+
+        if (width === 0 && height === 0) {
+            return null;
+        }
+
+        return {
+            x: x * 100 / container_rectangle.width,
+            y: y * 100 / container_rectangle.height,
+            width: width * 100 / container_rectangle.width,
+            height: height * 100 / container_rectangle.height
+        };
+    }
+
+    /**
      * @param {Photo} photo
-     * @param {string | null} photo_type
+     * @param {string} photo_type
+     * @param {string} type
+     * @param {number} quality
+     * @param {number} max_width
+     * @param {number} max_height
+     * @param {boolean} grayscale
      * @param {PhotoCrop | null} crop
-     * @param {number | null} max_width
-     * @param {number | null} max_height
-     * @param {boolean | null} grayscale
-     * @param {string | null} type
-     * @param {number | null} quality
      * @returns {Promise<Photo>}
      */
-    async optimize(photo, photo_type = null, crop = null, max_width = null, max_height = null, grayscale = null, type = null, quality = null) {
+    async optimize(photo, photo_type, type, quality, max_width, max_height, grayscale, crop = null) {
         const image_element = await this.toImageElement(
             photo,
             photo_type
@@ -145,16 +200,15 @@ export class PhotoService {
             return this.optimize(
                 await this.fromCtx(
                     crop_ctx,
-                    null,
-                    1
+                    type,
+                    quality
                 ),
-                null,
-                null,
+                type,
+                type,
+                quality,
                 max_width,
                 max_height,
-                grayscale,
-                type,
-                quality
+                grayscale
             );
         }
 
@@ -165,14 +219,13 @@ export class PhotoService {
             max_height
         );
 
-        const _grayscale = grayscale ?? true;
-        if (_grayscale && "filter" in ctx) {
+        if (grayscale && "filter" in ctx) {
             ctx.filter = "grayscale(1)";
         }
 
         ctx.drawImage(image_element, 0, 0, image_element.naturalWidth, image_element.naturalHeight, 0, 0, ctx.canvas.width, ctx.canvas.height);
 
-        if (_grayscale && !("filter" in ctx)) {
+        if (grayscale && !("filter" in ctx)) {
             // https://stackoverflow.com/questions/53364140/how-can-i-grayscale-a-canvas-image-in-javascript#answer-53365073
             const image_data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
             for (let i = 0; i < image_data.data.length; i += 4) {
@@ -194,23 +247,20 @@ export class PhotoService {
     /**
      * @param {number} original_width
      * @param {number} original_height
-     * @param {number | null} max_width
-     * @param {number | null} max_height
+     * @param {number} max_width
+     * @param {number} max_height
      * @returns {PhotoSize}
      */
-    resize(original_width, original_height, max_width = null, max_height = null) {
-        const _max_width = max_width ?? 200;
-        const _max_height = max_height ?? 200;
-
+    resize(original_width, original_height, max_width, max_height) {
         const ratio = original_width / original_height;
 
         let width, height;
         if (ratio >= 1) {
-            width = _max_width > original_width ? original_width : _max_width;
-            height = width / ratio;
+            width = max_width > original_width ? original_width : max_width;
+            height = max_width / ratio;
         } else {
-            height = _max_height > original_height ? original_height : _max_height;
-            width = height * ratio;
+            width = max_height > original_height ? original_height : max_height;
+            height = max_height * ratio;
         }
 
         return {
@@ -239,39 +289,37 @@ export class PhotoService {
 
     /**
      * @param {Photo} photo
-     * @param {string | null} type
+     * @param {string} type
      * @returns {string}
      */
-    toDataUrl(photo, type = null) {
-        return `data:${type ?? PHOTO_TYPE_WEBP};base64,${this.toBase64(
+    toDataUrl(photo, type) {
+        return `data:${type};base64,${this.toBase64(
             photo
         )}`;
     }
 
     /**
      * @param {Photo} photo
+     * @param {string} type
      * @param {string | null} name
-     * @param {string | null} type
      * @returns {File}
      */
-    toFile(photo, name = null, type = null) {
-        const _type = type ?? PHOTO_TYPE_WEBP;
-
+    toFile(photo, type, name = null) {
         return new File([
             new Uint8Array(photo).buffer
         ], name ?? `${this.#localization_api.translate(
             "Photo"
-        )}.${_type.split("/")[1]}`, {
-            type: _type
+        )}.${type.split("/")[1]}`, {
+            type
         });
     }
 
     /**
      * @param {Photo} photo
-     * @param {string | null} type
+     * @param {string} type
      * @returns {Promise<HTMLImageElement>}
      */
-    async toImageElement(photo, type = null) {
+    async toImageElement(photo, type) {
         return new Promise((resolve, reject) => {
             const image_element = new Image();
 
@@ -293,16 +341,16 @@ export class PhotoService {
     /**
      * @param {Photo} photo
      * @param {HTMLInputElement} input_element
+     * @param {string} type
      * @param {string | null} name
-     * @param {string | null} type
      * @returns {void}
      */
-    toInputElement(photo, input_element, name = null, type = null) {
+    toInputElement(photo, input_element, type, name = null) {
         const data_transfer = new DataTransfer();
         data_transfer.items.add(this.toFile(
             photo,
-            name,
-            type
+            type,
+            name
         ));
         input_element.files = data_transfer.files;
     }

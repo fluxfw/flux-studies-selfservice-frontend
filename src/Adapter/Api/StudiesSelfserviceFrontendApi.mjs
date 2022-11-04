@@ -631,6 +631,7 @@ export class StudiesSelfserviceFrontendApi {
         return (await import("../Portrait/PortraitElement.mjs")).PortraitElement.new(
             await this.#getCssApi(),
             async () => this.#getLoadingElement(),
+            await this.#getLabelService(),
             await this.#getLocalizationApi(),
             await this.#getPhotoService(),
             portrait,

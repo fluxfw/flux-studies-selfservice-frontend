@@ -161,9 +161,9 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             this.#localization_api.translate(
@@ -242,7 +242,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
             ),
             "readonly"
         );
-        subject_element.innerText = this.#label_service.getSubjectLabel(
+        subject_element.innerText = await this.#label_service.getSubjectLabel(
             this.#intended_degree_program_2.subject
         );
 
@@ -252,7 +252,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
             ),
             "readonly"
         );
-        combination_element.innerText = this.#label_service.getCombinationLabel(
+        combination_element.innerText = await this.#label_service.getCombinationLabel(
             this.#intended_degree_program_2.combination
         );
 
@@ -262,7 +262,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
             ),
             "readonly"
         );
-        mandatory_element.innerText = this.#label_service.getMultipleMandatoryLabel(
+        mandatory_element.innerText = await this.#label_service.getMultipleMandatoryLabel(
             this.#intended_degree_program_2.combination
         );
 
@@ -276,7 +276,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
             if (this.#intended_degree_program_2.combination["single-choice"] !== null) {
                 for (const single_choice of this.#intended_degree_program_2.combination["single-choice"]) {
                     const single_choice_element = this.#form_element.addInput(
-                        this.#label_service.getSingleChoiceLabel(
+                        await this.#label_service.getSingleChoiceLabel(
                             single_choice
                         ),
                         "select",
@@ -287,7 +287,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
                     for (const choice of single_choice.choices) {
                         const option_element = document.createElement("option");
-                        option_element.text = this.#label_service.getChoiceLabel(
+                        option_element.text = await this.#label_service.getChoiceLabel(
                             choice
                         );
                         option_element.value = choice.id;
@@ -299,7 +299,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
             if (this.#intended_degree_program_2.combination["multiple-choice"] !== null) {
                 for (const multiple_choice of this.#intended_degree_program_2.combination["multiple-choice"]) {
                     const multiple_choice_element = this.#form_element.addInput(
-                        this.#label_service.getMultipleChoiceLabel(
+                        await this.#label_service.getMultipleChoiceLabel(
                             multiple_choice
                         ),
                         "select",
@@ -313,7 +313,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
                     for (const choice of multiple_choice.choices) {
                         const option_element = document.createElement("option");
-                        option_element.text = this.#label_service.getChoiceLabel(
+                        option_element.text = await this.#label_service.getChoiceLabel(
                             choice
                         );
                         option_element.value = choice.id;

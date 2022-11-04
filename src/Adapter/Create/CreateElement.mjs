@@ -130,9 +130,9 @@ export class CreateElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#form_element = FormElement.new(
             this.#css_api,
             this.#localization_api,
@@ -168,7 +168,7 @@ export class CreateElement extends HTMLElement {
 
         for (const semester of this.#start.semesters) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getSemesterLabel(
+            option_element.text = await this.#label_service.getSemesterLabel(
                 semester
             );
             option_element.value = semester.id;

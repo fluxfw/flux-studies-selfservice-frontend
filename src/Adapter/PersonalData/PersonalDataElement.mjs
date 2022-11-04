@@ -50,7 +50,11 @@ export class PersonalDataElement extends HTMLElement {
     /**
      * @type {FormElement}
      */
-    #parent_address_form_element;
+    #parents_address_form_element;
+    /**
+     * @type {FormElement | null}
+     */
+    #postal_address_form_element = null;
     /**
      * @type {PersonalData}
      */
@@ -116,7 +120,7 @@ export class PersonalDataElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #filledPersonalData() {
-        if (!this.#address_form_element.validate() || !this.#contact_form_element.validate() || !this.#personal_information_form_element.validate() || !this.#origin_place_form_element.validate() || !this.#parent_address_form_element.validate()) {
+        if (!this.#address_form_element.validate() || !this.#contact_form_element.validate() || !this.#personal_information_form_element.validate() || !this.#origin_place_form_element.validate() || !this.#parents_address_form_element.validate() || !(this.#postal_address_form_element !== null ? this.#postal_address_form_element.validate() : true)) {
             return;
         }
 
@@ -153,7 +157,45 @@ export class PersonalDataElement extends HTMLElement {
                 "old-age-survivar-insurance-number": this.#personal_information_form_element.inputs["old-age-survivar-insurance-number"].value,
                 nationally: this.#personal_information_form_element.inputs.nationally.value,
                 "origin-place": this.#origin_place_form_element.inputs["origin-place"].value,
-                "parent-address": this.#parent_address_form_element.inputs["parent-address"].checked
+                "parents-address": this.#parents_address_form_element.inputs["parents-address"].checked,
+                ...this.#parents_address_form_element.inputs["parents-address"].checked ? {
+                    "parents-address-salutation": this.#parents_address_form_element.inputs["parents-address-salutation"].value,
+                    "parents-address-first-names": this.#parents_address_form_element.getTextareaValue(
+                        "parents-address-first-names"
+                    ).split("\n").filter(name => name !== ""),
+                    "parents-address-last-name": this.#parents_address_form_element.inputs["parents-address-last-name"].value,
+                    "parents-address-same-address": this.#parents_address_form_element.inputs["parents-address-same-address"].checked,
+                    ...!this.#parents_address_form_element.inputs["parents-address-same-address"].checked ? {
+                        "parents-address-country": this.#parents_address_form_element.inputs["parents-address-country"].value,
+                        "parents-address-extra-address-line": this.#parents_address_form_element.inputs["parents-address-extra-address-line"].value,
+                        "parents-address-street": this.#parents_address_form_element.inputs["parents-address-street"].value,
+                        "parents-address-house-number": this.#parents_address_form_element.inputs["parents-address-house-number"].valueAsNumber,
+                        "parents-address-postal-code": this.#parents_address_form_element.inputs["parents-address-postal-code"].valueAsNumber,
+                        "parents-address-place": this.#parents_address_form_element.inputs["parents-address-place"].value
+                    } : {
+                        "parents-address-country": null,
+                        "parents-address-extra-address-line": null,
+                        "parents-address-street": null,
+                        "parents-address-house-number": null,
+                        "parents-address-postal-code": null,
+                        "parents-address-place": null
+                    },
+                    "parents-address-general-post": this.#postal_address_form_element.inputs["parents-address-general-post"].checked,
+                    "parents-address-invoices": this.#postal_address_form_element.inputs["parents-address-invoices"].checked
+                } : {
+                    "parents-address-salutation": null,
+                    "parents-address-first-names": null,
+                    "parents-address-last-name": null,
+                    "parents-address-same-address": null,
+                    "parents-address-country": null,
+                    "parents-address-extra-address-line": null,
+                    "parents-address-street": null,
+                    "parents-address-house-number": null,
+                    "parents-address-postal-code": null,
+                    "parents-address-place": null,
+                    "parents-address-general-post": null,
+                    "parents-address-invoices": null
+                }
             }
         );
 
@@ -162,7 +204,7 @@ export class PersonalDataElement extends HTMLElement {
         }
 
         if (post_result["network-error"]) {
-            this.#parent_address_form_element.addInvalidMessage(
+            this.#parents_address_form_element.addInvalidMessage(
                 this.#localization_api.translate(
                     "Network error!"
                 )
@@ -171,7 +213,7 @@ export class PersonalDataElement extends HTMLElement {
         }
 
         if (post_result["server-error"]) {
-            this.#parent_address_form_element.addInvalidMessage(
+            this.#parents_address_form_element.addInvalidMessage(
                 this.#localization_api.translate(
                     "Server error!"
                 )
@@ -179,7 +221,7 @@ export class PersonalDataElement extends HTMLElement {
             return;
         }
 
-        this.#parent_address_form_element.addInvalidMessage(
+        this.#parents_address_form_element.addInvalidMessage(
             this.#localization_api.translate(
                 "Please check your data!"
             )
@@ -187,9 +229,9 @@ export class PersonalDataElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             this.#localization_api.translate(
@@ -247,6 +289,21 @@ export class PersonalDataElement extends HTMLElement {
                     }
                 }
 
+                if (this.#parents_address_form_element.inputs["parents-address"].checked) {
+                    const parents_address_first_names = this.#parents_address_form_element.getTextareaValue(
+                        "parents-address-first-names"
+                    );
+                    if (parents_address_first_names !== "" && parents_address_first_names.split("\n").some(name => name === "")) {
+                        this.#parents_address_form_element.setCustomValidationMessage(
+                            this.#parents_address_form_element.inputs["parents-address-first-names"],
+                            this.#localization_api.translate(
+                                "Some line contains no name!"
+                            )
+                        );
+                        return false;
+                    }
+                }
+
                 return true;
             }
         );
@@ -268,7 +325,7 @@ export class PersonalDataElement extends HTMLElement {
 
         for (const salutation of this.#personal_data.salutations) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getSalutationLabel(
+            option_element.text = await this.#label_service.getSalutationLabel(
                 salutation
             );
             option_element.value = salutation.id;
@@ -333,7 +390,7 @@ export class PersonalDataElement extends HTMLElement {
 
         for (const country of this.#personal_data.countries) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCountryLabel(
+            option_element.text = await this.#label_service.getCountryLabel(
                 country
             );
             option_element.value = country.id;
@@ -406,7 +463,7 @@ export class PersonalDataElement extends HTMLElement {
 
         for (const place of this.#personal_data.places) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getPlaceLabel(
+            option_element.text = await this.#label_service.getPlaceLabel(
                 place
             );
             option_element.value = place.id;
@@ -449,7 +506,7 @@ export class PersonalDataElement extends HTMLElement {
 
             for (const area_code of this.#personal_data["area-codes"]) {
                 const option_element = document.createElement("option");
-                option_element.text = this.#label_service.getAreaCodeLabel(
+                option_element.text = await this.#label_service.getAreaCodeLabel(
                     area_code
                 );
                 option_element.value = area_code.id;
@@ -490,7 +547,7 @@ export class PersonalDataElement extends HTMLElement {
 
         for (const language of this.#personal_data.languages) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getLanguageLabel(
+            option_element.text = await this.#label_service.getLanguageLabel(
                 language
             );
             option_element.value = language.id;
@@ -508,7 +565,7 @@ export class PersonalDataElement extends HTMLElement {
 
         for (const language of this.#personal_data.languages) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getLanguageLabel(
+            option_element.text = await this.#label_service.getLanguageLabel(
                 language
             );
             option_element.value = language.id;
@@ -565,7 +622,7 @@ export class PersonalDataElement extends HTMLElement {
 
         for (const country of this.#personal_data.countries) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getCountryLabel(
+            option_element.text = await this.#label_service.getCountryLabel(
                 country
             );
             option_element.value = country.id;
@@ -596,7 +653,7 @@ export class PersonalDataElement extends HTMLElement {
 
         for (const place of this.#personal_data.places) {
             const option_element = document.createElement("option");
-            option_element.text = this.#label_service.getPlaceLabel(
+            option_element.text = await this.#label_service.getPlaceLabel(
                 place
             );
             option_element.value = place.id;
@@ -605,33 +662,36 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#shadow.appendChild(this.#origin_place_form_element);
 
-        this.#parent_address_form_element = FormElement.new(
+        this.#parents_address_form_element = FormElement.new(
             this.#css_api,
             this.#localization_api
         );
 
-        this.#parent_address_form_element.addTitle(
+        this.#parents_address_form_element.addTitle(
             this.#localization_api.translate(
-                "Parent address"
+                "Parents address"
             )
         );
 
-        const parent_address_element = this.#parent_address_form_element.addInput(
+        const parents_address_element = this.#parents_address_form_element.addInput(
             this.#localization_api.translate(
-                "Parent address"
+                "Enter parents address"
             ),
             "checkbox",
-            "parent-address"
+            "parents-address"
         );
+        parents_address_element.addEventListener("input", () => {
+            this.#renderParentsAddress();
+        });
 
-        this.#parent_address_form_element.addButtons(
+        this.#parents_address_form_element.addButtons(
             () => {
                 this.#filledPersonalData();
             },
             this.#back_function
         );
 
-        this.#shadow.appendChild(this.#parent_address_form_element);
+        this.#shadow.appendChild(this.#parents_address_form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
             this.#css_api,
@@ -689,7 +749,259 @@ export class PersonalDataElement extends HTMLElement {
 
             origin_place_element.value = this.#personal_data.values["origin-place"];
 
-            parent_address_element.checked = this.#personal_data.values["parent-address"];
+            parents_address_element.checked = this.#personal_data.values["parents-address"];
+
+            await this.#renderParentsAddress();
+
+            if (this.#personal_data.values["parents-address"]) {
+                this.#parents_address_form_element.inputs["parents-address-salutation"].value = this.#personal_data.values["parents-address-salutation"];
+
+                this.#parents_address_form_element.inputs["parents-address-first-names"].value = this.#personal_data.values["parents-address-first-names"].join("\n");
+
+                this.#parents_address_form_element.inputs["parents-address-last-name"].value = this.#personal_data.values["parents-address-last-name"];
+
+                this.#parents_address_form_element.inputs["parents-address-same-address"].checked = this.#personal_data.values["parents-address-same-address"];
+
+                await this.#renderParentsAddress2();
+
+                if (!this.#personal_data.values["parents-address-same-address"]) {
+                    this.#parents_address_form_element.inputs["parents-address-country"].value = this.#personal_data.values["parents-address-country"];
+
+                    this.#parents_address_form_element.inputs["parents-address-extra-address-line"].value = this.#personal_data.values["parents-address-extra-address-line"];
+
+                    this.#parents_address_form_element.inputs["parents-address-street"].value = this.#personal_data.values["parents-address-street"];
+
+                    this.#parents_address_form_element.inputs["parents-address-house-number"].valueAsNumber = this.#personal_data.values["parents-address-house-number"];
+
+                    this.#parents_address_form_element.inputs["parents-address-postal-code"].valueAsNumber = this.#personal_data.values["parents-address-postal-code"];
+
+                    this.#parents_address_form_element.inputs["parents-address-place"].value = this.#personal_data.values["parents-address-place"];
+                }
+
+                this.#postal_address_form_element.inputs["parents-address-general-post"].checked = this.#personal_data.values["parents-address-general-post"];
+
+                this.#postal_address_form_element.inputs["parents-address-invoices"].checked = this.#personal_data.values["parents-address-invoices"];
+            }
+        }
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #renderParentsAddress() {
+        this.#parents_address_form_element.inputs["parents-address-salutation"]?.parentElement?.remove();
+
+        this.#parents_address_form_element.inputs["parents-address-first-names"]?.parentElement?.remove();
+
+        this.#parents_address_form_element.inputs["parents-address-last-name"]?.parentElement?.remove();
+
+        this.#parents_address_form_element.inputs["parents-address-same-address"]?.parentElement?.remove();
+
+        if (this.#postal_address_form_element !== null) {
+            this.#postal_address_form_element.remove();
+            this.#postal_address_form_element = null;
+        }
+
+        this.#parents_address_form_element.addButtons(
+            () => {
+                this.#filledPersonalData();
+            },
+            this.#back_function
+        );
+
+        if (!this.#parents_address_form_element.inputs["parents-address"].checked) {
+            await this.#renderParentsAddress2();
+
+            return;
+        }
+
+        this.#parents_address_form_element.removeButtons();
+
+        const parents_address_salutation_element = this.#parents_address_form_element.addInput(
+            this.#localization_api.translate(
+                "Salutation"
+            ),
+            "select",
+            "parents-address-salutation"
+        );
+        parents_address_salutation_element.required = true;
+
+        for (const salutation of this.#personal_data.salutations) {
+            const option_element = document.createElement("option");
+            option_element.text = await this.#label_service.getSalutationLabel(
+                salutation
+            );
+            option_element.value = salutation.id;
+            parents_address_salutation_element.appendChild(option_element);
+        }
+
+        const parents_address_first_names_element = this.#parents_address_form_element.addInput(
+            this.#localization_api.translate(
+                "First names (One per line)"
+            ),
+            "textarea",
+            "parents-address-first-names"
+        );
+        parents_address_first_names_element.required = true;
+
+        const parents_address_last_name_element = this.#parents_address_form_element.addInput(
+            this.#localization_api.translate(
+                "Last name"
+            ),
+            "text",
+            "parents-address-last-name"
+        );
+        parents_address_last_name_element.required = true;
+
+        const parents_address_same_address_element = this.#parents_address_form_element.addInput(
+            this.#localization_api.translate(
+                "Your parents have the same address as you"
+            ),
+            "checkbox",
+            "parents-address-same-address"
+        );
+        parents_address_same_address_element.addEventListener("input", () => {
+            this.#renderParentsAddress2();
+        });
+
+        await this.#renderParentsAddress2();
+
+        this.#postal_address_form_element = FormElement.new(
+            this.#css_api,
+            this.#localization_api
+        );
+
+        this.#postal_address_form_element.addTitle(
+            this.#localization_api.translate(
+                "Postal address"
+            )
+        );
+
+        this.#postal_address_form_element.addInput(
+            this.#localization_api.translate(
+                "General post to parents address"
+            ),
+            "checkbox",
+            "parents-address-general-post"
+        );
+
+        this.#postal_address_form_element.addInput(
+            this.#localization_api.translate(
+                "Invoices to parents address"
+            ),
+            "checkbox",
+            "parents-address-invoices"
+        );
+
+        this.#postal_address_form_element.addButtons(
+            () => {
+                this.#filledPersonalData();
+            },
+            this.#back_function
+        );
+
+        this.#parents_address_form_element.insertAdjacentElement("afterend", this.#postal_address_form_element);
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #renderParentsAddress2() {
+        this.#parents_address_form_element.inputs["parents-address-country"]?.parentElement?.remove();
+
+        this.#parents_address_form_element.inputs["parents-address-extra-address-line"]?.parentElement?.remove();
+
+        this.#parents_address_form_element.inputs["parents-address-street"]?.parentElement?.remove();
+
+        this.#parents_address_form_element.inputs["parents-address-house-number"]?.parentElement?.remove();
+
+        this.#parents_address_form_element.inputs["parents-address-postal-code"]?.parentElement?.remove();
+
+        this.#parents_address_form_element.inputs["parents-address-place"]?.parentElement?.remove();
+
+        if (this.#parents_address_form_element.inputs["parents-address"].checked && !this.#parents_address_form_element.inputs["parents-address-same-address"].checked) {
+            const parents_address_country_element = this.#parents_address_form_element.addInput(
+                this.#localization_api.translate(
+                    "Country"
+                ),
+                "select",
+                "parents-address-country"
+            );
+            parents_address_country_element.required = true;
+
+            for (const country of this.#personal_data.countries) {
+                const option_element = document.createElement("option");
+                option_element.text = await this.#label_service.getCountryLabel(
+                    country
+                );
+                option_element.value = country.id;
+                parents_address_country_element.appendChild(option_element);
+            }
+
+            this.#parents_address_form_element.addInput(
+                this.#localization_api.translate(
+                    "Extra address line (E.g. {example})",
+                    null,
+                    {
+                        example: this.#personal_data["extra-address-line-example"]
+                    }
+                ),
+                "text",
+                "parents-address-extra-address-line"
+            );
+
+            const parents_address_street_element = this.#parents_address_form_element.addInput(
+                this.#localization_api.translate(
+                    "Street"
+                ),
+                "text",
+                "parents-address-street"
+            );
+            parents_address_street_element.required = true;
+
+            const parents_address_house_number_element = this.#parents_address_form_element.addInput(
+                this.#localization_api.translate(
+                    "Appartement/House number"
+                ),
+                "number",
+                "parents-address-house-number"
+            );
+            parents_address_house_number_element.inputMode = "numeric";
+            parents_address_house_number_element.max = this.#personal_data["max-house-number"];
+            parents_address_house_number_element.min = this.#personal_data["min-house-number"];
+            parents_address_house_number_element.required = true;
+            parents_address_house_number_element.step = 1;
+
+            const parents_address_postal_code_element = this.#parents_address_form_element.addInput(
+                this.#localization_api.translate(
+                    "Postal code"
+                ),
+                "number",
+                "parents-address-postal-code"
+            );
+            parents_address_postal_code_element.inputMode = "numeric";
+            parents_address_postal_code_element.max = this.#personal_data["max-postal-code"];
+            parents_address_postal_code_element.min = this.#personal_data["min-postal-code"];
+            parents_address_postal_code_element.required = true;
+            parents_address_postal_code_element.step = 1;
+
+            const parents_address_place_element = this.#parents_address_form_element.addInput(
+                this.#localization_api.translate(
+                    "Place"
+                ),
+                "select",
+                "parents-address-place"
+            );
+            parents_address_place_element.required = true;
+
+            for (const place of this.#personal_data.places) {
+                const option_element = document.createElement("option");
+                option_element.text = await this.#label_service.getPlaceLabel(
+                    place
+                );
+                option_element.value = place.id;
+                parents_address_place_element.appendChild(option_element);
+            }
         }
     }
 }

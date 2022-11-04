@@ -152,9 +152,9 @@ export class ChoiceSubjectElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             this.#localization_api.translate(
@@ -175,7 +175,7 @@ export class ChoiceSubjectElement extends HTMLElement {
 
         for (const degree_program of this.#choice_subject["degree-programs"]) {
             const input_element = this.#degree_program_form_element.addInput(
-                this.#label_service.getDegreeProgramLabel(
+                await this.#label_service.getDegreeProgramLabel(
                     degree_program
                 ),
                 "radio",
@@ -183,6 +183,7 @@ export class ChoiceSubjectElement extends HTMLElement {
             );
             input_element.required = true;
             input_element.value = degree_program.id;
+            input_element._degree_program = degree_program;
             input_element.addEventListener("input", () => {
                 this.#renderQualifications(
                     degree_program
@@ -223,7 +224,9 @@ export class ChoiceSubjectElement extends HTMLElement {
             )) {
                 if (input_element.value === this.#choice_subject.values["degree-program"]) {
                     input_element.checked = true;
-                    input_element.dispatchEvent(new Event("input"));
+                    await this.#renderQualifications(
+                        input_element._degree_program
+                    );
                     break;
                 }
             }
@@ -240,14 +243,14 @@ export class ChoiceSubjectElement extends HTMLElement {
 
     /**
      * @param {DegreeProgram} degree_program
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #renderQualifications(degree_program) {
+    async #renderQualifications(degree_program) {
         this.#qualifications_form_element.clearInputs();
 
         for (const qualification of degree_program.qualifications) {
             const input_element = this.#qualifications_form_element.addInput(
-                this.#label_service.getQualificationLabel(
+                await this.#label_service.getQualificationLabel(
                     qualification
                 ),
                 "checkbox",

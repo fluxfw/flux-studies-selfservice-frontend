@@ -1,3 +1,3 @@
 /**
- * @typedef {{id: string, label: string}} Country
+ * @typedef {{id: string, label: {[key: string]: string}}} Country
  */

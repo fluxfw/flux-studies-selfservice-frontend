@@ -9,6 +9,7 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("./chosenPortraitFunction.mjs").chosenPortraitFunction} chosenPortraitFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("./getLoadingElement.mjs").getLoadingElement} getLoadingElement */
+/** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../Photo/Photo.mjs").Photo} Photo */
 /** @typedef {import("../../Service/Photo/Port/PhotoService.mjs").PhotoService} PhotoService */
@@ -38,6 +39,10 @@ export class PortraitElement extends HTMLElement {
      */
     #get_loading_element;
     /**
+     * @type {LabelService}
+     */
+    #label_service;
+    /**
      * @type {LocalizationApi}
      */
     #localization_api;
@@ -65,6 +70,7 @@ export class PortraitElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {getLoadingElement} get_loading_element
+     * @param {LabelService} label_service
      * @param {LocalizationApi} localization_api
      * @param {PhotoService} photo_service
      * @param {Portrait} portrait
@@ -72,10 +78,11 @@ export class PortraitElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @returns {PortraitElement}
      */
-    static new(css_api, get_loading_element, localization_api, photo_service, portrait, chosen_portrait, back_function = null) {
+    static new(css_api, get_loading_element, label_service, localization_api, photo_service, portrait, chosen_portrait, back_function = null) {
         return new this(
             css_api,
             get_loading_element,
+            label_service,
             localization_api,
             photo_service,
             portrait,
@@ -87,6 +94,7 @@ export class PortraitElement extends HTMLElement {
     /**
      * @param {CssApi} css_api
      * @param {getLoadingElement} get_loading_element
+     * @param {LabelService} label_service
      * @param {LocalizationApi} localization_api
      * @param {PhotoService} photo_service
      * @param {Portrait} portrait
@@ -94,11 +102,12 @@ export class PortraitElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, get_loading_element, localization_api, photo_service, portrait, chosen_portrait, back_function) {
+    constructor(css_api, get_loading_element, label_service, localization_api, photo_service, portrait, chosen_portrait, back_function) {
         super();
 
         this.#css_api = css_api;
         this.#get_loading_element = get_loading_element;
+        this.#label_service = label_service;
         this.#localization_api = localization_api;
         this.#photo_service = photo_service;
         this.#portrait = portrait;
@@ -209,14 +218,17 @@ export class PortraitElement extends HTMLElement {
 
         input_element.parentElement.parentElement.parentElement.appendChild(this.#photo_element = PhotoElement.new(
             this.#css_api,
-            this.#localization_api
+            this.#localization_api,
+            this.#photo_service
         ));
 
         const criteria_element = this.#form_element.addSubtitle(
             ""
         );
         const criteria_link_element = document.createElement("a");
-        const link = this.#portrait["photo-criteria-links"][await this.#localization_api.getLanguage()] ?? this.#portrait["photo-criteria-links"].en ?? "";
+        const link = await this.#label_service.getPhotoCriteriaLink(
+            this.#portrait
+        );
         if (link !== "") {
             criteria_link_element.href = link;
         }
@@ -245,7 +257,8 @@ export class PortraitElement extends HTMLElement {
             if (this.#portrait.values.photo !== null) {
                 this.#photo_service.toInputElement(
                     this.#portrait.values.photo,
-                    input_element
+                    input_element,
+                    this.#portrait["photo-type"]
                 );
                 input_element.dispatchEvent(new Event("input"));
             }
@@ -272,12 +285,12 @@ export class PortraitElement extends HTMLElement {
             this.#photo = await this.#photo_service.optimize(
                 photo.photo,
                 photo.type,
-                !final ? null : this.#photo_element.crop,
-                !final ? 1000 : null,
-                !final ? 1000 : null,
-                null,
-                null,
-                !final ? 1 : null
+                this.#portrait["photo-type"],
+                this.#portrait["photo-quality"],
+                !final ? 1000 : this.#portrait["photo-max-width"],
+                !final ? 1000 : this.#portrait["photo-max-height"],
+                this.#portrait["photo-grayscale"],
+                !final ? null : this.#photo_element.crop
             );
 
             if (final) {
@@ -286,13 +299,15 @@ export class PortraitElement extends HTMLElement {
 
             this.#photo_element.setImage(
                 this.#photo_service.toDataUrl(
-                    this.#photo
+                    this.#photo,
+                    this.#portrait["photo-type"]
                 )
             );
 
             this.#photo_service.toInputElement(
                 this.#photo,
-                this.#form_element.inputs.photo
+                this.#form_element.inputs.photo,
+                this.#portrait["photo-type"]
             );
         } catch (error) {
             if (final) {

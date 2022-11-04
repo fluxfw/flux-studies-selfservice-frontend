@@ -1,5 +1,5 @@
 /** @typedef {import("../Qualification/Qualification.mjs").Qualification} Qualification */
 
 /**
- * @typedef {{id: string, label: string, qualifications: Qualification[]}} DegreeProgram
+ * @typedef {{id: string, label: {[key: string]: string}, qualifications: Qualification[]}} DegreeProgram
  */
