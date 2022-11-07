@@ -7,6 +7,7 @@
 /** @typedef {import("../../../Adapter/Country/Country.mjs").Country} Country */
 /** @typedef {import("../../../Adapter/DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
 /** @typedef {import("../../../Adapter/DegreeTitle/DegreeTitle.mjs").DegreeTitle} DegreeTitle */
+/** @typedef {import("../../../Adapter/Label/Label.mjs").Label} Label */
 /** @typedef {import("../../../Adapter/Language/Language.mjs").Language} Language */
 /** @typedef {import("../../../Adapter/Legal/Legal.mjs").Legal} Legal */
 /** @typedef {import("../../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
@@ -50,7 +51,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getAgbLabel(legal) {
-        return legal["agb-label"][await this.#localization_api.getLanguage()] ?? legal["agb-label"].en ?? "";
+        return await this.#getLabel(
+            legal["agb-label"]
+        ) ?? "";
     }
 
     /**
@@ -58,7 +61,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getAgbLink(legal) {
-        return legal["agb-links"][await this.#localization_api.getLanguage()] ?? legal["agb-links"].en ?? "";
+        return await this.#getLabel(
+            legal["agb-links"]
+        ) ?? "";
     }
 
     /**
@@ -66,7 +71,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getAreaCodeLabel(area_code) {
-        return area_code.label[await this.#localization_api.getLanguage()] ?? area_code.label.en ?? area_code.id ?? "";
+        return await this.#getLabel(
+            area_code.label
+        ) ?? area_code.id ?? "";
     }
 
     /**
@@ -74,7 +81,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getCantonLabel(canton) {
-        return canton.label[await this.#localization_api.getLanguage()] ?? canton.label.en ?? canton.id ?? "";
+        return await this.#getLabel(
+            canton.label
+        ) ?? canton.id ?? "";
     }
 
     /**
@@ -82,7 +91,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getCertificateLabel(certificate) {
-        return certificate.label[await this.#localization_api.getLanguage()] ?? certificate.label.en ?? certificate.id ?? "";
+        return await this.#getLabel(
+            certificate.label
+        ) ?? certificate.id ?? "";
     }
 
     /**
@@ -90,7 +101,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getCertificateTypeLabel(certificate_type) {
-        return certificate_type.label[await this.#localization_api.getLanguage()] ?? certificate_type.label.en ?? certificate_type.id ?? "";
+        return await this.#getLabel(
+            certificate_type.label
+        ) ?? certificate_type.id ?? "";
     }
 
     /**
@@ -129,7 +142,9 @@ export class LabelService {
                         ...combination["multiple-choice"]?.map(multiple_choice => multiple_choice.ect) ?? []
                     ]
                 ),
-                label: combination.label[await this.#localization_api.getLanguage()] ?? combination.label.en ?? combination.id ?? ""
+                label: await this.#getLabel(
+                    combination.label
+                ) ?? combination.id ?? ""
             }
         );
     }
@@ -139,7 +154,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getCountryLabel(country) {
-        return country.label[await this.#localization_api.getLanguage()] ?? country.label.en ?? country.id ?? "";
+        return await this.#getLabel(
+            country.label
+        ) ?? country.id ?? "";
     }
 
     /**
@@ -147,7 +164,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getDegreeTitleLabel(degree_title) {
-        return degree_title.label[await this.#localization_api.getLanguage()] ?? degree_title.label.en ?? degree_title.id ?? "";
+        return await this.#getLabel(
+            degree_title.label
+        ) ?? degree_title.id ?? "";
     }
 
     /**
@@ -155,7 +174,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getDegreeProgramLabel(degree_program) {
-        return degree_program.label[await this.#localization_api.getLanguage()] ?? degree_program.label.en ?? degree_program.id ?? "";
+        return await this.#getLabel(
+            degree_program.label
+        ) ?? degree_program.id ?? "";
     }
 
     /**
@@ -180,11 +201,23 @@ export class LabelService {
     }
 
     /**
+     * @param {Label} error_message
+     * @returns {Promise<string>}
+     */
+    async getErrorMessageLabel(error_message) {
+        return await this.#getLabel(
+            error_message
+        ) ?? "";
+    }
+
+    /**
      * @param {Language} language
      * @returns {Promise<string>}
      */
     async getLanguageLabel(language) {
-        return language.label[await this.#localization_api.getLanguage()] ?? language.label.en ?? language.id ?? "";
+        return await this.#getLabel(
+            language.label
+        ) ?? language.id ?? "";
     }
 
     /**
@@ -226,7 +259,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getPlaceLabel(place) {
-        return place.label[await this.#localization_api.getLanguage()] ?? place.label.en ?? place.id ?? "";
+        return await this.#getLabel(
+            place.label
+        ) ?? place.id ?? "";
     }
 
     /**
@@ -234,7 +269,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getPhotoCriteriaLink(portrait) {
-        return portrait["photo-criteria-links"][await this.#localization_api.getLanguage()] ?? portrait["photo-criteria-links"].en ?? "";
+        return await this.#getLabel(
+            portrait["photo-criteria-links"]
+        ) ?? "";
     }
 
     /**
@@ -242,7 +279,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getQualificationLabel(qualification) {
-        return qualification.label[await this.#localization_api.getLanguage()] ?? qualification.label.en ?? qualification.id ?? "";
+        return await this.#getLabel(
+            qualification.label
+        ) ?? qualification.id ?? "";
     }
 
     /**
@@ -250,7 +289,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getSalutationLabel(salutation) {
-        return salutation.label[await this.#localization_api.getLanguage()] ?? salutation.label.en ?? salutation.id ?? "";
+        return await this.#getLabel(
+            salutation.label
+        ) ?? salutation.id ?? "";
     }
 
     /**
@@ -258,7 +299,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getSchoolLabel(school) {
-        return school.label[await this.#localization_api.getLanguage()] ?? school.label.en ?? school.id ?? "";
+        return await this.#getLabel(
+            school.label
+        ) ?? school.id ?? "";
     }
 
     /**
@@ -266,7 +309,9 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getSemesterLabel(semester) {
-        return semester.label[await this.#localization_api.getLanguage()] ?? semester.label.en ?? semester.id ?? "";
+        return await this.#getLabel(
+            semester.label
+        ) ?? semester.id ?? "";
     }
 
     /**
@@ -291,8 +336,18 @@ export class LabelService {
                 ect: this.getEctLabel(
                     subject.ect
                 ),
-                label: subject.label[await this.#localization_api.getLanguage()] ?? subject.label.en ?? subject.id ?? ""
+                label: await this.#getLabel(
+                    subject.label
+                ) ?? subject.id ?? ""
             }
         );
+    }
+
+    /**
+     * @param {Label} label
+     * @returns {Promise<string | null>}
+     */
+    async #getLabel(label) {
+        return label[await this.#localization_api.getLanguage()] ?? label.en ?? null;
     }
 }

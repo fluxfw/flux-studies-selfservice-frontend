@@ -203,29 +203,21 @@ export class PersonalDataElement extends HTMLElement {
             return;
         }
 
-        if (post_result["network-error"]) {
-            this.#parents_address_form_element.addInvalidMessage(
+        if (post_result["error-messages"] !== null) {
+            for (const error_message of post_result["error-messages"]) {
+                (this.#postal_address_form_element !== null ? this.#postal_address_form_element : this.#parents_address_form_element).addInvalidMessage(
+                    await this.#label_service.getErrorMessageLabel(
+                        error_message
+                    )
+                );
+            }
+        } else {
+            (this.#postal_address_form_element !== null ? this.#postal_address_form_element : this.#parents_address_form_element).addInvalidMessage(
                 this.#localization_api.translate(
-                    "Network error!"
+                    "Please check your data!"
                 )
             );
-            return;
         }
-
-        if (post_result["server-error"]) {
-            this.#parents_address_form_element.addInvalidMessage(
-                this.#localization_api.translate(
-                    "Server error!"
-                )
-            );
-            return;
-        }
-
-        this.#parents_address_form_element.addInvalidMessage(
-            this.#localization_api.translate(
-                "Please check your data!"
-            )
-        );
     }
 
     /**

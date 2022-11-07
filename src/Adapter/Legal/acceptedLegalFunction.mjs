@@ -1,6 +1,6 @@
 /** @typedef {import("./AcceptedLegal.mjs").AcceptedLegal} AcceptedLegal */
-/** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
+/** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
 
 /**
- * @typedef {(accepted_legal: AcceptedLegal) => Promise<PostClientResult>} acceptedLegalFunction
+ * @typedef {(accepted_legal: AcceptedLegal) => Promise<PostResult>} acceptedLegalFunction
  */

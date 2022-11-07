@@ -130,6 +130,7 @@ export class StartElement extends HTMLElement {
 
         this.#shadow.appendChild(ResumeElement.new(
             this.#css_api,
+            this.#label_service,
             this.#localization_api,
             this.#start,
             this.#resume_function,

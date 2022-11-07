@@ -1,6 +1,6 @@
 /** @typedef {import("./FilledPersonalData.mjs").FilledPersonalData} FilledPersonalData */
-/** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
+/** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
 
 /**
- * @typedef {(filled_personal_data: FilledPersonalData) => Promise<PostClientResult>} filledPersonalDataFunction
+ * @typedef {(filled_personal_data: FilledPersonalData) => Promise<PostResult>} filledPersonalDataFunction
  */

@@ -1,6 +1,6 @@
 /** @typedef {import("./Resume.mjs").Resume} Resume */
-/** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
+/** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
 
 /**
- * @typedef {(resume: Resume) => Promise<PostClientResult>} resumeFunction
+ * @typedef {(resume: Resume) => Promise<PostResult>} resumeFunction
  */

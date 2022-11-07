@@ -1,6 +1,6 @@
 /** @typedef {import("./ChosenPortrait.mjs").ChosenPortrait} ChosenPortrait */
-/** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
+/** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
 
 /**
- * @typedef {(chosen_portrait: ChosenPortrait) => Promise<PostClientResult>} chosenPortraitFunction
+ * @typedef {(chosen_portrait: ChosenPortrait) => Promise<PostResult>} chosenPortraitFunction
  */
