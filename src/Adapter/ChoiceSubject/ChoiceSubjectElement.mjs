@@ -128,14 +128,14 @@ export class ChoiceSubjectElement extends HTMLElement {
 
         if (post_result["error-messages"] !== null) {
             for (const error_message of post_result["error-messages"]) {
-                this.#degree_program_form_element.addInvalidMessage(
+                this.#qualifications_form_element.addInvalidMessage(
                     await this.#label_service.getErrorMessageLabel(
                         error_message
                     )
                 );
             }
         } else {
-            this.#degree_program_form_element.addInvalidMessage(
+            this.#qualifications_form_element.addInvalidMessage(
                 this.#localization_api.translate(
                     "Please check your data!"
                 )
