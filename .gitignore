@@ -14,4 +14,3 @@
 !README.md
 src/Adapter/Pwa/manifest-*.json
 src/index.html
-src/index-*.html
