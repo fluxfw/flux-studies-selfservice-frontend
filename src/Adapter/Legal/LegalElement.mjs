@@ -134,29 +134,21 @@ export class LegalElement extends HTMLElement {
             return;
         }
 
-        if (post_result["network-error"]) {
+        if (post_result["error-messages"] !== null) {
+            for (const error_message of post_result["error-messages"]) {
+                this.#comments_form_element.addInvalidMessage(
+                    await this.#label_service.getErrorMessageLabel(
+                        error_message
+                    )
+                );
+            }
+        } else {
             this.#comments_form_element.addInvalidMessage(
                 this.#localization_api.translate(
-                    "Network error!"
+                    "Please check your data!"
                 )
             );
-            return;
         }
-
-        if (post_result["server-error"]) {
-            this.#comments_form_element.addInvalidMessage(
-                this.#localization_api.translate(
-                    "Server error!"
-                )
-            );
-            return;
-        }
-
-        this.#comments_form_element.addInvalidMessage(
-            this.#localization_api.translate(
-                "Please check your data!"
-            )
-        );
     }
 
     /**

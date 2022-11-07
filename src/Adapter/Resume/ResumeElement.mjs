@@ -4,6 +4,7 @@ import { PAGE_RESUME } from "../Page/PAGE.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
+/** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("./resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
@@ -24,6 +25,10 @@ export class ResumeElement extends HTMLElement {
      */
     #form_element;
     /**
+     * @type {LabelService}
+     */
+    #label_service;
+    /**
      * @type {LocalizationApi}
      */
     #localization_api;
@@ -42,15 +47,17 @@ export class ResumeElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
+     * @param {LabelService} label_service
      * @param {LocalizationApi} localization_api
      * @param {Start} start
      * @param {resumeFunction} resume_function
      * @param {backFunction | null} back_function
      * @returns {ResumeElement}
      */
-    static new(css_api, localization_api, start, resume_function, back_function = null) {
+    static new(css_api, label_service, localization_api, start, resume_function, back_function = null) {
         return new this(
             css_api,
+            label_service,
             localization_api,
             start,
             resume_function,
@@ -60,16 +67,18 @@ export class ResumeElement extends HTMLElement {
 
     /**
      * @param {CssApi} css_api
+     * @param {LabelService} label_service
      * @param {LocalizationApi} localization_api
      * @param {Start} start
      * @param {resumeFunction} resume_function
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, localization_api, start, resume_function, back_function) {
+    constructor(css_api, label_service, localization_api, start, resume_function, back_function) {
         super();
 
         this.#css_api = css_api;
+        this.#label_service = label_service;
         this.#localization_api = localization_api;
         this.#start = start;
         this.#resume_function = resume_function;
@@ -153,29 +162,21 @@ export class ResumeElement extends HTMLElement {
             return;
         }
 
-        if (post_result["network-error"]) {
+        if (post_result["error-messages"] !== null) {
+            for (const error_message of post_result["error-messages"]) {
+                this.#form_element.addInvalidMessage(
+                    await this.#label_service.getErrorMessageLabel(
+                        error_message
+                    )
+                );
+            }
+        } else {
             this.#form_element.addInvalidMessage(
                 this.#localization_api.translate(
-                    "Network error!"
+                    "Please check your data!"
                 )
             );
-            return;
         }
-
-        if (post_result["server-error"]) {
-            this.#form_element.addInvalidMessage(
-                this.#localization_api.translate(
-                    "Server error!"
-                )
-            );
-            return;
-        }
-
-        this.#form_element.addInvalidMessage(
-            this.#localization_api.translate(
-                "Please check your data!"
-            )
-        );
     }
 }
 

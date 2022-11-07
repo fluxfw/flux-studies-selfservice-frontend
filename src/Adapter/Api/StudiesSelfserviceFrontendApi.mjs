@@ -35,7 +35,7 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../PreviousStudies/PreviousStudiesElement.mjs").PreviousStudiesElement} PreviousStudiesElement */
 /** @typedef {import("../Post/Post.mjs").Post} Post */
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
-/** @typedef {import("../Post/PostClientResult.mjs").PostClientResult} PostClientResult */
+/** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
 /** @typedef {import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs").PwaApi} PwaApi */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/SelectLanguage/SelectLanguageButtonElement.mjs").SelectLanguageButtonElement} SelectLanguageButtonElement */
 /** @typedef {import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs").SettingsApi} SettingsApi */
@@ -174,7 +174,7 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
-     * @returns {Promise<PostClientResult>}
+     * @returns {Promise<PostResult>}
      */
     async #back() {
         try {
@@ -191,17 +191,17 @@ export class StudiesSelfserviceFrontendApi {
 
             return {
                 ok: false,
-                ...error instanceof Response ? {
-                    "server-error": true
-                } : {
-                    "network-error": true
-                }
+                "error-messages": [
+                    {
+                        [await this.#localization_api.getLanguage()]: error instanceof Response ? "Server error!" : "Network error!"
+                    }
+                ]
             };
         }
     }
 
     /**
-     * @returns {Promise<GetResult | PostClientResult>}
+     * @returns {Promise<GetResult | PostResult>}
      */
     async #get() {
         try {
@@ -213,11 +213,11 @@ export class StudiesSelfserviceFrontendApi {
 
             return {
                 ok: false,
-                ...error instanceof Response ? {
-                    "server-error": true
-                } : {
-                    "network-error": true
-                }
+                "error-messages": [
+                    {
+                        [await this.#localization_api.getLanguage()]: error instanceof Response ? "Server error!" : "Network error!"
+                    }
+                ]
             };
         }
     }
@@ -339,6 +339,7 @@ export class StudiesSelfserviceFrontendApi {
     async #getIdentificationNumberElement(identification_number, post_function, back_function = null) {
         return (await import("../IdentificationNumber/IdentificationNumberElement.mjs")).IdentificationNumberElement.new(
             await this.#getCssApi(),
+            await this.#getLabelService(),
             await this.#getLocalizationApi(),
             identification_number,
             async confirmed_identification_number => post_function(
@@ -473,8 +474,8 @@ export class StudiesSelfserviceFrontendApi {
     async #getLocalizationApi() {
         if (this.#localization_api === null) {
             this.#localization_api ??= (await import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs")).LocalizationApi.new(
-                await this.#getCssApi(),
                 await this.#getJsonApi(),
+                await this.#getCssApi(),
                 await this.#getSettingsApi()
             );
 
@@ -592,7 +593,7 @@ export class StudiesSelfserviceFrontendApi {
      * @param {PersonalData} personal_data
      * @param {postFunction} post_function
      * @param {backFunction | null} back_function
-     * @returns {Promise<IntendedDegreeProgramElement>}
+     * @returns {Promise<PersonalDataElement>}
      */
     async #getPersonalDataElement(personal_data, post_function, back_function = null) {
         return (await import("../PersonalData/PersonalDataElement.mjs")).PersonalDataElement.new(
@@ -746,7 +747,7 @@ export class StudiesSelfserviceFrontendApi {
      * @param {UniversityEntranceQualification} university_entrance_qualification
      * @param {postFunction} post_function
      * @param {backFunction | null} back_function
-     * @returns {Promise<IntendedDegreeProgramElement>}
+     * @returns {Promise<UniversityEntranceQualificationElement>}
      */
     async #getUniversityEntranceQualificationElement(university_entrance_qualification, post_function, back_function = null) {
         return (await import("../UniversityEntranceQualification/UniversityEntranceQualificationElement.mjs")).UniversityEntranceQualificationElement.new(
@@ -807,8 +808,8 @@ export class StudiesSelfserviceFrontendApi {
                     if (!back_result.ok) {
                         this.#main_element.replaceContent(
                             await this.#getFormInvalidElement(
-                                (await this.#getLocalizationApi()).translate(
-                                    back_result["network-error"] ? "Network error!" : back_result["server-error"] ? "Server error!" : ""
+                                (await this.#getLabelService()).getErrorMessageLabel(
+                                    back_result["error-messages"]?.[0] ?? {}
                                 )
                             )
                         );
@@ -820,8 +821,8 @@ export class StudiesSelfserviceFrontendApi {
             );
         } else {
             page = await this.#getFormInvalidElement(
-                (await this.#getLocalizationApi()).translate(
-                    get_result["network-error"] ? "Network error!" : get_result["server-error"] ? "Server error!" : ""
+                (await this.#getLabelService()).getErrorMessageLabel(
+                    get_result["error-messages"]?.[0] ?? {}
                 )
             );
         }
@@ -833,7 +834,7 @@ export class StudiesSelfserviceFrontendApi {
 
     /**
      * @param {Post} post
-     * @returns {Promise<PostClientResult>}
+     * @returns {Promise<PostResult>}
      */
     async #post(post) {
         try {
@@ -847,11 +848,11 @@ export class StudiesSelfserviceFrontendApi {
 
             return {
                 ok: false,
-                ...error instanceof Response ? {
-                    "server-error": true
-                } : {
-                    "network-error": true
-                }
+                "error-messages": [
+                    {
+                        [await this.#localization_api.getLanguage()]: error instanceof Response ? "Server error!" : "Network error!"
+                    }
+                ]
             };
         }
     }

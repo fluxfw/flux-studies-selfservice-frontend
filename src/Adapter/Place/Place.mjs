@@ -1,3 +1,5 @@
+/** @typedef {import("../Label/Label.mjs").Label} Label */
+
 /**
- * @typedef {{id: string, label: {[key: string]: string}}} Place
+ * @typedef {{id: string, label: Label}} Place
  */
