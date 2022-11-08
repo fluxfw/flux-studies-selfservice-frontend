@@ -6,6 +6,7 @@ import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("./PhotoCrop.mjs").PhotoCrop} PhotoCrop */
 /** @typedef {import("../../Service/Photo/Port/PhotoService.mjs").PhotoService} PhotoService */
+/** @typedef {import("./PhotoSize.mjs").PhotoSize} PhotoSize */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -46,6 +47,10 @@ export class PhotoElement extends HTMLElement {
      * @type {ShadowRoot}
      */
     #shadow;
+    /**
+     * @type {HTMLDivElement}
+     */
+    #size_element;
     /**
      * @type {MouseEvent | Touch | null}
      */
@@ -160,13 +165,41 @@ export class PhotoElement extends HTMLElement {
     }
 
     /**
-     * @param {string | null} src
+     * @param {HTMLImageElement | null} image_element
      * @returns {void}
      */
-    setImage(src = null) {
+    setImage(image_element = null) {
         this.#removeRectangle();
 
-        this.#image_element.src = src ?? "";
+        if (image_element !== null) {
+            this.#image_element.replaceWith(this.#image_element = image_element);
+        } else {
+            this.#image_element.src = "";
+        }
+
+        this.#updateRectangle();
+    }
+
+    /**
+     * @returns {PhotoSize | null}
+     */
+    get size() {
+        if (this.#image_element.src === "") {
+            return null;
+        }
+
+        const crop = this.crop;
+        if (crop !== null) {
+            return {
+                width: crop.width,
+                height: crop.height
+            };
+        }
+
+        return {
+            width: this.#image_element.naturalWidth,
+            height: this.#image_element.naturalHeight
+        };
     }
 
     /**
@@ -268,14 +301,16 @@ export class PhotoElement extends HTMLElement {
         this.#container_element.addEventListener("touchstart", this);
         this.#shadow.appendChild(this.#container_element);
 
-        this.#shadow.appendChild(
-            FormSubtitleElement.new(
-                this.#css_api,
-                this.#localization_api.translate(
-                    "The photo can crop by dragging a rectangle with holding primary mouse button or touchscreen. The selection is croped on continue"
-                )
+        this.#size_element = document.createElement("div");
+        this.#size_element.classList.add("size");
+        this.#shadow.appendChild(this.#size_element);
+
+        this.#shadow.appendChild(FormSubtitleElement.new(
+            this.#css_api,
+            this.#localization_api.translate(
+                "The photo can crop by dragging a rectangle with holding primary mouse button or touchscreen"
             )
-        );
+        ));
 
         this.#remove_crop_element = FormButtonElement.new(
             this.#css_api,
@@ -383,6 +418,16 @@ export class PhotoElement extends HTMLElement {
      * @returns {void}
      */
     #updateRectangle() {
+        const size = this.size;
+        this.#size_element.innerText = size !== null ? this.#localization_api.translate(
+            "{width} x {height}",
+            null,
+            {
+                width: `${size.width}px`,
+                height: `${size.height}px`
+            }
+        ) : "";
+
         if (this.#rectangle === null) {
             if (this.#rectangle_element !== null) {
                 this.#rectangle_element.remove();

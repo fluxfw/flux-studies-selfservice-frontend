@@ -26,7 +26,7 @@ installDependency flux-localization-api https://github.com/fluxfw/flux-localizat
 
 installDependency flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2022-11-03-1.tar.gz
 
-installDependency flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2022-11-07-2.tar.gz
+installDependency flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2022-11-08-1.tar.gz
 
 installDependency flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2022-11-03-1.tar.gz
 

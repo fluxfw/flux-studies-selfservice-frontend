@@ -135,6 +135,23 @@ export class PortraitElement extends HTMLElement {
             true
         );
 
+        if (this.#photo !== null) {
+            if (this.#photo.length > this.#portrait["photo-max-data-size"]) {
+                this.#form_element.setCustomValidationMessage(
+                    this.#form_element.inputs.photo,
+                    this.#localization_api.translate(
+                        "The photo is too big! (Maximal: {max-data-size}, current: {current-data-size})",
+                        null,
+                        {
+                            "max-data-size": `${this.#portrait["photo-max-data-size"]}bytes`,
+                            "current-data-size": `${this.#photo.length}bytes`
+                        }
+                    )
+                );
+                return;
+            }
+        }
+
         const post_result = await this.#chosen_portrait_function(
             {
                 photo: this.#photo
@@ -184,7 +201,71 @@ export class PortraitElement extends HTMLElement {
 
         this.#form_element = FormElement.new(
             this.#css_api,
-            this.#localization_api
+            this.#localization_api,
+            () => {
+                const size = this.#photo_element.size;
+                if (size !== null) {
+                    if (size.width < this.#portrait["photo-min-width"] || size.height < this.#portrait["photo-min-height"]) {
+                        this.#form_element.setCustomValidationMessage(
+                            this.#form_element.inputs.photo,
+                            this.#localization_api.translate(
+                                "The photo is too small! (Minimal: {min-size})",
+                                null,
+                                {
+                                    "min-size": this.#localization_api.translate(
+                                        "{width} x {height}",
+                                        null,
+                                        {
+                                            width: `${this.#portrait["photo-min-width"]}px`,
+                                            height: `${this.#portrait["photo-min-height"]}px`
+                                        }
+                                    )
+                                }
+                            )
+                        );
+                        return false;
+                    }
+
+                    if (size.width > this.#portrait["photo-max-width"] || size.height > this.#portrait["photo-max-height"]) {
+                        this.#form_element.setCustomValidationMessage(
+                            this.#form_element.inputs.photo,
+                            this.#localization_api.translate(
+                                "The photo is too big! (Maximal: {max-size})",
+                                null,
+                                {
+                                    "max-size": this.#localization_api.translate(
+                                        "{width} x {height}",
+                                        null,
+                                        {
+                                            width: `${this.#portrait["photo-max-width"]}px`,
+                                            height: `${this.#portrait["photo-max-height"]}px`
+                                        }
+                                    )
+                                }
+                            )
+                        );
+                        return false;
+                    }
+
+                    const aspect_ratio = size.width / size.height;
+                    if (aspect_ratio < this.#portrait["photo-min-aspect-ratio"] || aspect_ratio > this.#portrait["photo-max-aspect-ratio"]) {
+                        this.#form_element.setCustomValidationMessage(
+                            this.#form_element.inputs.photo,
+                            this.#localization_api.translate(
+                                "The photo has a wrong aspect ratio! (Needed: {needed-aspect-ratio}, current: {current-aspect-ratio})",
+                                null,
+                                {
+                                    "needed-aspect-ratio": `${this.#portrait["photo-min-aspect-ratio"]} - ${this.#portrait["photo-max-aspect-ratio"]}`,
+                                    "current-aspect-ratio": aspect_ratio
+                                }
+                            )
+                        );
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         );
 
         this.#form_element.addTitle(
@@ -279,18 +360,14 @@ export class PortraitElement extends HTMLElement {
                 photo.type,
                 this.#portrait["photo-type"],
                 this.#portrait["photo-quality"],
-                !final ? 1000 : this.#portrait["photo-max-width"],
-                !final ? 1000 : this.#portrait["photo-max-height"],
+                !final ? this.#portrait["photo-preview-max-width"] : this.#portrait["photo-max-width"],
+                !final ? this.#portrait["photo-preview-max-height"] : this.#portrait["photo-max-height"],
                 this.#portrait["photo-grayscale"],
                 !final ? null : this.#photo_element.crop
             );
 
-            if (final) {
-                return;
-            }
-
             this.#photo_element.setImage(
-                this.#photo_service.toDataUrl(
+                await this.#photo_service.toImageElement(
                     this.#photo,
                     this.#portrait["photo-type"]
                 )
