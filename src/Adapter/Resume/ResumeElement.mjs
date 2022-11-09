@@ -94,28 +94,28 @@ export class ResumeElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#form_element = FormElement.new(
             this.#css_api,
             this.#localization_api
         );
 
         this.#form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Resume the application process"
             )
         );
 
         this.#form_element.addSubtitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Resume from where you left off"
             )
         );
 
         const identification_number_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Identification number"
             ),
             "text",
@@ -124,7 +124,7 @@ export class ResumeElement extends HTMLElement {
         identification_number_element.required = true;
 
         const password_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Password"
             ),
             "password",
@@ -133,7 +133,7 @@ export class ResumeElement extends HTMLElement {
         password_element.minLength = this.#start["min-password-length"];
         password_element.required = true;
 
-        this.#form_element.addButtons(
+        await this.#form_element.addButtons(
             () => {
                 this.#resume();
             },
@@ -147,7 +147,7 @@ export class ResumeElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #resume() {
-        if (!this.#form_element.validate()) {
+        if (!await this.#form_element.validate()) {
             return;
         }
 
@@ -172,7 +172,7 @@ export class ResumeElement extends HTMLElement {
             }
         } else {
             this.#form_element.addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             );

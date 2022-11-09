@@ -103,19 +103,19 @@ export class StartElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Application / Login"
             )
         ));
 
         this.#shadow.appendChild(SubtitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Create a new application by entering a password of you choice, or continue with your application by using your application identification number and your password"
             )
         ));

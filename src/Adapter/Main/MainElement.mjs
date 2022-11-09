@@ -74,8 +74,21 @@ export class MainElement extends HTMLElement {
     async #render() {
         const settings_element = document.createElement("div");
         settings_element.classList.add("settings");
-        settings_element.appendChild(await this.#studies_selfservice_frontend_api.getSelectLanguageButtonElement());
-        settings_element.appendChild(await this.#color_scheme_api.getSelectColorSchemeElement());
+
+        const select_language_button_placeholder_element = document.createElement("div");
+        select_language_button_placeholder_element.hidden = true;
+        this.#shadow.appendChild(select_language_button_placeholder_element);
+        (async () => {
+            select_language_button_placeholder_element.replaceWith(await this.#studies_selfservice_frontend_api.getSelectLanguageButtonElement());
+        })();
+
+        const select_color_scheme_placeholder_element = document.createElement("div");
+        select_color_scheme_placeholder_element.hidden = true;
+        this.#shadow.appendChild(select_color_scheme_placeholder_element);
+        (async () => {
+            select_color_scheme_placeholder_element.replaceWith(await this.#color_scheme_api.getSelectColorSchemeElement());
+        })();
+
         this.#shadow.appendChild(settings_element);
 
         this.#shadow.appendChild(document.createElement("div"));

@@ -112,9 +112,9 @@ export class PreviousStudyElement extends HTMLElement {
     }
 
     /**
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
-    validate() {
+    async validate() {
         return this.#form_element.validate();
     }
 
@@ -125,11 +125,11 @@ export class PreviousStudyElement extends HTMLElement {
         this.#form_element = FormElement.new(
             this.#css_api,
             this.#localization_api,
-            () => {
+            async () => {
                 if (this.#form_element.inputs["end-date"].valueAsNumber < this.#form_element.inputs["start-date"].valueAsNumber) {
                     this.#form_element.setCustomValidationMessage(
                         this.#form_element.inputs["end-date"],
-                        this.#localization_api.translate(
+                        await this.#localization_api.translate(
                             "The end date can not be before the start date!"
                         )
                     );
@@ -141,7 +141,7 @@ export class PreviousStudyElement extends HTMLElement {
         );
 
         const title_element = this.#form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Previous study"
             )
         );
@@ -158,7 +158,7 @@ export class PreviousStudyElement extends HTMLElement {
         );
 
         const certificate_type_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Type of certificate"
             ),
             "select",
@@ -176,7 +176,7 @@ export class PreviousStudyElement extends HTMLElement {
         }
 
         const start_date_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Start of your studies (Year)"
             ),
             "number",
@@ -189,7 +189,7 @@ export class PreviousStudyElement extends HTMLElement {
         start_date_element.step = 1;
 
         const end_date_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "End of your studies (Year)"
             ),
             "number",
@@ -202,7 +202,7 @@ export class PreviousStudyElement extends HTMLElement {
         end_date_element.step = 1;
 
         const university_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Name of university"
             ),
             "select",
@@ -220,7 +220,7 @@ export class PreviousStudyElement extends HTMLElement {
         }
 
         const subject_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Subject studied"
             ),
             "text",
@@ -229,7 +229,7 @@ export class PreviousStudyElement extends HTMLElement {
         subject_element.required = true;
 
         const semesters_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Number of semesters"
             ),
             "number",
@@ -242,7 +242,7 @@ export class PreviousStudyElement extends HTMLElement {
         semesters_element.step = 1;
 
         const degree_title_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Title degree"
             ),
             "select",
@@ -260,7 +260,7 @@ export class PreviousStudyElement extends HTMLElement {
         }
 
         const certificate_country_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "The country where you were registered at the time you were awarded your certificate"
             ),
             "select",
@@ -278,7 +278,7 @@ export class PreviousStudyElement extends HTMLElement {
         }
 
         const certificate_canton_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "The canton of your political commune where you were registered at the time you were awarded your certificate"
             ),
             "select",
@@ -296,7 +296,7 @@ export class PreviousStudyElement extends HTMLElement {
         }
 
         const certificate_place_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Legal place of residence when the certificate was awarded"
             ),
             "select",

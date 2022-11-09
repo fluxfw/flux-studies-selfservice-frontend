@@ -135,7 +135,7 @@ export class LabelService {
             "{label} ({ect})",
             null,
             {
-                ect: this.getEctLabel(
+                ect: await this.getEctLabel(
                     [
                         ...combination.mandatory?.map(mandatory => mandatory.ect) ?? [],
                         ...combination["single-choice"]?.map(single_choice => single_choice.ect) ?? [],
@@ -181,9 +181,9 @@ export class LabelService {
 
     /**
      * @param {number | number[]} ect
-     * @returns {string}
+     * @returns {Promise<string>}
      */
-    getEctLabel(ect) {
+    async getEctLabel(ect) {
         let _ect;
         if (Array.isArray(ect)) {
             _ect = ect.join(", ");
@@ -333,7 +333,7 @@ export class LabelService {
             "{label} ({ect})",
             null,
             {
-                ect: this.getEctLabel(
+                ect: await this.getEctLabel(
                     subject.ect
                 ),
                 label: await this.#getLabel(
@@ -348,6 +348,6 @@ export class LabelService {
      * @returns {Promise<string | null>}
      */
     async #getLabel(label) {
-        return label[await this.#localization_api.getLanguage()] ?? label.en ?? null;
+        return label[(await this.#localization_api.getLanguage()).language] ?? label.en ?? null;
     }
 }

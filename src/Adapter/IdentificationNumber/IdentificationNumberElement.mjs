@@ -99,7 +99,7 @@ export class IdentificationNumberElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #confirmedIdentificationNumber() {
-        if (!this.#form_element.validate()) {
+        if (!await this.#form_element.validate()) {
             return;
         }
 
@@ -121,7 +121,7 @@ export class IdentificationNumberElement extends HTMLElement {
             }
         } else {
             this.#shadow.prepend(this.#form_element.addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             ));
@@ -129,19 +129,19 @@ export class IdentificationNumberElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Your personal identification number"
             )
         ));
 
         this.#shadow.appendChild(SubtitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Your data will be saved under the following number"
             )
         ));
@@ -160,12 +160,12 @@ export class IdentificationNumberElement extends HTMLElement {
 
         this.#shadow.appendChild(SubtitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Please keep your identification number safe so that you can access your data at a later stage"
             )
         ));
 
-        this.#shadow.appendChild(this.#form_element.addButtons(
+        this.#shadow.appendChild(await this.#form_element.addButtons(
             () => {
                 this.#confirmedIdentificationNumber();
             },

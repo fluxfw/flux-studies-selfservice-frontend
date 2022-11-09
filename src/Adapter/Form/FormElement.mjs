@@ -88,9 +88,9 @@ export class FormElement extends HTMLElement {
      * @param {formButtonAction | null} continue_function
      * @param {formButtonAction | null} back_function
      * @param {string | null} subtitle
-     * @returns {FormButtonsElement}
+     * @returns {Promise<FormButtonsElement>}
      */
-    addButtons(continue_function = null, back_function = null, subtitle = null) {
+    async addButtons(continue_function = null, back_function = null, subtitle = null) {
         this.removeButtons();
 
         this.#buttons_element = FormButtonsElement.new(
@@ -98,7 +98,7 @@ export class FormElement extends HTMLElement {
             [
                 ...continue_function !== null ? [
                     {
-                        label: this.#localization_api.translate(
+                        label: await this.#localization_api.translate(
                             "Continue"
                         ),
                         action: continue_function,
@@ -107,7 +107,7 @@ export class FormElement extends HTMLElement {
                 ] : [],
                 ...back_function !== null ? [
                     {
-                        label: this.#localization_api.translate(
+                        label: await this.#localization_api.translate(
                             "Back"
                         ),
                         action: back_function
@@ -324,9 +324,9 @@ export class FormElement extends HTMLElement {
     }
 
     /**
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
-    validate() {
+    async validate() {
         this.#removeCustomValidationMessages();
         this.#removeInvalidMessages();
 
@@ -335,7 +335,7 @@ export class FormElement extends HTMLElement {
             return false;
         }
 
-        if (this.#custom_validation_function !== null && !this.#custom_validation_function()) {
+        if (this.#custom_validation_function !== null && !await this.#custom_validation_function()) {
             return false;
         }
 

@@ -10,8 +10,14 @@ try {
     const json_api = (await import("../../flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new();
     await json_api.init();
 
-    const pwa_generator_api = (await import("../../flux-pwa-generator-api/src/Adapter/Api/PwaGeneratorApi.mjs")).PwaGeneratorApi.new(
+    const localization_api = (await import("../../flux-localization-api/src/Adapter/Api/LocalizationApi.mjs")).LocalizationApi.new(
         json_api
+    );
+    await localization_api.init();
+
+    const pwa_generator_api = (await import("../../flux-pwa-generator-api/src/Adapter/Api/PwaGeneratorApi.mjs")).PwaGeneratorApi.new(
+        json_api,
+        localization_api
     );
     await pwa_generator_api.init();
 

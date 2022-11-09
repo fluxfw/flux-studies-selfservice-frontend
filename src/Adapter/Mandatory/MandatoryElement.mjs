@@ -52,11 +52,11 @@ export class MandatoryElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         const mandatory_element = document.createElement("span");
-        mandatory_element.innerText = this.#localization_api.translate(
+        mandatory_element.innerText = await this.#localization_api.translate(
             "Mandatory"
         );
         this.#shadow.appendChild(mandatory_element);

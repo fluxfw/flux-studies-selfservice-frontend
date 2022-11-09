@@ -132,7 +132,15 @@ export class PreviousStudiesElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #chosenPreviousStudies() {
-        if (!this.#previous_study_elements.every(previous_study_element => previous_study_element.validate()) || !this.#form_element.validate()) {
+        if (!await (async () => {
+            for (const previous_study_element of this.#previous_study_elements) {
+                if (!await previous_study_element.validate()) {
+                    return false;
+                }
+            }
+
+            return true;
+        })() || !await this.#form_element.validate()) {
             return;
         }
 
@@ -156,7 +164,7 @@ export class PreviousStudiesElement extends HTMLElement {
             }
         } else {
             this.#form_element.addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             );
@@ -185,12 +193,12 @@ export class PreviousStudiesElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Your previous studies"
             )
         ));
@@ -201,7 +209,7 @@ export class PreviousStudiesElement extends HTMLElement {
         );
 
         const subtitle_element = this.#form_element.addSubtitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Please indicate all your university studies even if you did not complete them"
             )
         );
@@ -215,7 +223,7 @@ export class PreviousStudiesElement extends HTMLElement {
         });
         subtitle_element.insertAdjacentElement("beforebegin", add_previous_study_element);
 
-        this.#form_element.addButtons(
+        await this.#form_element.addButtons(
             () => {
                 this.#chosenPreviousStudies();
             },

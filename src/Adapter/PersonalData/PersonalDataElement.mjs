@@ -120,7 +120,7 @@ export class PersonalDataElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #filledPersonalData() {
-        if (!this.#address_form_element.validate() || !this.#contact_form_element.validate() || !this.#personal_information_form_element.validate() || !this.#origin_place_form_element.validate() || !this.#parents_address_form_element.validate() || !(this.#postal_address_form_element !== null ? this.#postal_address_form_element.validate() : true)) {
+        if (!await this.#address_form_element.validate() || !await this.#contact_form_element.validate() || !await this.#personal_information_form_element.validate() || !await this.#origin_place_form_element.validate() || !await this.#parents_address_form_element.validate() || !(this.#postal_address_form_element !== null ? await this.#postal_address_form_element.validate() : true)) {
             return;
         }
 
@@ -213,7 +213,7 @@ export class PersonalDataElement extends HTMLElement {
             }
         } else {
             (this.#postal_address_form_element !== null ? this.#postal_address_form_element : this.#parents_address_form_element).addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             );
@@ -226,14 +226,14 @@ export class PersonalDataElement extends HTMLElement {
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Personal data"
             )
         ));
 
         this.#shadow.appendChild(SubtitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Please pay attention to use the correct spelling (Upper and lower case letters)"
             )
         ));
@@ -241,14 +241,14 @@ export class PersonalDataElement extends HTMLElement {
         this.#address_form_element = FormElement.new(
             this.#css_api,
             this.#localization_api,
-            () => {
+            async () => {
                 const additional_first_names = this.#address_form_element.getTextareaValue(
                     "additional-first-names"
                 );
                 if (additional_first_names !== "" && additional_first_names.split("\n").some(name => name === "")) {
                     this.#address_form_element.setCustomValidationMessage(
                         this.#address_form_element.inputs["additional-first-names"],
-                        this.#localization_api.translate(
+                        await this.#localization_api.translate(
                             "Some line contains no name!"
                         )
                     );
@@ -263,7 +263,7 @@ export class PersonalDataElement extends HTMLElement {
                     if (this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value === "" && this.#contact_form_element.inputs[`${phone_type}-phone-number`].value !== "") {
                         this.#contact_form_element.setCustomValidationMessage(
                             this.#contact_form_element.inputs[`${phone_type}-phone-area-code`],
-                            this.#localization_api.translate(
+                            await this.#localization_api.translate(
                                 "Please either enter both area code/number or neither of them!"
                             )
                         );
@@ -273,7 +273,7 @@ export class PersonalDataElement extends HTMLElement {
                     if (this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value !== "" && this.#contact_form_element.inputs[`${phone_type}-phone-number`].value === "") {
                         this.#contact_form_element.setCustomValidationMessage(
                             this.#contact_form_element.inputs[`${phone_type}-phone-number`],
-                            this.#localization_api.translate(
+                            await this.#localization_api.translate(
                                 "Please either enter both area code/number or neither of them!"
                             )
                         );
@@ -288,7 +288,7 @@ export class PersonalDataElement extends HTMLElement {
                     if (parents_address_first_names !== "" && parents_address_first_names.split("\n").some(name => name === "")) {
                         this.#parents_address_form_element.setCustomValidationMessage(
                             this.#parents_address_form_element.inputs["parents-address-first-names"],
-                            this.#localization_api.translate(
+                            await this.#localization_api.translate(
                                 "Some line contains no name!"
                             )
                         );
@@ -301,13 +301,13 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         this.#address_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Address"
             )
         );
 
         const salutation_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Salutation"
             ),
             "select",
@@ -325,7 +325,7 @@ export class PersonalDataElement extends HTMLElement {
         }
 
         const first_name_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "First name"
             ),
             "text",
@@ -334,7 +334,7 @@ export class PersonalDataElement extends HTMLElement {
         first_name_element.required = true;
 
         const second_first_name_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Second first name"
             ),
             "text",
@@ -342,7 +342,7 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         const additional_first_names_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Additional first names (One per line)"
             ),
             "textarea",
@@ -350,7 +350,7 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         const last_name_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Last name"
             ),
             "text",
@@ -359,7 +359,7 @@ export class PersonalDataElement extends HTMLElement {
         last_name_element.required = true;
 
         const registration_number_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Registration number (Format {example})",
                 null,
                 {
@@ -372,7 +372,7 @@ export class PersonalDataElement extends HTMLElement {
         registration_number_element.pattern = this.#personal_data["registration-number-format"].substring(1, this.#personal_data["registration-number-format"].length - 1);
 
         const country_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Country"
             ),
             "select",
@@ -390,7 +390,7 @@ export class PersonalDataElement extends HTMLElement {
         }
 
         const extra_address_line_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Extra address line (E.g. {example})",
                 null,
                 {
@@ -402,7 +402,7 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         const street_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Street"
             ),
             "text",
@@ -411,7 +411,7 @@ export class PersonalDataElement extends HTMLElement {
         street_element.required = true;
 
         const house_number_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Appartement/House number"
             ),
             "number",
@@ -424,7 +424,7 @@ export class PersonalDataElement extends HTMLElement {
         house_number_element.step = 1;
 
         const postal_office_box_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Postal office box"
             ),
             "text",
@@ -432,7 +432,7 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         const postal_code_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Postal code"
             ),
             "number",
@@ -445,7 +445,7 @@ export class PersonalDataElement extends HTMLElement {
         postal_code_element.step = 1;
 
         const place_element = this.#address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Place"
             ),
             "select",
@@ -470,7 +470,7 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         this.#contact_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Contact"
             )
         );
@@ -481,7 +481,7 @@ export class PersonalDataElement extends HTMLElement {
             "business"
         ]) {
             const area_code_element = this.#contact_form_element.addInput(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     `Phone ${phone_type} (Format {example})`,
                     null,
                     {
@@ -519,7 +519,7 @@ export class PersonalDataElement extends HTMLElement {
         }
 
         const email_element = this.#contact_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "E-Mail"
             ),
             "email",
@@ -529,7 +529,7 @@ export class PersonalDataElement extends HTMLElement {
         email_element.required = this.#personal_data["required-email"];
 
         const mother_language_element = this.#contact_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Mother language"
             ),
             "select",
@@ -547,7 +547,7 @@ export class PersonalDataElement extends HTMLElement {
         }
 
         const correspondence_language_element = this.#contact_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Correspondence language"
             ),
             "select",
@@ -572,13 +572,13 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         this.#personal_information_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Personal information"
             )
         );
 
         const birth_date_element = this.#personal_information_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Birth date"
             ),
             "date",
@@ -589,7 +589,7 @@ export class PersonalDataElement extends HTMLElement {
         birth_date_element.required = true;
 
         const old_age_survivar_insurance_number_element = this.#personal_information_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Swiss old-age and survivar insurance number ({ahv}/{oasi}) (Format {example})",
                 null,
                 {
@@ -604,7 +604,7 @@ export class PersonalDataElement extends HTMLElement {
         old_age_survivar_insurance_number_element.pattern = this.#personal_data["old-age-survivar-insurance-number-format"].substring(1, this.#personal_data["old-age-survivar-insurance-number-format"].length - 1);
 
         const nationally_element = this.#personal_information_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Nationally"
             ),
             "select",
@@ -629,13 +629,13 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         this.#origin_place_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Origin place"
             )
         );
 
         const origin_place_element = this.#origin_place_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Origin place"
             ),
             "select",
@@ -660,13 +660,13 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         this.#parents_address_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Parents address"
             )
         );
 
         const parents_address_element = this.#parents_address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Enter parents address"
             ),
             "checkbox",
@@ -676,7 +676,7 @@ export class PersonalDataElement extends HTMLElement {
             this.#renderParentsAddress();
         });
 
-        this.#parents_address_form_element.addButtons(
+        await this.#parents_address_form_element.addButtons(
             () => {
                 this.#filledPersonalData();
             },
@@ -794,7 +794,7 @@ export class PersonalDataElement extends HTMLElement {
             this.#postal_address_form_element = null;
         }
 
-        this.#parents_address_form_element.addButtons(
+        await this.#parents_address_form_element.addButtons(
             () => {
                 this.#filledPersonalData();
             },
@@ -810,7 +810,7 @@ export class PersonalDataElement extends HTMLElement {
         this.#parents_address_form_element.removeButtons();
 
         const parents_address_salutation_element = this.#parents_address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Salutation"
             ),
             "select",
@@ -828,7 +828,7 @@ export class PersonalDataElement extends HTMLElement {
         }
 
         const parents_address_first_names_element = this.#parents_address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "First names (One per line)"
             ),
             "textarea",
@@ -837,7 +837,7 @@ export class PersonalDataElement extends HTMLElement {
         parents_address_first_names_element.required = true;
 
         const parents_address_last_name_element = this.#parents_address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Last name"
             ),
             "text",
@@ -846,7 +846,7 @@ export class PersonalDataElement extends HTMLElement {
         parents_address_last_name_element.required = true;
 
         const parents_address_same_address_element = this.#parents_address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Your parents have the same address as you"
             ),
             "checkbox",
@@ -864,13 +864,13 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         this.#postal_address_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Postal address"
             )
         );
 
         this.#postal_address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "General post to parents"
             ),
             "checkbox",
@@ -878,14 +878,14 @@ export class PersonalDataElement extends HTMLElement {
         );
 
         this.#postal_address_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Invoices to parents"
             ),
             "checkbox",
             "parents-address-invoices"
         );
 
-        this.#postal_address_form_element.addButtons(
+        await this.#postal_address_form_element.addButtons(
             () => {
                 this.#filledPersonalData();
             },
@@ -913,7 +913,7 @@ export class PersonalDataElement extends HTMLElement {
 
         if (this.#parents_address_form_element.inputs["parents-address"].checked && !this.#parents_address_form_element.inputs["parents-address-same-address"].checked) {
             const parents_address_country_element = this.#parents_address_form_element.addInput(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Country"
                 ),
                 "select",
@@ -931,7 +931,7 @@ export class PersonalDataElement extends HTMLElement {
             }
 
             this.#parents_address_form_element.addInput(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Extra address line (E.g. {example})",
                     null,
                     {
@@ -943,7 +943,7 @@ export class PersonalDataElement extends HTMLElement {
             );
 
             const parents_address_street_element = this.#parents_address_form_element.addInput(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Street"
                 ),
                 "text",
@@ -952,7 +952,7 @@ export class PersonalDataElement extends HTMLElement {
             parents_address_street_element.required = true;
 
             const parents_address_house_number_element = this.#parents_address_form_element.addInput(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Appartement/House number"
                 ),
                 "number",
@@ -965,7 +965,7 @@ export class PersonalDataElement extends HTMLElement {
             parents_address_house_number_element.step = 1;
 
             const parents_address_postal_code_element = this.#parents_address_form_element.addInput(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Postal code"
                 ),
                 "number",
@@ -978,7 +978,7 @@ export class PersonalDataElement extends HTMLElement {
             parents_address_postal_code_element.step = 1;
 
             const parents_address_place_element = this.#parents_address_form_element.addInput(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Place"
                 ),
                 "select",

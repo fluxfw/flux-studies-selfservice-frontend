@@ -108,7 +108,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #chosenIntendedDegreeProgram() {
-        if (!this.#form_element.validate()) {
+        if (!await this.#form_element.validate()) {
             return;
         }
 
@@ -133,7 +133,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             }
         } else {
             this.#form_element.addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             );
@@ -146,7 +146,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Intended degree program"
             )
         ));
@@ -157,19 +157,19 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         );
 
         this.#form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Degree program"
             )
         );
 
         this.#form_element.addSubtitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Please choose your intended degree program"
             )
         );
 
         const subject_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Subject"
             ),
             "select",
@@ -191,7 +191,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         });
 
         const combination_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Combination of subjects"
             ),
             "select",
@@ -204,18 +204,18 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         });
 
         this.#mandatory_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Mandatory subjects"
             ),
             "readonly"
         );
 
-        this.#form_element.addButtons(
+        await this.#form_element.addButtons(
             () => {
                 this.#chosenIntendedDegreeProgram();
             },
             this.#back_function,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Please save your selection. In case you need to choose additional mandatory subjects for your course, they will be shown on the next page"
             )
         );

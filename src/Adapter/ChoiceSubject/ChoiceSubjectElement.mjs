@@ -104,7 +104,7 @@ export class ChoiceSubjectElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #chosenSubject() {
-        if (!this.#degree_program_form_element.validate() || !this.#qualifications_form_element.validate()) {
+        if (!await this.#degree_program_form_element.validate() || !await this.#qualifications_form_element.validate()) {
             return;
         }
 
@@ -136,7 +136,7 @@ export class ChoiceSubjectElement extends HTMLElement {
             }
         } else {
             this.#qualifications_form_element.addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             );
@@ -149,7 +149,7 @@ export class ChoiceSubjectElement extends HTMLElement {
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Choice of subject"
             )
         ));
@@ -160,7 +160,7 @@ export class ChoiceSubjectElement extends HTMLElement {
         );
 
         this.#degree_program_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Choose your degree program"
             )
         );
@@ -191,12 +191,12 @@ export class ChoiceSubjectElement extends HTMLElement {
         );
 
         this.#qualifications_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Qualifications for admission"
             )
         );
 
-        this.#qualifications_form_element.addButtons(
+        await this.#qualifications_form_element.addButtons(
             () => {
                 this.#chosenSubject();
             },

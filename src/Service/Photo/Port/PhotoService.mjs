@@ -302,12 +302,12 @@ export class PhotoService {
      * @param {Photo} photo
      * @param {string} type
      * @param {string | null} name
-     * @returns {File}
+     * @returns {Promise<File>}
      */
-    toFile(photo, type, name = null) {
+    async toFile(photo, type, name = null) {
         return new File([
             new Uint8Array(photo).buffer
-        ], name ?? `${this.#localization_api.translate(
+        ], name ?? `${await this.#localization_api.translate(
             "Photo"
         )}.${type.split("/")[1]}`, {
             type
@@ -343,11 +343,11 @@ export class PhotoService {
      * @param {HTMLInputElement} input_element
      * @param {string} type
      * @param {string | null} name
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    toInputElement(photo, input_element, type, name = null) {
+    async toInputElement(photo, input_element, type, name = null) {
         const data_transfer = new DataTransfer();
-        data_transfer.items.add(this.toFile(
+        data_transfer.items.add(await this.toFile(
             photo,
             type,
             name

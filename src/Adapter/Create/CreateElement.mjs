@@ -88,7 +88,7 @@ export class CreateElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #create() {
-        if (!this.#form_element.validate()) {
+        if (!await this.#form_element.validate()) {
             return;
         }
 
@@ -114,7 +114,7 @@ export class CreateElement extends HTMLElement {
             }
         } else {
             this.#form_element.addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             );
@@ -128,11 +128,11 @@ export class CreateElement extends HTMLElement {
         this.#form_element = FormElement.new(
             this.#css_api,
             this.#localization_api,
-            () => {
+            async () => {
                 if (this.#form_element.inputs.password.value !== this.#form_element.inputs["confirm-password"].value) {
                     this.#form_element.setCustomValidationMessage(
                         this.#form_element.inputs["confirm-password"],
-                        this.#localization_api.translate(
+                        await this.#localization_api.translate(
                             "Confirm password does not match!"
                         )
                     );
@@ -144,13 +144,13 @@ export class CreateElement extends HTMLElement {
         );
 
         this.#form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Create a new application"
             )
         );
 
         const semester_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Semester"
             ),
             "select",
@@ -168,7 +168,7 @@ export class CreateElement extends HTMLElement {
         }
 
         this.#form_element.addSubtitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Enter a password with at least {min-password-length} characters which will allow you to access your data at a later stage",
                 null,
                 {
@@ -178,7 +178,7 @@ export class CreateElement extends HTMLElement {
         );
 
         const password_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Password"
             ),
             "password",
@@ -188,7 +188,7 @@ export class CreateElement extends HTMLElement {
         password_element.required = true;
 
         const confirm_password_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Confirm password"
             ),
             "password",
@@ -197,7 +197,7 @@ export class CreateElement extends HTMLElement {
         confirm_password_element.minLength = this.#start["min-password-length"];
         confirm_password_element.required = true;
 
-        this.#form_element.addButtons(
+        await this.#form_element.addButtons(
             () => {
                 this.#create();
             }

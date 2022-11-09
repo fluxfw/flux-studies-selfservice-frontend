@@ -115,7 +115,7 @@ export class LegalElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #acceptedLegal() {
-        if (!this.#degree_program_form_element.validate() || !this.#disqualification_form_element.validate() || !this.#agb_form_element.validate() || !this.#complete_form_element.validate() || !this.#comments_form_element.validate()) {
+        if (!await this.#degree_program_form_element.validate() || !await this.#disqualification_form_element.validate() || !await this.#agb_form_element.validate() || !await this.#complete_form_element.validate() || !await this.#comments_form_element.validate()) {
             return;
         }
 
@@ -144,7 +144,7 @@ export class LegalElement extends HTMLElement {
             }
         } else {
             this.#comments_form_element.addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             );
@@ -157,7 +157,7 @@ export class LegalElement extends HTMLElement {
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Legal"
             )
         ));
@@ -168,13 +168,13 @@ export class LegalElement extends HTMLElement {
         );
 
         this.#degree_program_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Intended degree program"
             )
         );
 
         const degree_program_element = this.#degree_program_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Choice of subject"
             ),
             "readonly"
@@ -184,7 +184,7 @@ export class LegalElement extends HTMLElement {
         );
 
         const subject_element = this.#degree_program_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Subject"
             ),
             "readonly"
@@ -194,7 +194,7 @@ export class LegalElement extends HTMLElement {
         );
 
         const combination_element = this.#degree_program_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Combination of subjects"
             ),
             "readonly"
@@ -204,7 +204,7 @@ export class LegalElement extends HTMLElement {
         );
 
         const mandatory_element = this.#degree_program_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Mandatory subjects"
             ),
             "readonly"
@@ -260,13 +260,13 @@ export class LegalElement extends HTMLElement {
         );
 
         this.#disqualification_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Disqualification"
             )
         );
 
         const not_disqualified_element = this.#disqualification_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "I am not disqualified from continuing my studies in the above-mentioned main subject because of exam failure or am not exams at another institution of higher education planned before the intended transfer, which would result in disqualification from the above-mentioned main subject in case of failure or non-attendance"
             ),
             "checkbox",
@@ -282,13 +282,13 @@ export class LegalElement extends HTMLElement {
         );
 
         this.#agb_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "AGB"
             )
         );
 
         const agb_element = this.#agb_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "I accept the terms and conditions of"
             ),
             "checkbox",
@@ -319,13 +319,13 @@ export class LegalElement extends HTMLElement {
         );
 
         this.#complete_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Complete"
             )
         );
 
         const complete_element = this.#complete_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "I confirm that all provided data is complete and truthful. The application is legally binding"
             ),
             "checkbox",
@@ -341,13 +341,13 @@ export class LegalElement extends HTMLElement {
         );
 
         this.#comments_form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Comments"
             )
         );
 
         const comments_element = this.#comments_form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Did any problems during the application proccess occur or would you like to share any comments or suggestions with us, so please use the comment box below (Max {max-comments-length} characters)",
                 null,
                 {
@@ -363,8 +363,8 @@ export class LegalElement extends HTMLElement {
         const comments_left_element = document.createElement("div");
         comments_element.parentElement.insertAdjacentElement("afterend", comments_left_element);
 
-        comments_element.addEventListener("input", () => {
-            comments_left_element.innerText = this.#localization_api.translate(
+        comments_element.addEventListener("input", async () => {
+            comments_left_element.innerText = await this.#localization_api.translate(
                 "Characters left: {characters}",
                 null,
                 {
@@ -373,7 +373,7 @@ export class LegalElement extends HTMLElement {
             );
         });
 
-        this.#comments_form_element.addButtons(
+        await this.#comments_form_element.addButtons(
             () => {
                 this.#acceptedLegal();
             },

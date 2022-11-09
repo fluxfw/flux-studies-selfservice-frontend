@@ -99,7 +99,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #chosenIntendedDegreeProgram2() {
-        if (!this.#form_element.validate()) {
+        if (!await this.#form_element.validate()) {
             return;
         }
 
@@ -145,7 +145,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
             }
         } else {
             this.#form_element.addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             );
@@ -158,7 +158,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Intended degree program"
             )
         ));
@@ -166,7 +166,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         this.#form_element = FormElement.new(
             this.#css_api,
             this.#localization_api,
-            () => {
+            async () => {
                 if (this.#intended_degree_program_2.combination["multiple-choice"] === null) {
                     return true;
                 }
@@ -188,11 +188,11 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                     if (ect < multiple_choice.ect) {
                         this.#form_element.setCustomValidationMessage(
                             input_element,
-                            this.#localization_api.translate(
+                            await this.#localization_api.translate(
                                 "Please select more {ect}!",
                                 null,
                                 {
-                                    ect: this.#label_service.getEctLabel(
+                                    ect: await this.#label_service.getEctLabel(
                                         multiple_choice.ect - ect
                                     )
                                 }
@@ -204,11 +204,11 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                     if (ect > multiple_choice.ect) {
                         this.#form_element.setCustomValidationMessage(
                             input_element,
-                            this.#localization_api.translate(
+                            await this.#localization_api.translate(
                                 "Please select less {ect}!",
                                 null,
                                 {
-                                    ect: this.#label_service.getEctLabel(
+                                    ect: await this.#label_service.getEctLabel(
                                         ect - multiple_choice.ect
                                     )
                                 }
@@ -223,13 +223,13 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         );
 
         this.#form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Choice of subjects"
             )
         );
 
         const subject_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Subject"
             ),
             "readonly"
@@ -239,7 +239,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         );
 
         const combination_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Combination of subjects"
             ),
             "readonly"
@@ -249,7 +249,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         );
 
         const mandatory_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Mandatory subjects"
             ),
             "readonly"
@@ -260,7 +260,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         if (this.#intended_degree_program_2.combination["single-choice"] !== null || this.#intended_degree_program_2.combination["multiple-choice"] !== null) {
             this.#form_element.addSubtitle(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please choose your combination of subjects from the given selection below"
                 )
             );
@@ -314,7 +314,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                 }
 
                 this.#form_element.addSubtitle(
-                    this.#localization_api.translate(
+                    await this.#localization_api.translate(
                         "On desktop operating systems/browsers may use Ctrl + Click for select multiple options"
                     )
                 );
@@ -322,7 +322,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         }
 
         const further_information_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "If you have already studied the choosen subject and would like to continue in an advanced semester, please enter it here"
             ),
             "textarea",
@@ -330,7 +330,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
             true
         );
 
-        this.#form_element.addButtons(
+        await this.#form_element.addButtons(
             () => {
                 this.#chosenIntendedDegreeProgram2();
             },

@@ -84,6 +84,10 @@ export class StudiesSelfserviceFrontendApi {
      */
     #photo_service = null;
     /**
+     * @type {GetResult | null}
+     */
+    #previous_get_result = null;
+    /**
      * @type {PwaApi | null}
      */
     #pwa_api = null;
@@ -129,34 +133,39 @@ export class StudiesSelfserviceFrontendApi {
             `${__dirname}/../style.css`
         );
 
+        await this.#localization_api.addModule(
+            `${__dirname}/../Localization`
+        );
+
         await color_scheme_api.renderColorScheme();
 
         await this.#selectLanguage();
     }
 
     /**
+     * @param {boolean} previous_get_result
      * @returns {Promise<void>}
      */
-    async showFrontend() {
+    async showFrontend(previous_get_result = false) {
         document.body.appendChild(this.#main_element = (await import("../Main/MainElement.mjs")).MainElement.new(
             await this.#getColorSchemeApi(),
             await this.#getCssApi(),
             this
         ));
 
-        await this.#next();
+        await this.#next(
+            previous_get_result
+        );
     }
 
     /**
      * @returns {Promise<SelectLanguageButtonElement>}
      */
     async getSelectLanguageButtonElement() {
-        const select_language_parameters = this.#getSelectLanguageParameters();
-
         return (await this.#getLocalizationApi()).getSelectLanguageButtonElement(
-            select_language_parameters.localization_folder,
-            select_language_parameters.module,
-            select_language_parameters.ensure,
+            async () => {
+                await this.#ensureBeforeAndAfterSelectLanguage();
+            },
             () => {
                 this.#afterSelectLanguage();
             }
@@ -170,7 +179,9 @@ export class StudiesSelfserviceFrontendApi {
         this.#main_element.remove();
         this.#main_element = null;
 
-        this.showFrontend();
+        this.showFrontend(
+            true
+        );
     }
 
     /**
@@ -193,11 +204,20 @@ export class StudiesSelfserviceFrontendApi {
                 ok: false,
                 "error-messages": [
                     {
-                        [await this.#localization_api.getLanguage()]: error instanceof Response ? "Server error!" : "Network error!"
+                        [(await this.#localization_api.getLanguage()).language]: error instanceof Response ? "Server error!" : "Network error!"
                     }
                 ]
             };
         }
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #ensureBeforeAndAfterSelectLanguage() {
+        await (await this.#getPwaApi()).initPwa(
+            `${__dirname}/../Pwa/manifest.json`
+        );
     }
 
     /**
@@ -215,7 +235,7 @@ export class StudiesSelfserviceFrontendApi {
                 ok: false,
                 "error-messages": [
                     {
-                        [await this.#localization_api.getLanguage()]: error instanceof Response ? "Server error!" : "Network error!"
+                        [(await this.#localization_api.getLanguage()).language]: error instanceof Response ? "Server error!" : "Network error!"
                     }
                 ]
             };
@@ -582,7 +602,7 @@ export class StudiesSelfserviceFrontendApi {
             console.error(error);
 
             return this.#getFormInvalidElement(
-                (await this.#getLocalizationApi()).translate(
+                await (await this.#getLocalizationApi()).translate(
                     "Page error!"
                 )
             );
@@ -686,21 +706,6 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
-     * @returns {{localization_folder: string, module: string | null, ensure: () => Promise<void> | null}}
-     */
-    #getSelectLanguageParameters() {
-        return {
-            localization_folder: `${__dirname}/../Localization`,
-            module: null,
-            ensure: async () => {
-                await (await this.#getPwaApi()).initPwa(
-                    `${__dirname}/../Pwa/manifest.json`
-                );
-            }
-        };
-    }
-
-    /**
      * @returns {Promise<SettingsApi>}
      */
     async #getSettingsApi() {
@@ -766,21 +771,24 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
+     * @param {boolean} previous_get_result
      * @returns {Promise<void>}
      */
-    async #next() {
+    async #next(previous_get_result = false) {
         scroll(0, 0);
 
         const get_loading_element = await this.#getLoadingElement();
 
-        const get_result = await this.#get();
+        if (!previous_get_result || this.#previous_get_result === null) {
+            this.#previous_get_result = await this.#get();
+        }
 
         get_loading_element.remove();
 
         let page;
-        if (!("ok" in get_result)) {
+        if (!("ok" in this.#previous_get_result)) {
             page = await this.#getPage(
-                get_result,
+                this.#previous_get_result,
                 async post => {
                     const post_loading_element = await this.#getLoadingElement();
 
@@ -822,7 +830,7 @@ export class StudiesSelfserviceFrontendApi {
         } else {
             page = await this.#getFormInvalidElement(
                 (await this.#getLabelService()).getErrorMessageLabel(
-                    get_result["error-messages"]?.[0] ?? {}
+                    this.#previous_get_result["error-messages"]?.[0] ?? {}
                 )
             );
         }
@@ -850,7 +858,7 @@ export class StudiesSelfserviceFrontendApi {
                 ok: false,
                 "error-messages": [
                     {
-                        [await this.#localization_api.getLanguage()]: error instanceof Response ? "Server error!" : "Network error!"
+                        [(await this.#localization_api.getLanguage()).language]: error instanceof Response ? "Server error!" : "Network error!"
                     }
                 ]
             };
@@ -861,12 +869,10 @@ export class StudiesSelfserviceFrontendApi {
      * @returns {Promise<void>}
      */
     async #selectLanguage() {
-        const select_language_parameters = this.#getSelectLanguageParameters();
-
         await (await this.#getLocalizationApi()).selectLanguage(
-            select_language_parameters.localization_folder,
-            select_language_parameters.module,
-            select_language_parameters.ensure
+            async () => {
+                await this.#ensureBeforeAndAfterSelectLanguage();
+            }
         );
     }
 }
