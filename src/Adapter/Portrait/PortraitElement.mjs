@@ -127,7 +127,7 @@ export class PortraitElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #chosenPortrait() {
-        if (!this.#form_element.validate()) {
+        if (!await this.#form_element.validate()) {
             return;
         }
 
@@ -139,7 +139,7 @@ export class PortraitElement extends HTMLElement {
             if (this.#photo.length > this.#portrait["photo-max-data-size"]) {
                 this.#form_element.setCustomValidationMessage(
                     this.#form_element.inputs.photo,
-                    this.#localization_api.translate(
+                    await this.#localization_api.translate(
                         "The photo is too big! (Maximal: {max-data-size}, current: {current-data-size})",
                         null,
                         {
@@ -172,7 +172,7 @@ export class PortraitElement extends HTMLElement {
             }
         } else {
             this.#form_element.addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             );
@@ -194,7 +194,7 @@ export class PortraitElement extends HTMLElement {
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Portrait"
             )
         ));
@@ -202,24 +202,17 @@ export class PortraitElement extends HTMLElement {
         this.#form_element = FormElement.new(
             this.#css_api,
             this.#localization_api,
-            () => {
+            async () => {
                 const size = this.#photo_element.size;
                 if (size !== null) {
                     if (size.width < this.#portrait["photo-min-width"] || size.height < this.#portrait["photo-min-height"]) {
                         this.#form_element.setCustomValidationMessage(
                             this.#form_element.inputs.photo,
-                            this.#localization_api.translate(
+                            await this.#localization_api.translate(
                                 "The photo is too small! (Minimal: {min-size})",
                                 null,
                                 {
-                                    "min-size": this.#localization_api.translate(
-                                        "{width} x {height}",
-                                        null,
-                                        {
-                                            width: `${this.#portrait["photo-min-width"]}px`,
-                                            height: `${this.#portrait["photo-min-height"]}px`
-                                        }
-                                    )
+                                    "min-size": `${this.#portrait["photo-min-width"]}px x ${this.#portrait["photo-min-height"]}px`
                                 }
                             )
                         );
@@ -229,18 +222,11 @@ export class PortraitElement extends HTMLElement {
                     if (size.width > this.#portrait["photo-max-width"] || size.height > this.#portrait["photo-max-height"]) {
                         this.#form_element.setCustomValidationMessage(
                             this.#form_element.inputs.photo,
-                            this.#localization_api.translate(
+                            await this.#localization_api.translate(
                                 "The photo is too big! (Maximal: {max-size})",
                                 null,
                                 {
-                                    "max-size": this.#localization_api.translate(
-                                        "{width} x {height}",
-                                        null,
-                                        {
-                                            width: `${this.#portrait["photo-max-width"]}px`,
-                                            height: `${this.#portrait["photo-max-height"]}px`
-                                        }
-                                    )
+                                    "max-size": `${this.#portrait["photo-max-width"]}px x ${this.#portrait["photo-max-height"]}px`
                                 }
                             )
                         );
@@ -251,7 +237,7 @@ export class PortraitElement extends HTMLElement {
                     if (aspect_ratio < this.#portrait["photo-min-aspect-ratio"] || aspect_ratio > this.#portrait["photo-max-aspect-ratio"]) {
                         this.#form_element.setCustomValidationMessage(
                             this.#form_element.inputs.photo,
-                            this.#localization_api.translate(
+                            await this.#localization_api.translate(
                                 "The photo has a wrong aspect ratio! (Needed: {needed-aspect-ratio}, current: {current-aspect-ratio})",
                                 null,
                                 {
@@ -269,13 +255,13 @@ export class PortraitElement extends HTMLElement {
         );
 
         this.#form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Portrait"
             )
         );
 
         const input_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Photo"
             ),
             "file",
@@ -305,14 +291,14 @@ export class PortraitElement extends HTMLElement {
         if (link !== "") {
             criteria_link_element.href = link;
         }
-        criteria_link_element.innerText = this.#localization_api.translate(
+        criteria_link_element.innerText = await this.#localization_api.translate(
             "Photo criteria"
         );
         criteria_link_element.rel = "noopener noreferrer";
         criteria_link_element.target = "__blank";
         criteria_element.addElement(criteria_link_element);
 
-        this.#form_element.addButtons(
+        await this.#form_element.addButtons(
             () => {
                 this.#chosenPortrait();
             },
@@ -328,7 +314,7 @@ export class PortraitElement extends HTMLElement {
 
         if (this.#portrait.values !== null) {
             if (this.#portrait.values.photo !== null) {
-                this.#photo_service.toInputElement(
+                await this.#photo_service.toInputElement(
                     this.#portrait.values.photo,
                     input_element,
                     this.#portrait["photo-type"]
@@ -351,7 +337,9 @@ export class PortraitElement extends HTMLElement {
             );
 
             if (photo === null) {
-                this.#removePhoto();
+                if (!final) {
+                    this.#removePhoto();
+                }
                 return;
             }
 
@@ -366,6 +354,10 @@ export class PortraitElement extends HTMLElement {
                 !final ? null : this.#photo_element.crop
             );
 
+            if (final) {
+                return;
+            }
+
             this.#photo_element.setImage(
                 await this.#photo_service.toImageElement(
                     this.#photo,
@@ -373,7 +365,7 @@ export class PortraitElement extends HTMLElement {
                 )
             );
 
-            this.#photo_service.toInputElement(
+            await this.#photo_service.toInputElement(
                 this.#photo,
                 this.#form_element.inputs.photo,
                 this.#portrait["photo-type"]
@@ -382,7 +374,7 @@ export class PortraitElement extends HTMLElement {
             if (final) {
                 this.#form_element.setCustomValidationMessage(
                     this.#form_element.inputs.photo,
-                    this.#localization_api.translate(
+                    await this.#localization_api.translate(
                         "The photo could not been optimized!"
                     )
                 );
@@ -397,7 +389,7 @@ export class PortraitElement extends HTMLElement {
 
             this.#form_element.setCustomValidationMessage(
                 this.#form_element.inputs.photo,
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "The photo could not been loaded!"
                 )
             );

@@ -1,3 +1,3 @@
 /**
- * @typedef {() => boolean} customValidationFunction
+ * @typedef {() => Promise<boolean>} customValidationFunction
  */

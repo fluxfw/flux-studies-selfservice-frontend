@@ -174,7 +174,7 @@ export class PhotoElement extends HTMLElement {
         if (image_element !== null) {
             this.#image_element.replaceWith(this.#image_element = image_element);
         } else {
-            this.#image_element.src = "";
+            this.#image_element.replaceWith(this.#image_element = new Image());
         }
 
         this.#updateRectangle();
@@ -286,9 +286,9 @@ export class PhotoElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#container_element = document.createElement("div");
         this.#container_element.classList.add("container");
 
@@ -307,14 +307,14 @@ export class PhotoElement extends HTMLElement {
 
         this.#shadow.appendChild(FormSubtitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "The photo can crop by dragging a rectangle with holding primary mouse button or touchscreen"
             )
         ));
 
         this.#remove_crop_element = FormButtonElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Remove crop"
             )
         );
@@ -419,14 +419,7 @@ export class PhotoElement extends HTMLElement {
      */
     #updateRectangle() {
         const size = this.size;
-        this.#size_element.innerText = size !== null ? this.#localization_api.translate(
-            "{width} x {height}",
-            null,
-            {
-                width: `${size.width}px`,
-                height: `${size.height}px`
-            }
-        ) : "";
+        this.#size_element.innerText = size !== null ? `${size.width}px x ${size.height}px` : "";
 
         if (this.#rectangle === null) {
             if (this.#rectangle_element !== null) {

@@ -65,24 +65,24 @@ export class CompletedElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #render() {
+    async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Registration completed"
             )
         ));
 
         this.#shadow.appendChild(SubtitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Thank you for your registration"
             )
         ));
 
-        this.#shadow.appendChild(FormElement.new(
+        this.#shadow.appendChild(await FormElement.new(
             this.#css_api,
             this.#localization_api
         )

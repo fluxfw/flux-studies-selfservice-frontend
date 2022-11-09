@@ -99,7 +99,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #chosenUniversityEntranceQualification() {
-        if (!this.#form_element.validate()) {
+        if (!await this.#form_element.validate()) {
             return;
         }
 
@@ -130,7 +130,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
             }
         } else {
             this.#form_element.addInvalidMessage(
-                this.#localization_api.translate(
+                await this.#localization_api.translate(
                     "Please check your data!"
                 )
             );
@@ -143,7 +143,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "University entrance qualification"
             )
         ));
@@ -154,19 +154,19 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         );
 
         this.#form_element.addTitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Upper secondary school-leaving certificate"
             )
         );
 
         this.#form_element.addSubtitle(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Please enter your educational qualifications that qualify you to apply for admission to a degree program"
             )
         );
 
         const certificate_type_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Type of certificate"
             ),
             "select",
@@ -184,7 +184,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         }
 
         const issue_date_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Date of issue (Year)"
             ),
             "number",
@@ -197,7 +197,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         issue_date_element.step = 1;
 
         const certificate_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Certificate"
             ),
             "select",
@@ -215,7 +215,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         }
 
         const matura_canton_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "The canton, in which the school is located where you were awarded your matura"
             ),
             "select",
@@ -233,7 +233,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         }
 
         const upper_secondary_school_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Upper secondary school"
             ),
             "select",
@@ -251,7 +251,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         }
 
         const certificate_country_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "The country where you were registered at the time you were awarded your certificate"
             ),
             "select",
@@ -269,7 +269,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         }
 
         const certificate_canton_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "The canton of your political commune where you were registered at the time you were awarded your certificate"
             ),
             "select",
@@ -287,7 +287,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         }
 
         const certificate_place_element = this.#form_element.addInput(
-            this.#localization_api.translate(
+            await this.#localization_api.translate(
                 "Legal place of residence when the certificate was awarded"
             ),
             "select",
@@ -304,7 +304,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
             certificate_place_element.appendChild(option_element);
         }
 
-        this.#form_element.addButtons(
+        await this.#form_element.addButtons(
             () => {
                 this.#chosenUniversityEntranceQualification();
             },
