@@ -205,7 +205,9 @@ export class StudiesSelfserviceFrontendApi {
                 ok: false,
                 "error-messages": [
                     {
-                        [(await this.#localization_api.getLanguage()).language]: error instanceof Response ? "Server error!" : "Network error!"
+                        [(await this.#localization_api.getLanguage()).language]: await this.#localization_api.translate(
+                            error instanceof Response ? "Server error!" : "Network error!"
+                        )
                     }
                 ]
             };
@@ -236,7 +238,9 @@ export class StudiesSelfserviceFrontendApi {
                 ok: false,
                 "error-messages": [
                     {
-                        [(await this.#localization_api.getLanguage()).language]: error instanceof Response ? "Server error!" : "Network error!"
+                        [(await this.#localization_api.getLanguage()).language]: await this.#localization_api.translate(
+                            error instanceof Response ? "Server error!" : "Network error!"
+                        )
                     }
                 ]
             };
@@ -863,7 +867,9 @@ export class StudiesSelfserviceFrontendApi {
                 ok: false,
                 "error-messages": [
                     {
-                        [(await this.#localization_api.getLanguage()).language]: error instanceof Response ? "Server error!" : "Network error!"
+                        [(await this.#localization_api.getLanguage()).language]: await this.#localization_api.translate(
+                            error instanceof Response ? "Server error!" : "Network error!"
+                        )
                     }
                 ]
             };
