@@ -109,7 +109,7 @@ export class StartElement extends HTMLElement {
         this.#shadow.appendChild(TitleElement.new(
             this.#css_api,
             await this.#localization_api.translate(
-                "Application / Login"
+                "Login"
             )
         ));
 

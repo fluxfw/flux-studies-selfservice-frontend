@@ -1,12 +1,15 @@
 :host {
     display: block;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 form {
-    background-color: var(--form-background-color);
-    border: var(--form-border-size) solid var(--form-border-color);
+    background-color: var(--color-scheme-form-background-color);
     padding: 30px 40px;
+}
+
+studies-selfservice-form-title + form {
+    margin-top: -15px;
 }
 
 label {
@@ -24,7 +27,7 @@ label {
 .input_textarea,
 .input_container {
     all: initial;
-    color: var(--input-text-color);
+    color: var(--color-scheme-foreground);
     font-family: inherit;
     min-height: 20px;
     order: 2;
@@ -35,15 +38,15 @@ label {
 .input_field,
 .input_select,
 .input_textarea {
-    background-color: var(--input-background-color);
-    border: var(--input-border-size) solid var(--input-border-color);
+    background-color: var(--color-scheme-background);
+    border: 1px solid var(--color-scheme-input-border-color);
     border-radius: 3px;
 }
 
 .input:invalid,
 .input_select:invalid,
 .input_textarea:invalid {
-    --input-border-color: var(--mandatory-color)
+    border-color: var(--mandatory-color)
 }
 
 .input_select {

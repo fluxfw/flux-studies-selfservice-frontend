@@ -1,6 +1,6 @@
 :host {
     background-color: var(--form-invalid-background-color);
-    border: var(--form-invalid-border-size) solid var(--form-invalid-border-color);
+    border: 1px solid var(--form-invalid-border-color);
     color: var(--form-invalid-text-color);
     display: block;
     margin-bottom: 30px;

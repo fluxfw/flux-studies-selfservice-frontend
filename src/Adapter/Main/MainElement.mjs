@@ -1,7 +1,9 @@
 import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
+import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 
 /** @typedef {import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs").ColorSchemeApi} ColorSchemeApi */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../Api/StudiesSelfserviceFrontendApi.mjs").StudiesSelfserviceFrontendApi} StudiesSelfserviceFrontendApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -12,9 +14,17 @@ export class MainElement extends HTMLElement {
      */
     #color_scheme_api;
     /**
+     * @type {HTMLElement}
+     */
+    #content_element;
+    /**
      * @type {CssApi}
      */
     #css_api;
+    /**
+     * @type {LocalizationApi}
+     */
+    #localization_api;
     /**
      * @type {StudiesSelfserviceFrontendApi}
      */
@@ -27,13 +37,15 @@ export class MainElement extends HTMLElement {
     /**
      * @param {ColorSchemeApi} color_scheme_api
      * @param {CssApi} css_api
+     * @param {LocalizationApi} localization_api
      * @param {StudiesSelfserviceFrontendApi} studies_selfservice_frontend_api
      * @returns {MainElement}
      */
-    static new(color_scheme_api, css_api, studies_selfservice_frontend_api) {
+    static new(color_scheme_api, css_api, localization_api, studies_selfservice_frontend_api) {
         return new this(
             color_scheme_api,
             css_api,
+            localization_api,
             studies_selfservice_frontend_api
         );
     }
@@ -41,14 +53,16 @@ export class MainElement extends HTMLElement {
     /**
      * @param {ColorSchemeApi} color_scheme_api
      * @param {CssApi} css_api
+     * @param {LocalizationApi} localization_api
      * @param {StudiesSelfserviceFrontendApi} studies_selfservice_frontend_api
      * @private
      */
-    constructor(color_scheme_api, css_api, studies_selfservice_frontend_api) {
+    constructor(color_scheme_api, css_api, localization_api, studies_selfservice_frontend_api) {
         super();
 
         this.#color_scheme_api = color_scheme_api;
         this.#css_api = css_api;
+        this.#localization_api = localization_api;
         this.#studies_selfservice_frontend_api = studies_selfservice_frontend_api;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
@@ -61,37 +75,106 @@ export class MainElement extends HTMLElement {
     }
 
     /**
-     * @param {HTMLElement} element
+     * @param {HTMLElement} content_element
      * @returns {void}
      */
-    replaceContent(element) {
-        this.#shadow.lastElementChild.replaceWith(element);
+    replaceContent(content_element) {
+        this.#content_element.innerHTML = "";
+        this.#content_element.appendChild(content_element);
     }
 
     /**
      * @returns {Promise<void>}
      */
     async #render() {
-        const settings_element = document.createElement("div");
-        settings_element.classList.add("settings");
+        const container_element = document.createElement("div");
+        container_element.classList.add("container");
 
-        const select_language_button_placeholder_element = document.createElement("div");
-        select_language_button_placeholder_element.hidden = true;
-        this.#shadow.appendChild(select_language_button_placeholder_element);
-        (async () => {
-            select_language_button_placeholder_element.replaceWith(await this.#studies_selfservice_frontend_api.getSelectLanguageButtonElement());
-        })();
+        const left_element = document.createElement("div");
+        left_element.classList.add("left");
+
+        const title_element = document.createElement("div");
+        title_element.classList.add("title");
+        title_element.innerText = await this.#localization_api.translate(
+            "Studis selfservice"
+        );
+        left_element.appendChild(title_element);
+
+        const menu_element = document.createElement("div");
+        menu_element.classList.add("menu");
+        menu_element.dataset.active = true;
+        menu_element.innerText = await this.#localization_api.translate(
+            "Application / Login"
+        );
+        left_element.appendChild(menu_element);
 
         const select_color_scheme_placeholder_element = document.createElement("div");
         select_color_scheme_placeholder_element.hidden = true;
-        this.#shadow.appendChild(select_color_scheme_placeholder_element);
+        left_element.appendChild(select_color_scheme_placeholder_element);
         (async () => {
             select_color_scheme_placeholder_element.replaceWith(await this.#color_scheme_api.getSelectColorSchemeElement());
         })();
 
-        this.#shadow.appendChild(settings_element);
+        const logo_element = new Image();
+        logo_element.classList.add("logo");
+        logo_element.src = `${__dirname}/../Logo/logo.svg`;
+        left_element.appendChild(logo_element);
 
-        this.#shadow.appendChild(document.createElement("div"));
+        container_element.appendChild(left_element);
+
+        const right_element = document.createElement("div");
+        right_element.classList.add("right");
+
+        const header_element = document.createElement("div");
+        header_element.classList.add("header");
+
+        const select_language_button_placeholder_element = document.createElement("div");
+        select_language_button_placeholder_element.hidden = true;
+        header_element.appendChild(select_language_button_placeholder_element);
+        (async () => {
+            select_language_button_placeholder_element.replaceWith(await this.#studies_selfservice_frontend_api.getSelectLanguageButtonElement());
+        })();
+
+        const print_element = FormButtonElement.new(
+            this.#css_api,
+            await this.#localization_api.translate(
+                "Print page"
+            )
+        );
+        print_element.classList.add("print");
+        print_element.button.addEventListener("click", () => {
+            this.#print();
+        });
+        header_element.appendChild(print_element);
+
+        right_element.appendChild(header_element);
+
+        const header2_element = document.createElement("div");
+        header2_element.classList.add("header2");
+
+        const arrow_element = document.createElement("div");
+        arrow_element.classList.add("arrow");
+        arrow_element.innerText = await this.#localization_api.translate(
+            "Application / Login"
+        );
+        header2_element.appendChild(arrow_element);
+
+        right_element.appendChild(header2_element);
+
+        this.#content_element = document.createElement("div");
+        this.#content_element.classList.add("content");
+        right_element.appendChild(this.#content_element);
+
+        container_element.appendChild(right_element);
+
+        this.#shadow.appendChild(container_element);
+    }
+
+    /**
+     * @returns {void}
+     */
+    #print() {
+        print();
     }
 }
 

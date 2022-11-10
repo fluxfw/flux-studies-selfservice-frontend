@@ -25,10 +25,10 @@
     ],
     "id": "studies-selfservice",
     "lang": "en",
-    "name": "Studies selfservice",
+    "name": "Studis selfservice",
     "orientation": "any",
     "scope": "../..",
-    "short_name": "Studies selfservice",
+    "short_name": "Studis selfservice",
     "start_url": "../..",
     "theme_color": "#e3003d"
 }

@@ -150,6 +150,7 @@ export class StudiesSelfserviceFrontendApi {
         document.body.appendChild(this.#main_element = (await import("../Main/MainElement.mjs")).MainElement.new(
             await this.#getColorSchemeApi(),
             await this.#getCssApi(),
+            await this.#getLocalizationApi(),
             this
         ));
 
@@ -288,8 +289,12 @@ export class StudiesSelfserviceFrontendApi {
                     [COLOR_SCHEME_DARK]: "dark"
                 },
                 [
+                    "container-border-color",
                     "form-background-color",
-                    "form-buttons-background-color"
+                    "form-buttons-background-color",
+                    "input-border-color",
+                    "left-background-color",
+                    "left-border-color"
                 ]
             );
 
@@ -872,7 +877,8 @@ export class StudiesSelfserviceFrontendApi {
         await (await this.#getLocalizationApi()).selectLanguage(
             async () => {
                 await this.#ensureBeforeAndAfterSelectLanguage();
-            }
+            },
+            false
         );
     }
 }

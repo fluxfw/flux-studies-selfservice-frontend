@@ -1,9 +1,7 @@
 :host {
-    background-color: var(--form-background-color);
-    border: var(--form-border-size) solid var(--form-border-color);
-    border-bottom: none;
+    background-color: var(--color-scheme-form-background-color);
     display: inline-block;
-    font-size: 1.5em;
+    font-size: 14px;
     font-weight: bold;
-    padding: 5px;
+    padding: 10px 22px;
 }
