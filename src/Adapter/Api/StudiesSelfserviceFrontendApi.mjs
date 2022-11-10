@@ -211,12 +211,16 @@ export class StudiesSelfserviceFrontendApi {
                         ...languages.other
                     }).map(async ([
                         language
-                    ]) => this.#localization_api.translate(
-                        error instanceof Response ? "Server error!" : "Network error!",
-                        null,
-                        null,
-                        language
-                    ))))
+                    ]) => [
+                            language,
+                            await this.#localization_api.translate(
+                                error instanceof Response ? "Server error!" : "Network error!",
+                                null,
+                                null,
+                                language
+                            )
+                        ]
+                    )))
                 ]
             };
         }
@@ -252,12 +256,16 @@ export class StudiesSelfserviceFrontendApi {
                         ...languages.other
                     }).map(async ([
                         language
-                    ]) => this.#localization_api.translate(
-                        error instanceof Response ? "Server error!" : "Network error!",
-                        null,
-                        null,
-                        language
-                    ))))
+                    ]) => [
+                            language,
+                            await this.#localization_api.translate(
+                                error instanceof Response ? "Server error!" : "Network error!",
+                                null,
+                                null,
+                                language
+                            )
+                        ]
+                    )))
                 ]
             };
         }
@@ -889,12 +897,16 @@ export class StudiesSelfserviceFrontendApi {
                         ...languages.other
                     }).map(async ([
                         language
-                    ]) => this.#localization_api.translate(
-                        error instanceof Response ? "Server error!" : "Network error!",
-                        null,
-                        null,
-                        language
-                    ))))
+                    ]) => [
+                            language,
+                            await this.#localization_api.translate(
+                                error instanceof Response ? "Server error!" : "Network error!",
+                                null,
+                                null,
+                                language
+                            )
+                        ]
+                    )))
                 ]
             };
         }
