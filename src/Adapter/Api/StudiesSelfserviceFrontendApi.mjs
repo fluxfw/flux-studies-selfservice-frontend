@@ -201,14 +201,22 @@ export class StudiesSelfserviceFrontendApi {
         } catch (error) {
             console.error(error);
 
+            const languages = await this.#localization_api.getLanguages();
+
             return {
                 ok: false,
                 "error-messages": [
-                    {
-                        [(await this.#localization_api.getLanguage()).language]: await this.#localization_api.translate(
-                            error instanceof Response ? "Server error!" : "Network error!"
-                        )
-                    }
+                    Object.fromEntries(await Promise.all(Object.entries({
+                        ...languages.preferred,
+                        ...languages.other
+                    }).map(async ([
+                        language
+                    ]) => this.#localization_api.translate(
+                        error instanceof Response ? "Server error!" : "Network error!",
+                        null,
+                        null,
+                        language
+                    ))))
                 ]
             };
         }
@@ -234,14 +242,22 @@ export class StudiesSelfserviceFrontendApi {
         } catch (error) {
             console.error(error);
 
+            const languages = await this.#localization_api.getLanguages();
+
             return {
                 ok: false,
                 "error-messages": [
-                    {
-                        [(await this.#localization_api.getLanguage()).language]: await this.#localization_api.translate(
-                            error instanceof Response ? "Server error!" : "Network error!"
-                        )
-                    }
+                    Object.fromEntries(await Promise.all(Object.entries({
+                        ...languages.preferred,
+                        ...languages.other
+                    }).map(async ([
+                        language
+                    ]) => this.#localization_api.translate(
+                        error instanceof Response ? "Server error!" : "Network error!",
+                        null,
+                        null,
+                        language
+                    ))))
                 ]
             };
         }
@@ -863,14 +879,22 @@ export class StudiesSelfserviceFrontendApi {
         } catch (error) {
             console.error(error);
 
+            const languages = await this.#localization_api.getLanguages();
+
             return {
                 ok: false,
                 "error-messages": [
-                    {
-                        [(await this.#localization_api.getLanguage()).language]: await this.#localization_api.translate(
-                            error instanceof Response ? "Server error!" : "Network error!"
-                        )
-                    }
+                    Object.fromEntries(await Promise.all(Object.entries({
+                        ...languages.preferred,
+                        ...languages.other
+                    }).map(async ([
+                        language
+                    ]) => this.#localization_api.translate(
+                        error instanceof Response ? "Server error!" : "Network error!",
+                        null,
+                        null,
+                        language
+                    ))))
                 ]
             };
         }
