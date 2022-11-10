@@ -825,7 +825,7 @@ export class StudiesSelfserviceFrontendApi {
                     if (!back_result.ok) {
                         this.#main_element.replaceContent(
                             await this.#getFormInvalidElement(
-                                (await this.#getLabelService()).getErrorMessageLabel(
+                                await (await this.#getLabelService()).getErrorMessageLabel(
                                     back_result["error-messages"]?.[0] ?? {}
                                 )
                             )
@@ -838,7 +838,7 @@ export class StudiesSelfserviceFrontendApi {
             );
         } else {
             page = await this.#getFormInvalidElement(
-                (await this.#getLabelService()).getErrorMessageLabel(
+                await (await this.#getLabelService()).getErrorMessageLabel(
                     this.#previous_get_result["error-messages"]?.[0] ?? {}
                 )
             );
