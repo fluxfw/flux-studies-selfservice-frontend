@@ -128,11 +128,11 @@ export class MainElement extends HTMLElement {
         const header_element = document.createElement("div");
         header_element.classList.add("header");
 
-        const select_language_button_placeholder_element = document.createElement("div");
-        select_language_button_placeholder_element.hidden = true;
-        header_element.appendChild(select_language_button_placeholder_element);
+        const select_language_buttons_placeholder_element = document.createElement("div");
+        select_language_buttons_placeholder_element.hidden = true;
+        header_element.appendChild(select_language_buttons_placeholder_element);
         (async () => {
-            select_language_button_placeholder_element.replaceWith(await this.#studies_selfservice_frontend_api.getSelectLanguageButtonElement());
+            select_language_buttons_placeholder_element.replaceWith(await this.#studies_selfservice_frontend_api.getSelectLanguageButtonsElement());
         })();
 
         const print_element = FormButtonElement.new(

@@ -37,7 +37,7 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
 /** @typedef {import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs").PwaApi} PwaApi */
-/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/SelectLanguage/SelectLanguageButtonElement.mjs").SelectLanguageButtonElement} SelectLanguageButtonElement */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/SelectLanguage/SelectLanguageButtonsElement.mjs").SelectLanguageButtonsElement} SelectLanguageButtonsElement */
 /** @typedef {import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs").SettingsApi} SettingsApi */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 /** @typedef {import("../Start/StartElement.mjs").StartElement} StartElement */
@@ -117,7 +117,7 @@ export class StudiesSelfserviceFrontendApi {
         const color_scheme_api = await this.#getColorSchemeApi();
         const css_api = await this.#getCssApi();
         await this.#getLoadingApi();
-        await this.#getLocalizationApi();
+        const localization_api = await this.#getLocalizationApi();
         await this.#getPwaApi();
 
         await css_api.importCss(
@@ -133,7 +133,7 @@ export class StudiesSelfserviceFrontendApi {
             `${__dirname}/../style.css`
         );
 
-        await this.#localization_api.addModule(
+        await localization_api.addModule(
             `${__dirname}/../Localization`
         );
 
@@ -160,14 +160,13 @@ export class StudiesSelfserviceFrontendApi {
     }
 
     /**
-     * @returns {Promise<SelectLanguageButtonElement>}
+     * @returns {Promise<SelectLanguageButtonsElement>}
      */
-    async getSelectLanguageButtonElement() {
-        return (await this.#getLocalizationApi()).getSelectLanguageButtonElement(
+    async getSelectLanguageButtonsElement() {
+        return (await this.#getLocalizationApi()).getSelectLanguageButtonsElement(
             async () => {
                 await this.#ensureBeforeAndAfterSelectLanguage();
-            },
-            () => {
+
                 this.#afterSelectLanguage();
             }
         );
@@ -201,19 +200,16 @@ export class StudiesSelfserviceFrontendApi {
         } catch (error) {
             console.error(error);
 
-            const languages = await this.#localization_api.getLanguages();
+            const localization_api = await this.#getLocalizationApi();
 
             return {
                 ok: false,
                 "error-messages": [
-                    Object.fromEntries(await Promise.all(Object.entries({
-                        ...languages.preferred,
-                        ...languages.other
-                    }).map(async ([
+                    Object.fromEntries(await Promise.all(Object.entries((await localization_api.getLanguages()).all).map(async ([
                         language
                     ]) => [
                             language,
-                            await this.#localization_api.translate(
+                            await localization_api.translate(
                                 error instanceof Response ? "Server error!" : "Network error!",
                                 null,
                                 null,
@@ -246,19 +242,16 @@ export class StudiesSelfserviceFrontendApi {
         } catch (error) {
             console.error(error);
 
-            const languages = await this.#localization_api.getLanguages();
+            const localization_api = await this.#getLocalizationApi();
 
             return {
                 ok: false,
                 "error-messages": [
-                    Object.fromEntries(await Promise.all(Object.entries({
-                        ...languages.preferred,
-                        ...languages.other
-                    }).map(async ([
+                    Object.fromEntries(await Promise.all(Object.entries((await localization_api.getLanguages()).all).map(async ([
                         language
                     ]) => [
                             language,
-                            await this.#localization_api.translate(
+                            await localization_api.translate(
                                 error instanceof Response ? "Server error!" : "Network error!",
                                 null,
                                 null,
@@ -887,19 +880,16 @@ export class StudiesSelfserviceFrontendApi {
         } catch (error) {
             console.error(error);
 
-            const languages = await this.#localization_api.getLanguages();
+            const localization_api = await this.#getLocalizationApi();
 
             return {
                 ok: false,
                 "error-messages": [
-                    Object.fromEntries(await Promise.all(Object.entries({
-                        ...languages.preferred,
-                        ...languages.other
-                    }).map(async ([
+                    Object.fromEntries(await Promise.all(Object.entries((await localization_api.getLanguages()).all).map(async ([
                         language
                     ]) => [
                             language,
-                            await this.#localization_api.translate(
+                            await localization_api.translate(
                                 error instanceof Response ? "Server error!" : "Network error!",
                                 null,
                                 null,
