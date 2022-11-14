@@ -1,4 +1,4 @@
-:host {
+:host(:not([hidden])) {
     display: inline-block;
 }
 
@@ -9,8 +9,7 @@ button {
     color: var(--form-button-text-color);
     display: block;
     font-family: inherit;
-    font-size: inherit;
-    font-weight: bold;
+    font-size: 14px;
     padding: 10px;
 }
 

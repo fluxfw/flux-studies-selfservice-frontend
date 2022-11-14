@@ -11,11 +11,11 @@
     flex-wrap: wrap;
 }
 
-studies-selfservice-form-button {
+studis-selfservice-form-button {
     margin: 0 5px;
 }
 
-studies-selfservice-form-button[data-right] {
+studis-selfservice-form-button[data-right] {
     margin-left: auto;
     order: 2;
 }

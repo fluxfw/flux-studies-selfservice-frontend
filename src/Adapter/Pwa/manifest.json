@@ -23,12 +23,12 @@
             "type": "image/x-icon"
         }
     ],
-    "id": "studies-selfservice",
+    "id": "studis-selfservice",
     "lang": "en",
     "name": "Studis selfservice",
     "orientation": "any",
     "scope": "../..",
-    "short_name": "Studis selfservice",
+    "short_name": "Selfservice",
     "start_url": "../..",
     "theme_color": "#e3003d"
 }

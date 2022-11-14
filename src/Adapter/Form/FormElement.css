@@ -8,7 +8,7 @@ form {
     padding: 30px 40px;
 }
 
-studies-selfservice-form-title + form {
+studis-selfservice-form-title + form {
     margin-top: -15px;
 }
 
@@ -26,8 +26,7 @@ label {
 .input_select,
 .input_textarea,
 .input_container {
-    all: initial;
-    color: var(--color-scheme-foreground);
+    box-sizing: inherit;
     font-family: inherit;
     min-height: 20px;
     order: 2;
@@ -41,16 +40,20 @@ label {
     background-color: var(--color-scheme-background);
     border: 1px solid var(--color-scheme-input-border-color);
     border-radius: 3px;
+    color: var(--color-scheme-foreground);
+    outline: none;
 }
 
 .input:invalid,
 .input_select:invalid,
 .input_textarea:invalid {
-    border-color: var(--mandatory-color)
+    border-color: var(--mandatory-color);
 }
 
-.input_select {
-    appearance: auto;
+.input:focus,
+.input_select:focus,
+.input_textarea:focus {
+    border-color: var(--color-scheme-foreground);
 }
 
 .input_select[data-small] {
@@ -60,6 +63,10 @@ label {
 .input_textarea {
     min-height: 120px;
     resize: vertical;
+}
+
+.input_readonly {
+    cursor: default;
 }
 
 .input_container {
@@ -139,7 +146,7 @@ label[data-seperate] .input_container {
     width: calc(100% - 4px);
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     label {
         align-items: start;
         flex-direction: column;
