@@ -1,6 +1,6 @@
 :host {
     display: block;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .container {
@@ -61,9 +61,14 @@ flux-select-color-scheme {
 
 .logo {
     bottom: 40px;
+    display: block;
     left: 40px;
     position: absolute;
     width: 150px;
+}
+
+.logo img {
+    width: 100%;
 }
 
 .right {
@@ -122,7 +127,7 @@ flux-select-language-buttons {
     padding: 33px 66px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     .container {
         flex-direction: column;
     }

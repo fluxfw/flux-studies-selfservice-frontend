@@ -55,6 +55,10 @@ export class PhotoElement extends HTMLElement {
      * @type {MouseEvent | Touch | null}
      */
     #start = null;
+    /**
+     * @type {FormSubtitleElement}
+     */
+    #subtitle_element;
 
     /**
      * @param {CssApi} css_api
@@ -173,8 +177,12 @@ export class PhotoElement extends HTMLElement {
 
         if (image_element !== null) {
             this.#image_element.replaceWith(this.#image_element = image_element);
+            this.#subtitle_element.hidden = false;
+            this.#remove_crop_element.hidden = false;
         } else {
             this.#image_element.replaceWith(this.#image_element = new Image());
+            this.#subtitle_element.hidden = true;
+            this.#remove_crop_element.hidden = true;
         }
 
         this.#updateRectangle();
@@ -305,12 +313,14 @@ export class PhotoElement extends HTMLElement {
         this.#size_element.classList.add("size");
         this.#shadow.appendChild(this.#size_element);
 
-        this.#shadow.appendChild(FormSubtitleElement.new(
+        this.#subtitle_element = FormSubtitleElement.new(
             this.#css_api,
             await this.#localization_api.translate(
                 "The photo can crop by dragging a rectangle with holding primary mouse button or touchscreen"
             )
-        ));
+        );
+        this.#subtitle_element.hidden = true;
+        this.#shadow.appendChild(this.#subtitle_element);
 
         this.#remove_crop_element = FormButtonElement.new(
             this.#css_api,
@@ -319,6 +329,7 @@ export class PhotoElement extends HTMLElement {
             )
         );
         this.#remove_crop_element.button.disabled = true;
+        this.#remove_crop_element.hidden = true;
         this.#remove_crop_element.button.addEventListener("click", () => {
             this.#removeRectangle();
         });

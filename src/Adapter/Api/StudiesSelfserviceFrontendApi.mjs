@@ -21,6 +21,7 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs").IntendedDegreeProgram2Element} IntendedDegreeProgram2Element */
 /** @typedef {import("../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs").JsonApi} JsonApi */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../Layout/Layout.mjs").Layout} Layout */
 /** @typedef {import("../Legal/Legal.mjs").Legal} Legal */
 /** @typedef {import("../Legal/LegalElement.mjs").LegalElement} LegalElement */
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs").LoadingApi} LoadingApi */
@@ -67,6 +68,10 @@ export class StudiesSelfserviceFrontendApi {
      * @type {LabelService | null}
      */
     #label_service = null;
+    /**
+     * @type {Layout | null}
+     */
+    #layout = null;
     /**
      * @type {LoadingApi | null}
      */
@@ -126,11 +131,11 @@ export class StudiesSelfserviceFrontendApi {
         await import("../FormInvalid/FormInvalidElement.mjs");
 
         await css_api.importCss(
-            `${__dirname}/../style.css`
+            `${__dirname}/../Layout/style.css`
         );
         css_api.importCssToRoot(
             document,
-            `${__dirname}/../style.css`
+            `${__dirname}/../Layout/style.css`
         );
 
         await localization_api.addModule(
@@ -150,6 +155,7 @@ export class StudiesSelfserviceFrontendApi {
         document.body.appendChild(this.#main_element = (await import("../Main/MainElement.mjs")).MainElement.new(
             await this.#getColorSchemeApi(),
             await this.#getCssApi(),
+            await this.#getLayout(),
             await this.#getLocalizationApi(),
             this
         ));
@@ -466,6 +472,17 @@ export class StudiesSelfserviceFrontendApi {
         );
 
         return this.#label_service;
+    }
+
+    /**
+     * @returns {Promise<Layout>}
+     */
+    async #getLayout() {
+        this.#layout ??= await (await this.#getJsonApi()).importJson(
+            `${__dirname}/../../api/layout`
+        );
+
+        return this.#layout;
     }
 
     /**

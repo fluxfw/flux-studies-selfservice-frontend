@@ -3,6 +3,7 @@ import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 
 /** @typedef {import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs").ColorSchemeApi} ColorSchemeApi */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
+/** @typedef {import("../Layout/Layout.mjs").Layout} Layout */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../Api/StudiesSelfserviceFrontendApi.mjs").StudiesSelfserviceFrontendApi} StudiesSelfserviceFrontendApi */
 
@@ -22,6 +23,10 @@ export class MainElement extends HTMLElement {
      */
     #css_api;
     /**
+     * @type {Layout}
+     */
+    #layout;
+    /**
      * @type {LocalizationApi}
      */
     #localization_api;
@@ -37,14 +42,16 @@ export class MainElement extends HTMLElement {
     /**
      * @param {ColorSchemeApi} color_scheme_api
      * @param {CssApi} css_api
+     * @param {Layout} layout
      * @param {LocalizationApi} localization_api
      * @param {StudiesSelfserviceFrontendApi} studies_selfservice_frontend_api
      * @returns {MainElement}
      */
-    static new(color_scheme_api, css_api, localization_api, studies_selfservice_frontend_api) {
+    static new(color_scheme_api, css_api, layout, localization_api, studies_selfservice_frontend_api) {
         return new this(
             color_scheme_api,
             css_api,
+            layout,
             localization_api,
             studies_selfservice_frontend_api
         );
@@ -53,15 +60,17 @@ export class MainElement extends HTMLElement {
     /**
      * @param {ColorSchemeApi} color_scheme_api
      * @param {CssApi} css_api
+     * @param {Layout} layout
      * @param {LocalizationApi} localization_api
      * @param {StudiesSelfserviceFrontendApi} studies_selfservice_frontend_api
      * @private
      */
-    constructor(color_scheme_api, css_api, localization_api, studies_selfservice_frontend_api) {
+    constructor(color_scheme_api, css_api, layout, localization_api, studies_selfservice_frontend_api) {
         super();
 
         this.#color_scheme_api = color_scheme_api;
         this.#css_api = css_api;
+        this.#layout = layout;
         this.#localization_api = localization_api;
         this.#studies_selfservice_frontend_api = studies_selfservice_frontend_api;
 
@@ -115,10 +124,20 @@ export class MainElement extends HTMLElement {
             select_color_scheme_placeholder_element.replaceWith(await this.#color_scheme_api.getSelectColorSchemeElement());
         })();
 
-        const logo_element = new Image();
-        logo_element.classList.add("logo");
-        logo_element.src = `${__dirname}/../Logo/logo.svg`;
-        left_element.appendChild(logo_element);
+        const logo_link_element = document.createElement("a");
+        logo_link_element.classList.add("logo");
+        logo_link_element.href = this.#layout["logo-link"];
+        logo_link_element.rel = "noopener noreferrer";
+        logo_link_element.target = "__blank";
+        if (this.#layout["logo-link"] !== "") {
+            logo_link_element.title = this.#layout["logo-title"];
+        }
+
+        const logo_image_element = new Image();
+        logo_image_element.src = `${__dirname}/../Logo/logo.svg`;
+        logo_link_element.appendChild(logo_image_element);
+
+        left_element.appendChild(logo_link_element);
 
         container_element.appendChild(left_element);
 
