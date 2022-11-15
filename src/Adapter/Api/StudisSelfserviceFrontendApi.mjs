@@ -47,7 +47,7 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
-export class StudiesSelfserviceFrontendApi {
+export class StudisSelfserviceFrontendApi {
     /**
      * @type {ColorSchemeApi | null}
      */
@@ -102,7 +102,7 @@ export class StudiesSelfserviceFrontendApi {
     #settings_api = null;
 
     /**
-     * @returns {StudiesSelfserviceFrontendApi}
+     * @returns {StudisSelfserviceFrontendApi}
      */
     static new() {
         return new this();

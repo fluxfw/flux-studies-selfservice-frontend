@@ -5,7 +5,7 @@ import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../Layout/Layout.mjs").Layout} Layout */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
-/** @typedef {import("../Api/StudiesSelfserviceFrontendApi.mjs").StudiesSelfserviceFrontendApi} StudiesSelfserviceFrontendApi */
+/** @typedef {import("../Api/StudisSelfserviceFrontendApi.mjs").StudisSelfserviceFrontendApi} StudisSelfserviceFrontendApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
@@ -31,9 +31,9 @@ export class MainElement extends HTMLElement {
      */
     #localization_api;
     /**
-     * @type {StudiesSelfserviceFrontendApi}
+     * @type {StudisSelfserviceFrontendApi}
      */
-    #studies_selfservice_frontend_api;
+    #studis_selfservice_frontend_api;
     /**
      * @type {ShadowRoot}
      */
@@ -44,16 +44,16 @@ export class MainElement extends HTMLElement {
      * @param {CssApi} css_api
      * @param {Layout} layout
      * @param {LocalizationApi} localization_api
-     * @param {StudiesSelfserviceFrontendApi} studies_selfservice_frontend_api
+     * @param {StudisSelfserviceFrontendApi} studis_selfservice_frontend_api
      * @returns {MainElement}
      */
-    static new(color_scheme_api, css_api, layout, localization_api, studies_selfservice_frontend_api) {
+    static new(color_scheme_api, css_api, layout, localization_api, studis_selfservice_frontend_api) {
         return new this(
             color_scheme_api,
             css_api,
             layout,
             localization_api,
-            studies_selfservice_frontend_api
+            studis_selfservice_frontend_api
         );
     }
 
@@ -62,17 +62,17 @@ export class MainElement extends HTMLElement {
      * @param {CssApi} css_api
      * @param {Layout} layout
      * @param {LocalizationApi} localization_api
-     * @param {StudiesSelfserviceFrontendApi} studies_selfservice_frontend_api
+     * @param {StudisSelfserviceFrontendApi} studis_selfservice_frontend_api
      * @private
      */
-    constructor(color_scheme_api, css_api, layout, localization_api, studies_selfservice_frontend_api) {
+    constructor(color_scheme_api, css_api, layout, localization_api, studis_selfservice_frontend_api) {
         super();
 
         this.#color_scheme_api = color_scheme_api;
         this.#css_api = css_api;
         this.#layout = layout;
         this.#localization_api = localization_api;
-        this.#studies_selfservice_frontend_api = studies_selfservice_frontend_api;
+        this.#studis_selfservice_frontend_api = studis_selfservice_frontend_api;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
         this.#css_api.importCssToRoot(
@@ -151,7 +151,7 @@ export class MainElement extends HTMLElement {
         select_language_buttons_placeholder_element.hidden = true;
         header_element.appendChild(select_language_buttons_placeholder_element);
         (async () => {
-            select_language_buttons_placeholder_element.replaceWith(await this.#studies_selfservice_frontend_api.getSelectLanguageButtonsElement());
+            select_language_buttons_placeholder_element.replaceWith(await this.#studis_selfservice_frontend_api.getSelectLanguageButtonsElement());
         })();
 
         const print_element = FormButtonElement.new(

@@ -5,3 +5,5 @@
 !src/**
 !package.json
 !package-lock.json
+src/Adapter/Pwa/manifest-*.json
+src/index.html
