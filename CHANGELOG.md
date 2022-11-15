@@ -6,6 +6,12 @@ Changes:
 
 \-
 
+## v2022-11-15-2
+
+Changes:
+
+- Remove docker image
+
 ## v2022-11-15-1
 
 Changes:
