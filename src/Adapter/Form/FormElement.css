@@ -147,7 +147,12 @@ label[data-seperate] .input_container {
 }
 
 @media (max-width: 900px) {
-    label {
+    label:where(
+        :has(.input_field),
+        :has(.input_readonly),
+        :has(.input_select),
+        :has(.input_textarea)
+    ) {
         align-items: start;
         flex-direction: column;
     }

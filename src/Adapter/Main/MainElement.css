@@ -21,7 +21,7 @@
 
 .left::after {
     background-color: var(--color-scheme-left-border-color);
-    border: 1px solid var( --color-scheme-container-border-color);
+    border: 1px solid var(--color-scheme-container-border-color);
     border-bottom: none;
     border-top: none;
     content: "";
@@ -78,7 +78,7 @@ flux-select-color-scheme {
 }
 
 .header {
-    border-bottom: 1px solid var( --color-scheme-container-border-color);
+    border-bottom: 1px solid var(--color-scheme-container-border-color);
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -97,12 +97,12 @@ flux-select-language-buttons {
 }
 
 .header2 {
-    border-bottom: 1px solid var( --color-scheme-container-border-color);
+    border-bottom: 1px solid var(--color-scheme-container-border-color);
     padding: 23px 66px;
 }
 
 .arrow {
-    border: 1px solid var( --color-scheme-container-border-color);
+    border: 1px solid var(--color-scheme-container-border-color);
     border-right: none;
     padding: 8px 11px;
     position: relative;
@@ -110,7 +110,7 @@ flux-select-language-buttons {
 }
 
 .arrow::after {
-    border: 1px solid var( --color-scheme-container-border-color);
+    border: 1px solid var(--color-scheme-container-border-color);
     border-bottom: none;
     border-left: none;
     content: "";
@@ -153,5 +153,9 @@ flux-select-language-buttons {
     .header,
     .header2 {
         display: none;
+    }
+
+    .content {
+        padding: 33px;
     }
 }
