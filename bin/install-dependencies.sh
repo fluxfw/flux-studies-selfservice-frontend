@@ -18,15 +18,15 @@ installDependency flux-css-api https://github.com/fluxfw/flux-css-api/archive/re
 
 installDependency flux-fetch-api https://github.com/fluxfw/flux-fetch-api/archive/refs/tags/v2022-11-03-1.tar.gz
 
-installDependency flux-json-api https://github.com/fluxfw/flux-json-api/archive/refs/tags/v2022-11-01-1.tar.gz
+installDependency flux-json-api https://github.com/fluxfw/flux-json-api/archive/refs/tags/v2022-11-16-2.tar.gz
 
 installDependency flux-loading-api https://github.com/fluxfw/flux-loading-api/archive/refs/tags/v2022-11-04-1.tar.gz
 
-installDependency flux-localization-api https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2022-11-11-1.tar.gz
+installDependency flux-localization-api https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2022-11-16-1.tar.gz
 
 installDependency flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2022-11-09-1.tar.gz
 
-installDependency flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2022-11-14-1.tar.gz
+installDependency flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2022-11-16-1.tar.gz
 
 installDependency flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2022-11-03-1.tar.gz
 
