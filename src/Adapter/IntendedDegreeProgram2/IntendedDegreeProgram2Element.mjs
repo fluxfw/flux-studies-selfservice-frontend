@@ -121,9 +121,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                     input_element
                 ]) => [
                         id,
-                        [
-                            ...input_element.selectedOptions
-                        ].map(option_element => option_element.value)
+                        Array.from(input_element.selectedOptions).map(option_element => option_element.value)
                     ])) : null,
                 "further-information": this.#form_element.getTextareaValue(
                     "further-information"
@@ -174,9 +172,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                 for (const multiple_choice of this.#intended_degree_program_2.combination["multiple-choice"]) {
                     const input_element = this.#form_element.inputs[`multiple-choice-${multiple_choice.id}`];
 
-                    const values = [
-                        ...input_element.selectedOptions
-                    ].map(option_element => option_element.value);
+                    const values = Array.from(input_element.selectedOptions).map(option_element => option_element.value);
 
                     let ect = 0;
                     for (const choice of multiple_choice.choices) {

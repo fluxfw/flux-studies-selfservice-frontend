@@ -60,15 +60,17 @@ flux-select-color-scheme {
 }
 
 .logo {
+    background-image: url("../Logo/logo.svg");
+    background-origin: content-box;
+    background-position: left bottom;
+    background-repeat: no-repeat;
+    background-size: contain;
     bottom: 40px;
     display: block;
+    height: 150px;
     left: 40px;
     position: absolute;
     width: 150px;
-}
-
-.logo img {
-    width: 100%;
 }
 
 .right {
