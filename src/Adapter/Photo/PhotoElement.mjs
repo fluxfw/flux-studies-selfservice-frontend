@@ -366,9 +366,7 @@ export class PhotoElement extends HTMLElement {
         /*this.#rectangle = this.#photo_service.getRectangle(
             this.#container_element,
             this.#start,
-            [
-                ...e.touches
-            ].find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0]
+            Array.from(e.touches).find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0]
         );
 
         this.#updateRectangle();*/
@@ -391,9 +389,7 @@ export class PhotoElement extends HTMLElement {
         this.#rectangle = this.#photo_service.getRectangleFromEvent(
             this.#container_element,
             this.#start,
-            [
-                ...e.touches
-            ].find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0]
+            Array.from(e.touches).find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0]
         );
 
         this.#updateRectangle();

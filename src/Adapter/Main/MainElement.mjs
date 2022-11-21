@@ -120,9 +120,6 @@ export class MainElement extends HTMLElement {
         const select_color_scheme_placeholder_element = document.createElement("div");
         select_color_scheme_placeholder_element.hidden = true;
         left_element.appendChild(select_color_scheme_placeholder_element);
-        (async () => {
-            select_color_scheme_placeholder_element.replaceWith(await this.#color_scheme_api.getSelectColorSchemeElement());
-        })();
 
         const logo_link_element = document.createElement("a");
         logo_link_element.classList.add("logo");
@@ -132,10 +129,6 @@ export class MainElement extends HTMLElement {
         if (this.#layout["logo-link"] !== "") {
             logo_link_element.title = this.#layout["logo-title"];
         }
-
-        const logo_image_element = new Image();
-        logo_image_element.src = `${__dirname}/../Logo/logo.svg`;
-        logo_link_element.appendChild(logo_image_element);
 
         left_element.appendChild(logo_link_element);
 
@@ -150,9 +143,6 @@ export class MainElement extends HTMLElement {
         const select_language_buttons_placeholder_element = document.createElement("div");
         select_language_buttons_placeholder_element.hidden = true;
         header_element.appendChild(select_language_buttons_placeholder_element);
-        (async () => {
-            select_language_buttons_placeholder_element.replaceWith(await this.#studis_selfservice_frontend_api.getSelectLanguageButtonsElement());
-        })();
 
         const print_element = FormButtonElement.new(
             this.#css_api,
@@ -187,6 +177,14 @@ export class MainElement extends HTMLElement {
         container_element.appendChild(right_element);
 
         this.#shadow.appendChild(container_element);
+
+        (async () => {
+            select_color_scheme_placeholder_element.replaceWith(await this.#color_scheme_api.getSelectColorSchemeElement());
+        })();
+
+        (async () => {
+            select_language_buttons_placeholder_element.replaceWith(await this.#studis_selfservice_frontend_api.getSelectLanguageButtonsElement());
+        })();
     }
 
     /**

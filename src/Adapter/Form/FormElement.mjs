@@ -260,9 +260,7 @@ export class FormElement extends HTMLElement {
      * @returns {void}
      */
     clearSelectOptions(select_element) {
-        for (const option_element of [
-            ...select_element.options
-        ].filter(_option_element => _option_element.value !== "")) {
+        for (const option_element of Array.from(select_element.options).filter(_option_element => _option_element.value !== "")) {
             option_element.remove();
         }
     }
