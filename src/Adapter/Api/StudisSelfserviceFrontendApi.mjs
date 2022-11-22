@@ -1,5 +1,5 @@
 import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
-import { STORAGE_SETTINGS_PREFIX } from "../Settings/STORAGE_SETTINGS_PREFIX.mjs";
+import { STORAGE_IMPLEMENTATION_PREFIX } from "../Settings/STORAGE_IMPLEMENTATION_PREFIX.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_PREVIOUS_STUDIES, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
 
@@ -753,8 +753,10 @@ export class StudisSelfserviceFrontendApi {
      */
     async #getSettingsApi() {
         if (this.#settings_api === null) {
-            this.#settings_api ??= await (await import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs")).SettingsApi.newWithAutoSettings(
-                STORAGE_SETTINGS_PREFIX
+            this.#settings_api ??= (await import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs")).SettingsApi.new(
+                await (await import("../../Libs/flux-settings-api/src/Adapter/Implementation/StorageImplementation.mjs")).StorageImplementation.newWithMemoryFallback(
+                    STORAGE_IMPLEMENTATION_PREFIX
+                )
             );
 
             await this.#settings_api.init();
