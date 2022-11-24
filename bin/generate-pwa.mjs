@@ -4,7 +4,8 @@ import { dirname, join } from "node:path/posix";
 
 let shutdown_handler = null;
 try {
-    shutdown_handler = await (await import("../../flux-shutdown-handler-api/src/Adapter/Api/ShutdownHandlerApi.mjs")).ShutdownHandlerApi.new().getShutdownHandler();
+    shutdown_handler = await (await import("../../flux-shutdown-handler-api/src/Adapter/Api/ShutdownHandlerApi.mjs")).ShutdownHandlerApi.new()
+        .getShutdownHandler();
 
     const json_api = (await import("../../flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new();
 
