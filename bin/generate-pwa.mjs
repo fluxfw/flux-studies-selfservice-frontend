@@ -4,11 +4,9 @@ import { dirname, join } from "node:path/posix";
 
 try {
     const shutdown_handler_api = (await import("../../flux-shutdown-handler-api/src/Adapter/Api/ShutdownHandlerApi.mjs")).ShutdownHandlerApi.new();
-    await shutdown_handler_api.init();
     await shutdown_handler_api.getShutdownHandler();
 
     const json_api = (await import("../../flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new();
-    await json_api.init();
 
     const localization_api = (await import("../../flux-localization-api/src/Adapter/Api/LocalizationApi.mjs")).LocalizationApi.new(
         json_api
@@ -19,7 +17,6 @@ try {
         json_api,
         localization_api
     );
-    await pwa_generator_api.init();
 
     const __dirname = dirname(fileURLToPath(import.meta.url));
 
