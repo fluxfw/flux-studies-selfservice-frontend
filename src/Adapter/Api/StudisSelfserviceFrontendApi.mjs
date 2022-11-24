@@ -362,11 +362,7 @@ export class StudisSelfserviceFrontendApi {
      * @returns {Promise<FetchApi>}
      */
     async #getFetchApi() {
-        if (this.#fetch_api === null) {
-            this.#fetch_api ??= (await import("../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs")).FetchApi.new();
-
-            await this.#fetch_api.init();
-        }
+        this.#fetch_api ??= (await import("../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs")).FetchApi.new();
 
         return this.#fetch_api;
     }
@@ -452,13 +448,9 @@ export class StudisSelfserviceFrontendApi {
      * @returns {Promise<JsonApi>}
      */
     async #getJsonApi() {
-        if (this.#json_api === null) {
-            this.#json_api ??= (await import("../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new(
-                await this.#getFetchApi()
-            );
-
-            await this.#json_api.init();
-        }
+        this.#json_api ??= (await import("../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new(
+            await this.#getFetchApi()
+        );
 
         return this.#json_api;
     }
@@ -752,18 +744,14 @@ export class StudisSelfserviceFrontendApi {
      * @returns {Promise<SettingsApi>}
      */
     async #getSettingsApi() {
-        if (this.#settings_api === null) {
-            this.#settings_api ??= (await import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs")).SettingsApi.new(
-                await (await import("../../Libs/flux-settings-api/src/Adapter/Implementation/getImplementation.mjs")).getImplementation(
-                    SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME,
-                    SETTINGS_INDEXEDDB_IMPLEMENTATION_STORE_NAME,
-                    SETTINGS_STORAGE_IMPLEMENTATION_KEY_PREFIX,
-                    SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME
-                )
-            );
-
-            await this.#settings_api.init();
-        }
+        this.#settings_api ??= (await import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs")).SettingsApi.new(
+            await (await import("../../Libs/flux-settings-api/src/Adapter/Implementation/getImplementation.mjs")).getImplementation(
+                SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME,
+                SETTINGS_INDEXEDDB_IMPLEMENTATION_STORE_NAME,
+                SETTINGS_STORAGE_IMPLEMENTATION_KEY_PREFIX,
+                SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME
+            )
+        );
 
         return this.#settings_api;
     }
