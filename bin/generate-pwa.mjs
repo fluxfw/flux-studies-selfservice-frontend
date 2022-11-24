@@ -2,9 +2,9 @@
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path/posix";
 
+let shutdown_handler = null;
 try {
-    const shutdown_handler_api = (await import("../../flux-shutdown-handler-api/src/Adapter/Api/ShutdownHandlerApi.mjs")).ShutdownHandlerApi.new();
-    await shutdown_handler_api.getShutdownHandler();
+    shutdown_handler = await (await import("../../flux-shutdown-handler-api/src/Adapter/Api/ShutdownHandlerApi.mjs")).ShutdownHandlerApi.new().getShutdownHandler();
 
     const json_api = (await import("../../flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new();
 
@@ -37,5 +37,11 @@ try {
 } catch (error) {
     console.error(error);
 
-    process.exit(1);
+    if (shutdown_handler !== null) {
+        await shutdown_handler.shutdown(
+            1
+        );
+    } else {
+        process.exit(1);
+    }
 }
