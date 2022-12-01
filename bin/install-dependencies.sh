@@ -28,6 +28,6 @@ installDependency flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/re
 
 installDependency flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2022-11-24-1.tar.gz
 
-installDependency flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2022-11-24-1.tar.gz
+installDependency flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2022-12-01-1.tar.gz
 
 installDependency flux-shutdown-handler-api https://github.com/fluxfw/flux-shutdown-handler-api/archive/refs/tags/v2022-11-24-1.tar.gz
