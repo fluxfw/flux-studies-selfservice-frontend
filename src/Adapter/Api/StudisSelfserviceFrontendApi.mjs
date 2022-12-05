@@ -731,6 +731,7 @@ export class StudisSelfserviceFrontendApi {
             this.#pwa_api ??= (await import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs")).PwaApi.new(
                 await this.#getCssApi(),
                 await this.#getJsonApi(),
+                await this.#getLoadingApi(),
                 await this.#getLocalizationApi()
             );
 
@@ -745,11 +746,11 @@ export class StudisSelfserviceFrontendApi {
      */
     async #getSettingsApi() {
         this.#settings_api ??= (await import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs")).SettingsApi.new(
-            await (await import("../../Libs/flux-settings-api/src/Adapter/StorageImplementation/getStorageImplementation.mjs")).getStorageImplementation(
+            await (await import("../../Libs/flux-settings-api/src/Adapter/StorageImplementation/getBrowserStorageImplementation.mjs")).getBrowserStorageImplementation(
                 SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME,
                 SETTINGS_INDEXEDDB_IMPLEMENTATION_STORE_NAME,
-                SETTINGS_STORAGE_IMPLEMENTATION_KEY_PREFIX,
-                SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME
+                SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME,
+                SETTINGS_STORAGE_IMPLEMENTATION_KEY_PREFIX
             )
         );
 
