@@ -136,7 +136,7 @@ flux-select-language-buttons {
 
     .left {
         min-height: 0;
-        width: 100%;
+        width: calc(100% - 12px);
     }
 
     .logo {
