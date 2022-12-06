@@ -732,7 +732,8 @@ export class StudisSelfserviceFrontendApi {
                 await this.#getCssApi(),
                 await this.#getJsonApi(),
                 await this.#getLoadingApi(),
-                await this.#getLocalizationApi()
+                await this.#getLocalizationApi(),
+                await this.#getSettingsApi()
             );
 
             await this.#pwa_api.init();
