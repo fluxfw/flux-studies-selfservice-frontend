@@ -146,7 +146,7 @@ label[data-seperate] .input_container {
     width: calc(100% - 4px);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
     label:where(
         :has(.input_field),
         :has(.input_readonly),

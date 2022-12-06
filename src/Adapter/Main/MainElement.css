@@ -129,7 +129,7 @@ flux-select-language-buttons {
     padding: 33px 66px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
     .container {
         flex-direction: column;
     }
