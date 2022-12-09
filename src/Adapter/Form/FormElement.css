@@ -8,7 +8,7 @@ form {
     padding: 30px 40px;
 }
 
-studis-selfservice-form-title + form {
+flux-studis-selfservice-form-title + form {
     margin-top: -15px;
 }
 

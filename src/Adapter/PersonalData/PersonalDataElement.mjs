@@ -255,45 +255,14 @@ export class PersonalDataElement extends HTMLElement {
                     return false;
                 }
 
-                for (const phone_type of [
-                    "home",
-                    "mobile",
-                    "business"
-                ]) {
-                    if (this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value === "" && this.#contact_form_element.inputs[`${phone_type}-phone-number`].value !== "") {
-                        this.#contact_form_element.setCustomValidationMessage(
-                            this.#contact_form_element.inputs[`${phone_type}-phone-area-code`],
-                            await this.#localization_api.translate(
-                                "Please either enter both area code/number or neither of them!"
-                            )
-                        );
-                        return false;
-                    }
-
-                    if (this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value !== "" && this.#contact_form_element.inputs[`${phone_type}-phone-number`].value === "") {
-                        this.#contact_form_element.setCustomValidationMessage(
-                            this.#contact_form_element.inputs[`${phone_type}-phone-number`],
-                            await this.#localization_api.translate(
-                                "Please either enter both area code/number or neither of them!"
-                            )
-                        );
-                        return false;
-                    }
-                }
-
-                if (this.#parents_address_form_element.inputs["parents-address"].checked) {
-                    const parents_address_first_names = this.#parents_address_form_element.getTextareaValue(
-                        "parents-address-first-names"
+                if (this.#address_form_element.inputs["postal-code"].valueAsNumber !== this.#personal_data.places.find(place => place.id === this.#address_form_element.inputs.place.value)["postal-code"]) {
+                    this.#address_form_element.setCustomValidationMessage(
+                        this.#address_form_element.inputs["postal-code"],
+                        await this.#localization_api.translate(
+                            "Postal code and place does not match!"
+                        )
                     );
-                    if (parents_address_first_names !== "" && parents_address_first_names.split("\n").some(name => name === "")) {
-                        this.#parents_address_form_element.setCustomValidationMessage(
-                            this.#parents_address_form_element.inputs["parents-address-first-names"],
-                            await this.#localization_api.translate(
-                                "Some line contains no name!"
-                            )
-                        );
-                        return false;
-                    }
+                    return false;
                 }
 
                 return true;
@@ -462,11 +431,65 @@ export class PersonalDataElement extends HTMLElement {
             place_element.appendChild(option_element);
         }
 
+        postal_code_element.addEventListener("input", () => {
+            if (postal_code_element.value === "" || place_element.value !== "") {
+                return;
+            }
+
+            const place = this.#personal_data.places.find(_place => _place["postal-code"] === postal_code_element.valueAsNumber) ?? null;
+            if (place === null) {
+                return;
+            }
+
+            place_element.value = place.id;
+        });
+        place_element.addEventListener("input", () => {
+            if (place_element.value === "" || postal_code_element.value !== "") {
+                return;
+            }
+
+            const place = this.#personal_data.places.find(_place => _place.id === place_element.value) ?? null;
+            if (place === null) {
+                return;
+            }
+
+            postal_code_element.valueAsNumber = place["postal-code"];
+        });
+
         this.#shadow.appendChild(this.#address_form_element);
 
         this.#contact_form_element = FormElement.new(
             this.#css_api,
-            this.#localization_api
+            this.#localization_api,
+            async () => {
+                for (const phone_type of [
+                    "home",
+                    "mobile",
+                    "business"
+                ]) {
+                    if (this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value === "" && this.#contact_form_element.inputs[`${phone_type}-phone-number`].value !== "") {
+                        this.#contact_form_element.setCustomValidationMessage(
+                            this.#contact_form_element.inputs[`${phone_type}-phone-area-code`],
+                            await this.#localization_api.translate(
+                                "Please either enter both area code/number or neither of them!"
+                            )
+                        );
+                        return false;
+                    }
+
+                    if (this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value !== "" && this.#contact_form_element.inputs[`${phone_type}-phone-number`].value === "") {
+                        this.#contact_form_element.setCustomValidationMessage(
+                            this.#contact_form_element.inputs[`${phone_type}-phone-number`],
+                            await this.#localization_api.translate(
+                                "Please either enter both area code/number or neither of them!"
+                            )
+                        );
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         );
 
         this.#contact_form_element.addTitle(
@@ -656,7 +679,37 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#parents_address_form_element = FormElement.new(
             this.#css_api,
-            this.#localization_api
+            this.#localization_api,
+            async () => {
+                if (this.#parents_address_form_element.inputs["parents-address"].checked) {
+                    const parents_address_first_names = this.#parents_address_form_element.getTextareaValue(
+                        "parents-address-first-names"
+                    );
+                    if (parents_address_first_names !== "" && parents_address_first_names.split("\n").some(name => name === "")) {
+                        this.#parents_address_form_element.setCustomValidationMessage(
+                            this.#parents_address_form_element.inputs["parents-address-first-names"],
+                            await this.#localization_api.translate(
+                                "Some line contains no name!"
+                            )
+                        );
+                        return false;
+                    }
+
+                    if (!this.#parents_address_form_element.inputs["parents-address-same-address"].checked) {
+                        if (this.#parents_address_form_element.inputs["parents-address-postal-code"].valueAsNumber !== this.#personal_data.places.find(place => place.id === this.#parents_address_form_element.inputs["parents-address-place"].value)["postal-code"]) {
+                            this.#parents_address_form_element.setCustomValidationMessage(
+                                this.#parents_address_form_element.inputs["parents-address-postal-code"],
+                                await this.#localization_api.translate(
+                                    "Postal code and place does not match!"
+                                )
+                            );
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
         );
 
         this.#parents_address_form_element.addTitle(
@@ -994,6 +1047,31 @@ export class PersonalDataElement extends HTMLElement {
                 option_element.value = place.id;
                 parents_address_place_element.appendChild(option_element);
             }
+
+            parents_address_postal_code_element.addEventListener("input", () => {
+                if (parents_address_postal_code_element.value === "" || parents_address_place_element.value !== "") {
+                    return;
+                }
+
+                const place = this.#personal_data.places.find(_place => _place["postal-code"] === parents_address_postal_code_element.valueAsNumber) ?? null;
+                if (place === null) {
+                    return;
+                }
+
+                parents_address_place_element.value = place.id;
+            });
+            parents_address_place_element.addEventListener("input", () => {
+                if (parents_address_place_element.value === "" || parents_address_postal_code_element.value !== "") {
+                    return;
+                }
+
+                const place = this.#personal_data.places.find(_place => _place.id === parents_address_place_element.value) ?? null;
+                if (place === null) {
+                    return;
+                }
+
+                parents_address_postal_code_element.valueAsNumber = place["postal-code"];
+            });
         }
     }
 }
