@@ -1,6 +1,6 @@
 *
 !bin/generate-pwa.mjs
-!bin/install-dependencies.sh
+!bin/install-libraries.sh
 !src
 !src/**
 !package.json
