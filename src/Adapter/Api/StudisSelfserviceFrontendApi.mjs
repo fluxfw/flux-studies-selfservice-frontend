@@ -38,7 +38,7 @@ import { SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTA
 /** @typedef {import("../Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("../Post/PostResult.mjs").PostResult} PostResult */
 /** @typedef {import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs").PwaApi} PwaApi */
-/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/SelectLanguage/SelectLanguageButtonsElement.mjs").SelectLanguageButtonsElement} SelectLanguageButtonsElement */
+/** @typedef {import("../../Libs/flux-localization-api/src/Adapter/SelectLanguage/SelectLanguageElement.mjs").SelectLanguageElement} SelectLanguageElement */
 /** @typedef {import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs").SettingsApi} SettingsApi */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 /** @typedef {import("../Start/StartElement.mjs").StartElement} StartElement */
@@ -144,7 +144,8 @@ export class StudisSelfserviceFrontendApi {
 
         await color_scheme_api.renderColorScheme();
 
-        await this.#selectLanguage();
+        await (await this.#getLocalizationApi()).selectDefaultLanguage();
+        await this.#afterSelectLanguage();
     }
 
     /**
@@ -166,22 +167,31 @@ export class StudisSelfserviceFrontendApi {
     }
 
     /**
-     * @returns {Promise<SelectLanguageButtonsElement>}
+     * @returns {Promise<SelectLanguageElement>}
      */
-    async getSelectLanguageButtonsElement() {
-        return (await this.#getLocalizationApi()).getSelectLanguageButtonsElement(
+    async getSelectLanguageElement() {
+        return (await this.#getLocalizationApi()).getSelectLanguageElement(
             async () => {
-                await this.#ensureBeforeAndAfterSelectLanguage();
-
-                this.#afterSelectLanguage();
+                await this.#afterSelectLanguage(
+                    true
+                );
             }
         );
     }
 
     /**
-     * @returns {void}
+     * @param {boolean} ui
+     * @returns {Promise<void>}
      */
-    #afterSelectLanguage() {
+    async #afterSelectLanguage(ui = false) {
+        await (await this.#getPwaApi()).initPwa(
+            `${__dirname}/../Pwa/manifest.json`
+        );
+
+        if (!ui) {
+            return;
+        }
+
         this.#main_element.remove();
         this.#main_element = null;
 
@@ -226,15 +236,6 @@ export class StudisSelfserviceFrontendApi {
                 ]
             };
         }
-    }
-
-    /**
-     * @returns {Promise<void>}
-     */
-    async #ensureBeforeAndAfterSelectLanguage() {
-        await (await this.#getPwaApi()).initPwa(
-            `${__dirname}/../Pwa/manifest.json`
-        );
     }
 
     /**
@@ -912,17 +913,5 @@ export class StudisSelfserviceFrontendApi {
                 ]
             };
         }
-    }
-
-    /**
-     * @returns {Promise<void>}
-     */
-    async #selectLanguage() {
-        await (await this.#getLocalizationApi()).selectLanguage(
-            async () => {
-                await this.#ensureBeforeAndAfterSelectLanguage();
-            },
-            false
-        );
     }
 }
