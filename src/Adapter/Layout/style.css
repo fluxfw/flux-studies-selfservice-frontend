@@ -33,9 +33,5 @@
     --form-invalid-border-color: #e2003c;
     --form-invalid-text-color: #000000;
     --mandatory-color: #c12c2c;
-    --select-language-buttons-active-button-background-color: var(--color-scheme-dark-accent);
-    --select-language-buttons-active-button-foreground-color: var(--color-scheme-dark-accent-foreground);
-    --select-language-buttons-selected-button-background-color: var(--color-scheme-dark-accent);
-    --select-language-buttons-selected-button-foreground-color: var(--color-scheme-dark-accent-foreground);
     font-family: Arial, Helvetica, sans-serif;
 }

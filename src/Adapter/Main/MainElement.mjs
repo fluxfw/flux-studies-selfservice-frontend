@@ -140,9 +140,9 @@ export class MainElement extends HTMLElement {
         const header_element = document.createElement("div");
         header_element.classList.add("header");
 
-        const select_language_buttons_placeholder_element = document.createElement("div");
-        select_language_buttons_placeholder_element.hidden = true;
-        header_element.appendChild(select_language_buttons_placeholder_element);
+        const select_language_placeholder_element = document.createElement("div");
+        select_language_placeholder_element.hidden = true;
+        header_element.appendChild(select_language_placeholder_element);
 
         const print_element = FormButtonElement.new(
             this.#css_api,
@@ -183,7 +183,7 @@ export class MainElement extends HTMLElement {
         })();
 
         (async () => {
-            select_language_buttons_placeholder_element.replaceWith(await this.#studis_selfservice_frontend_api.getSelectLanguageButtonsElement());
+            select_language_placeholder_element.replaceWith(await this.#studis_selfservice_frontend_api.getSelectLanguageElement());
         })();
     }
 
