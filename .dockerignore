@@ -3,7 +3,5 @@
 !bin/install-libraries.sh
 !src
 !src/**
-!package.json
-!package-lock.json
 src/Adapter/Pwa/manifest-*.json
 src/index.html
