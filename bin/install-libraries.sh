@@ -32,7 +32,7 @@ installLibrary flux-localization-api https://github.com/fluxfw/flux-localization
 
 installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2022-12-14-1.tar.gz
 
-installLibrary flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2022-12-12-2.tar.gz
+installLibrary flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2022-12-19-1.tar.gz
 
 installLibrary flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2022-12-08-1.tar.gz
 
