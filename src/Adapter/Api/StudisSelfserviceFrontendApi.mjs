@@ -748,7 +748,7 @@ export class StudisSelfserviceFrontendApi {
      */
     async #getSettingsApi() {
         this.#settings_api ??= (await import("../../Libs/flux-settings-api/src/Adapter/Api/SettingsApi.mjs")).SettingsApi.new(
-            await (await import("../../Libs/flux-settings-api/src/Adapter/StorageImplementation/getBrowserStorageImplementation.mjs")).getBrowserStorageImplementation(
+            await (await import("../../Libs/flux-settings-api/src/Adapter/StorageImplementation/Browser/getBrowserStorageImplementation.mjs")).getBrowserStorageImplementation(
                 SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME,
                 SETTINGS_INDEXEDDB_IMPLEMENTATION_STORE_NAME,
                 SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME,

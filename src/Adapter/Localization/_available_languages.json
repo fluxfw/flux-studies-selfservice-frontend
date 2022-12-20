@@ -1,4 +1,15 @@
 [
-    "de",
-    "en"
+    {
+        "language": "de",
+        "fallback_for_languages": [
+            "de-AT",
+            "de-CH",
+            "de-DE",
+            "de-LI"
+        ]
+    },
+    {
+        "language": "en",
+        "fallback_for_languages": []
+    }
 ]
