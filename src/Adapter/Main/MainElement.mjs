@@ -5,6 +5,7 @@ import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../Layout/Layout.mjs").Layout} Layout */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
+/** @typedef {import("../Post/logoutFunction.mjs").logoutFunction} logoutFunction */
 /** @typedef {import("../Api/StudisSelfserviceFrontendApi.mjs").StudisSelfserviceFrontendApi} StudisSelfserviceFrontendApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -23,6 +24,10 @@ export class MainElement extends HTMLElement {
      */
     #css_api;
     /**
+     * @type {HTMLDivElement}
+     */
+    #header_element;
+    /**
      * @type {Layout}
      */
     #layout;
@@ -30,6 +35,10 @@ export class MainElement extends HTMLElement {
      * @type {LocalizationApi}
      */
     #localization_api;
+    /**
+     * @type {FormButtonElement | null}
+     */
+    #logout_button_element = null;
     /**
      * @type {StudisSelfserviceFrontendApi}
      */
@@ -85,11 +94,30 @@ export class MainElement extends HTMLElement {
 
     /**
      * @param {HTMLElement} content_element
-     * @returns {void}
+     * @param {logoutFunction | null} logout_function
+     * @returns {Promise<void>}
      */
-    replaceContent(content_element) {
+    async replaceContent(content_element, logout_function = null) {
         this.#content_element.innerHTML = "";
         this.#content_element.appendChild(content_element);
+
+        if (this.#logout_button_element !== null) {
+            this.#logout_button_element.remove();
+            this.#logout_button_element = null;
+        }
+
+        if (logout_function !== null) {
+            this.#logout_button_element = FormButtonElement.new(
+                this.#css_api,
+                await this.#localization_api.translate(
+                    "Logout"
+                )
+            );
+            this.#logout_button_element.button.addEventListener("click", () => {
+                logout_function();
+            });
+            this.#header_element.appendChild(this.#logout_button_element);
+        }
     }
 
     /**
@@ -137,26 +165,25 @@ export class MainElement extends HTMLElement {
         const right_element = document.createElement("div");
         right_element.classList.add("right");
 
-        const header_element = document.createElement("div");
-        header_element.classList.add("header");
+        this.#header_element = document.createElement("div");
+        this.#header_element.classList.add("header");
 
         const select_language_placeholder_element = document.createElement("div");
         select_language_placeholder_element.hidden = true;
-        header_element.appendChild(select_language_placeholder_element);
+        this.#header_element.appendChild(select_language_placeholder_element);
 
-        const print_element = FormButtonElement.new(
+        const print_button_element = FormButtonElement.new(
             this.#css_api,
             await this.#localization_api.translate(
                 "Print page"
             )
         );
-        print_element.classList.add("print");
-        print_element.button.addEventListener("click", () => {
+        print_button_element.button.addEventListener("click", () => {
             this.#print();
         });
-        header_element.appendChild(print_element);
+        this.#header_element.appendChild(print_button_element);
 
-        right_element.appendChild(header_element);
+        right_element.appendChild(this.#header_element);
 
         const header2_element = document.createElement("div");
         header2_element.classList.add("header2");

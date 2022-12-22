@@ -90,7 +90,7 @@ flux-select-language-buttons {
     padding: 1px;
 }
 
-.print {
+flux-studis-selfservice-form-button {
     --form-button-background-color: var(--color-scheme-background);
     --form-button-text-color: var(--color-scheme-foreground);
     align-self: center;

@@ -810,6 +810,44 @@ export class StudisSelfserviceFrontendApi {
     }
 
     /**
+     * @returns {Promise<void>}
+     */
+    async #logout() {
+        try {
+            await (await this.#getFetchApi()).fetch({
+                url: `${__dirname}/../../api/logout`,
+                method: METHOD_POST
+            });
+
+            return {
+                ok: true
+            };
+        } catch (error) {
+            console.error(error);
+
+            const localization_api = await this.#getLocalizationApi();
+
+            return {
+                ok: false,
+                "error-messages": [
+                    Object.fromEntries(await Promise.all(Object.entries((await localization_api.getLanguages()).all).map(async ([
+                        language
+                    ]) => [
+                            language,
+                            await localization_api.translate(
+                                error instanceof Response ? "Server error!" : "Network error!",
+                                null,
+                                null,
+                                language
+                            )
+                        ]
+                    )))
+                ]
+            };
+        }
+    }
+
+    /**
      * @param {boolean} previous_get_result
      * @returns {Promise<void>}
      */
@@ -853,7 +891,7 @@ export class StudisSelfserviceFrontendApi {
                     back_loading_element.remove();
 
                     if (!back_result.ok) {
-                        this.#main_element.replaceContent(
+                        await this.#main_element.replaceContent(
                             await this.#getFormInvalidElement(
                                 await (await this.#getLabelService()).getErrorMessageLabel(
                                     back_result["error-messages"]?.[0] ?? {}
@@ -874,8 +912,28 @@ export class StudisSelfserviceFrontendApi {
             );
         }
 
-        this.#main_element.replaceContent(
-            page
+        await this.#main_element.replaceContent(
+            page,
+            this.#previous_get_result["can-logout"] ? async () => {
+                const logout_loading_element = await this.#getLoadingElement();
+
+                const logout_result = await this.#logout();
+
+                logout_loading_element.remove();
+
+                if (!logout_result.ok) {
+                    await this.#main_element.replaceContent(
+                        await this.#getFormInvalidElement(
+                            await (await this.#getLabelService()).getErrorMessageLabel(
+                                logout_result["error-messages"]?.[0] ?? {}
+                            )
+                        )
+                    );
+                    return;
+                }
+
+                this.#next();
+            } : null
         );
     }
 
