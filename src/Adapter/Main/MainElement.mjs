@@ -36,10 +36,6 @@ export class MainElement extends HTMLElement {
      */
     #localization_api;
     /**
-     * @type {FormButtonElement | null}
-     */
-    #logout_button_element = null;
-    /**
      * @type {StudisSelfserviceFrontendApi}
      */
     #studis_selfservice_frontend_api;
@@ -47,6 +43,10 @@ export class MainElement extends HTMLElement {
      * @type {ShadowRoot}
      */
     #shadow;
+    /**
+     * @type {HTMLDivElement | null}
+     */
+    #user_element = null;
 
     /**
      * @param {ColorSchemeApi} color_scheme_api
@@ -94,29 +94,44 @@ export class MainElement extends HTMLElement {
 
     /**
      * @param {HTMLElement} content_element
+     * @param {string | null} user_name
      * @param {logoutFunction | null} logout_function
      * @returns {Promise<void>}
      */
-    async replaceContent(content_element, logout_function = null) {
+    async replaceContent(content_element, user_name = null, logout_function = null) {
         this.#content_element.innerHTML = "";
         this.#content_element.appendChild(content_element);
 
-        if (this.#logout_button_element !== null) {
-            this.#logout_button_element.remove();
-            this.#logout_button_element = null;
+        if (this.#user_element !== null) {
+            this.#user_element.remove();
+            this.#user_element = null;
         }
 
-        if (logout_function !== null) {
-            this.#logout_button_element = FormButtonElement.new(
-                this.#css_api,
-                await this.#localization_api.translate(
-                    "Logout"
-                )
-            );
-            this.#logout_button_element.button.addEventListener("click", () => {
-                logout_function();
-            });
-            this.#header_element.appendChild(this.#logout_button_element);
+        if (user_name !== null || logout_function !== null) {
+            this.#user_element = document.createElement("div");
+            this.#user_element.classList.add("user");
+
+            if (user_name !== null) {
+                const user_name_element = document.createElement("div");
+                user_name_element.classList.add("user_name");
+                user_name_element.innerText = user_name;
+                this.#user_element.appendChild(user_name_element);
+            }
+
+            if (logout_function !== null) {
+                const logout_button_element = FormButtonElement.new(
+                    this.#css_api,
+                    await this.#localization_api.translate(
+                        "Logout"
+                    )
+                );
+                logout_button_element.button.addEventListener("click", () => {
+                    logout_function();
+                });
+                this.#user_element.appendChild(logout_button_element);
+            }
+
+            this.#header_element.appendChild(this.#user_element);
         }
     }
 

@@ -90,12 +90,22 @@ flux-select-language-buttons {
     padding: 1px;
 }
 
+.user,
 flux-studis-selfservice-form-button {
-    --form-button-background-color: var(--color-scheme-background);
-    --form-button-text-color: var(--color-scheme-foreground);
     align-self: center;
     flex-grow: 0;
     flex-shrink: 0;
+}
+
+.user_name {
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+flux-studis-selfservice-form-button {
+    --form-button-background-color: var(--color-scheme-background);
+    --form-button-text-color: var(--color-scheme-foreground);
 }
 
 .header2 {
