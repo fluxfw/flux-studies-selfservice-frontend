@@ -338,6 +338,8 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
             await this.#renderCertificatePlaces();
 
             certificate_place_element.value = this.#university_entrance_qualification.values["certificate-place"];
+        } else {
+            await this.#renderCertificates();
         }
     }
 

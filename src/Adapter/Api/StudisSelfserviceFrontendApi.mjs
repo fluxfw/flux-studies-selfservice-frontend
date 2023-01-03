@@ -916,6 +916,7 @@ export class StudisSelfserviceFrontendApi {
 
         await this.#main_element.replaceContent(
             page,
+            this.#previous_get_result["identification-number"],
             this.#previous_get_result["can-logout"] ? async () => {
                 this.#previous_get_result = null;
 
