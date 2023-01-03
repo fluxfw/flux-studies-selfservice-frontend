@@ -1,4 +1,4 @@
-import { METHOD_POST } from "../../Libs/flux-fetch-api/src/Adapter/Method/METHOD.mjs";
+import { METHOD_POST } from "../../Libs/flux-http-api/src/Adapter/Method/METHOD.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_PREVIOUS_STUDIES, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
 import { SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTATION_STORE_NAME, SETTINGS_STORAGE_IMPLEMENTATION_KEY_PREFIX } from "../Settings/SETTINGS_IMPLEMENTATION.mjs";
@@ -9,10 +9,10 @@ import { SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTA
 /** @typedef {import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs").ColorSchemeApi} ColorSchemeApi */
 /** @typedef {import("../Completed/CompletedElement.mjs").CompletedElement} CompletedElement */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
-/** @typedef {import("../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs").FetchApi} FetchApi */
 /** @typedef {import("../FormInvalid/FormInvalidElement.mjs").FormInvalidElement} FormInvalidElement */
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Loading/FullscreenLoadingElement.mjs").FullscreenLoadingElement} FullscreenLoadingElement */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
+/** @typedef {import("../../Libs/flux-http-api/src/Adapter/Api/HttpApi.mjs").HttpApi} HttpApi */
 /** @typedef {import("../IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
 /** @typedef {import("../IdentificationNumber/IdentificationNumberElement.mjs").IdentificationNumberElement} IdentificationNumberElement */
 /** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgram.mjs").IntendedDegreeProgram} IntendedDegreeProgram */
@@ -57,9 +57,9 @@ export class StudisSelfserviceFrontendApi {
      */
     #css_api = null;
     /**
-     * @type {FetchApi | null}
+     * @type {HttpApi | null}
      */
-    #fetch_api = null;
+    #http_api = null;
     /**
      * @type {JsonApi | null}
      */
@@ -205,7 +205,7 @@ export class StudisSelfserviceFrontendApi {
      */
     async #back() {
         try {
-            await (await this.#getFetchApi()).fetch({
+            await (await this.#getHttpApi()).fetch({
                 url: `${__dirname}/../../api/back`,
                 method: METHOD_POST
             });
@@ -243,7 +243,7 @@ export class StudisSelfserviceFrontendApi {
      */
     async #get() {
         try {
-            return await (await this.#getFetchApi()).fetch({
+            return await (await this.#getHttpApi()).fetch({
                 url: `${__dirname}/../../api/get`
             });
         } catch (error) {
@@ -350,22 +350,13 @@ export class StudisSelfserviceFrontendApi {
     async #getCssApi() {
         if (this.#css_api === null) {
             this.#css_api ??= (await import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs")).CssApi.new(
-                await this.#getFetchApi()
+                await this.#getHttpApi()
             );
 
             await this.#css_api.init();
         }
 
         return this.#css_api;
-    }
-
-    /**
-     * @returns {Promise<FetchApi>}
-     */
-    async #getFetchApi() {
-        this.#fetch_api ??= (await import("../../Libs/flux-fetch-api/src/Adapter/Api/FetchApi.mjs")).FetchApi.new();
-
-        return this.#fetch_api;
     }
 
     /**
@@ -377,6 +368,15 @@ export class StudisSelfserviceFrontendApi {
             await this.#getCssApi(),
             message
         );
+    }
+
+    /**
+     * @returns {Promise<HttpApi>}
+     */
+    async #getHttpApi() {
+        this.#http_api ??= (await import("../../Libs/flux-http-api/src/Adapter/Api/HttpApi.mjs")).HttpApi.new();
+
+        return this.#http_api;
     }
 
     /**
@@ -450,7 +450,7 @@ export class StudisSelfserviceFrontendApi {
      */
     async #getJsonApi() {
         this.#json_api ??= (await import("../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new(
-            await this.#getFetchApi()
+            await this.#getHttpApi()
         );
 
         return this.#json_api;
@@ -814,7 +814,7 @@ export class StudisSelfserviceFrontendApi {
      */
     async #logout() {
         try {
-            await (await this.#getFetchApi()).fetch({
+            await (await this.#getHttpApi()).fetch({
                 url: `${__dirname}/../../api/logout`,
                 method: METHOD_POST
             });
@@ -943,7 +943,7 @@ export class StudisSelfserviceFrontendApi {
      */
     async #post(post) {
         try {
-            return await (await this.#getFetchApi()).fetch({
+            return await (await this.#getHttpApi()).fetch({
                 url: `${__dirname}/../../api/post`,
                 method: METHOD_POST,
                 data: post
