@@ -5,10 +5,16 @@ import { PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
+/** @typedef {import("../Canton/CantonWithPlaces.mjs").CantonWithPlaces} CantonWithPlaces */
+/** @typedef {import("../Canton/CantonWithSchools.mjs").CantonWithSchools} CantonWithSchools */
+/** @typedef {import("../CertificateType/CertificateTypeWithCertificates.mjs").CertificateTypeWithCertificates} CertificateTypeWithCertificates */
+/** @typedef {import("../Certificate/CertificateWithCantons.mjs").CertificateWithCantons} CertificateWithCantons */
 /** @typedef {import("./chosenUniversityEntranceQualificationFunction.mjs").chosenUniversityEntranceQualificationFunction} chosenUniversityEntranceQualificationFunction */
+/** @typedef {import("../Country/CountryWithCantons.mjs").CountryWithCantons} CountryWithCantons */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
+/** @typedef {import("../School/SchoolWithCountries.mjs").SchoolWithCountries} SchoolWithCountries */
 /** @typedef {import("./UniversityEntranceQualification.mjs").UniversityEntranceQualification} UniversityEntranceQualification */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -18,6 +24,22 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
      * @type {backFunction | null}
      */
     #back_function;
+    /**
+     * @type {CertificateWithCantons | null}
+     */
+    #certificate = null;
+    /**
+     * @type {CantonWithPlaces | null}
+     */
+    #certificate_canton = null;
+    /**
+     * @type {CountryWithCantons | null}
+     */
+    #certificate_country = null;
+    /**
+     * @type {CertificateTypeWithCertificates | null}
+     */
+    #certificate_type = null;
     /**
      * @type {chosenUniversityEntranceQualificationFunction}
      */
@@ -39,6 +61,10 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
      */
     #localization_api;
     /**
+     * @type {CantonWithSchools | null}
+     */
+    #matura_canton = null;
+    /**
      * @type {ShadowRoot}
      */
     #shadow;
@@ -46,6 +72,10 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
      * @type {UniversityEntranceQualification}
      */
     #university_entrance_qualification;
+    /**
+     * @type {SchoolWithCountries | null}
+     */
+    #upper_secondary_school = null;
 
     /**
      * @param {CssApi} css_api
@@ -183,6 +213,10 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
             certificate_type_element.appendChild(option_element);
         }
 
+        certificate_type_element.addEventListener("input", () => {
+            this.#renderCertificates();
+        });
+
         const issue_date_element = this.#form_element.addInput(
             await this.#localization_api.translate(
                 "Date of issue (Year)"
@@ -191,8 +225,6 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
             "issue-date"
         );
         issue_date_element.inputMode = "numeric";
-        issue_date_element.max = this.#university_entrance_qualification["max-issue-date"];
-        issue_date_element.min = this.#university_entrance_qualification["min-issue-date"];
         issue_date_element.required = true;
         issue_date_element.step = 1;
 
@@ -205,14 +237,9 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         );
         certificate_element.required = true;
 
-        for (const certificate of this.#university_entrance_qualification.certificates) {
-            const option_element = document.createElement("option");
-            option_element.text = await this.#label_service.getCertificateLabel(
-                certificate
-            );
-            option_element.value = certificate.id;
-            certificate_element.appendChild(option_element);
-        }
+        certificate_element.addEventListener("input", () => {
+            this.#renderMaturaCantons();
+        });
 
         const matura_canton_element = this.#form_element.addInput(
             await this.#localization_api.translate(
@@ -223,14 +250,9 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         );
         matura_canton_element.required = true;
 
-        for (const canton of this.#university_entrance_qualification.cantons) {
-            const option_element = document.createElement("option");
-            option_element.text = await this.#label_service.getCantonLabel(
-                canton
-            );
-            option_element.value = canton.id;
-            matura_canton_element.appendChild(option_element);
-        }
+        matura_canton_element.addEventListener("input", () => {
+            this.#renderUpperSecondarySchool();
+        });
 
         const upper_secondary_school_element = this.#form_element.addInput(
             await this.#localization_api.translate(
@@ -241,14 +263,9 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         );
         upper_secondary_school_element.required = true;
 
-        for (const school of this.#university_entrance_qualification.schools) {
-            const option_element = document.createElement("option");
-            option_element.text = await this.#label_service.getSchoolLabel(
-                school
-            );
-            option_element.value = school.id;
-            upper_secondary_school_element.appendChild(option_element);
-        }
+        upper_secondary_school_element.addEventListener("input", () => {
+            this.#renderCertificateCountries();
+        });
 
         const certificate_country_element = this.#form_element.addInput(
             await this.#localization_api.translate(
@@ -259,14 +276,9 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         );
         certificate_country_element.required = true;
 
-        for (const country of this.#university_entrance_qualification.countries) {
-            const option_element = document.createElement("option");
-            option_element.text = await this.#label_service.getCountryLabel(
-                country
-            );
-            option_element.value = country.id;
-            certificate_country_element.appendChild(option_element);
-        }
+        certificate_country_element.addEventListener("input", () => {
+            this.#renderCertificateCantons();
+        });
 
         const certificate_canton_element = this.#form_element.addInput(
             await this.#localization_api.translate(
@@ -277,14 +289,9 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         );
         certificate_canton_element.required = true;
 
-        for (const canton of this.#university_entrance_qualification.cantons) {
-            const option_element = document.createElement("option");
-            option_element.text = await this.#label_service.getCantonLabel(
-                canton
-            );
-            option_element.value = canton.id;
-            certificate_canton_element.appendChild(option_element);
-        }
+        certificate_canton_element.addEventListener("input", () => {
+            this.#renderCertificatePlaces();
+        });
 
         const certificate_place_element = this.#form_element.addInput(
             await this.#localization_api.translate(
@@ -294,15 +301,6 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
             "certificate-place"
         );
         certificate_place_element.required = true;
-
-        for (const place of this.#university_entrance_qualification.places) {
-            const option_element = document.createElement("option");
-            option_element.text = await this.#label_service.getPlaceLabel(
-                place
-            );
-            option_element.value = place.id;
-            certificate_place_element.appendChild(option_element);
-        }
 
         await this.#form_element.addButtons(
             () => {
@@ -320,20 +318,187 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         if (this.#university_entrance_qualification.values !== null) {
             certificate_type_element.value = this.#university_entrance_qualification.values["certificate-type"];
+            await this.#renderCertificates();
 
             issue_date_element.valueAsNumber = this.#university_entrance_qualification.values["issue-date"];
 
             certificate_element.value = this.#university_entrance_qualification.values.certificate;
+            await this.#renderMaturaCantons();
 
             matura_canton_element.value = this.#university_entrance_qualification.values["matura-canton"];
+            await this.#renderUpperSecondarySchool();
 
             upper_secondary_school_element.value = this.#university_entrance_qualification.values["upper-secondary-school"];
+            await this.#renderCertificateCountries();
 
             certificate_country_element.value = this.#university_entrance_qualification.values["certificate-country"];
+            await this.#renderCertificateCantons();
 
             certificate_canton_element.value = this.#university_entrance_qualification.values["certificate-canton"];
+            await this.#renderCertificatePlaces();
 
             certificate_place_element.value = this.#university_entrance_qualification.values["certificate-place"];
+        }
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #renderCertificateCantons() {
+        this.#form_element.clearSelectOptions(
+            this.#form_element.inputs["certificate-canton"]
+        );
+
+        this.#certificate_country = this.#upper_secondary_school?.countries?.find(country => country.id === this.#form_element.inputs["certificate-country"].value) ?? null;
+
+        await this.#renderCertificatePlaces();
+
+        if (this.#certificate_country === null) {
+            return;
+        }
+
+        for (const canton of this.#certificate_country.cantons) {
+            const option_element = document.createElement("option");
+            option_element.text = await this.#label_service.getCantonLabel(
+                canton
+            );
+            option_element.value = canton.id;
+            this.#form_element.inputs["certificate-canton"].appendChild(option_element);
+        }
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #renderCertificateCountries() {
+        this.#form_element.clearSelectOptions(
+            this.#form_element.inputs["certificate-country"]
+        );
+
+        this.#upper_secondary_school = this.#matura_canton?.schools?.find(school => school.id === this.#form_element.inputs["upper-secondary-school"].value) ?? null;
+
+        await this.#renderCertificateCantons();
+
+        if (this.#upper_secondary_school === null) {
+            return;
+        }
+
+        for (const country of this.#upper_secondary_school.countries) {
+            const option_element = document.createElement("option");
+            option_element.text = await this.#label_service.getCountryLabel(
+                country
+            );
+            option_element.value = country.id;
+            this.#form_element.inputs["certificate-country"].appendChild(option_element);
+        }
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #renderCertificatePlaces() {
+        this.#form_element.clearSelectOptions(
+            this.#form_element.inputs["certificate-place"]
+        );
+
+        this.#certificate_canton = this.#certificate_country?.cantons?.find(canton => canton.id === this.#form_element.inputs["certificate-canton"].value) ?? null;
+
+        if (this.#certificate_canton === null) {
+            return;
+        }
+
+        for (const place of this.#certificate_canton.places) {
+            const option_element = document.createElement("option");
+            option_element.text = await this.#label_service.getPlaceLabel(
+                place
+            );
+            option_element.value = place.id;
+            this.#form_element.inputs["certificate-place"].appendChild(option_element);
+        }
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #renderCertificates() {
+        this.#form_element.inputs["issue-date"].max = 0;
+        this.#form_element.inputs["issue-date"].min = 0;
+        this.#form_element.inputs["issue-date"].value = "";
+
+        this.#form_element.clearSelectOptions(
+            this.#form_element.inputs.certificate
+        );
+
+        this.#certificate_type = this.#university_entrance_qualification["certificate-types"].find(certificate_type => certificate_type.id === this.#form_element.inputs["certificate-type"].value) ?? null;
+
+        await this.#renderMaturaCantons();
+
+        if (this.#certificate_type === null) {
+            return;
+        }
+
+        this.#form_element.inputs["issue-date"].max = this.#certificate_type["max-issue-date"];
+        this.#form_element.inputs["issue-date"].min = this.#certificate_type["min-issue-date"];
+
+        for (const certificate of this.#certificate_type.certificates) {
+            const option_element = document.createElement("option");
+            option_element.text = await this.#label_service.getCertificateLabel(
+                certificate
+            );
+            option_element.value = certificate.id;
+            this.#form_element.inputs.certificate.appendChild(option_element);
+        }
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #renderMaturaCantons() {
+        this.#form_element.clearSelectOptions(
+            this.#form_element.inputs["matura-canton"]
+        );
+
+        this.#certificate = this.#certificate_type?.certificates?.find(certificate => certificate.id === this.#form_element.inputs.certificate.value) ?? null;
+
+        await this.#renderUpperSecondarySchool();
+
+        if (this.#certificate === null) {
+            return;
+        }
+
+        for (const canton of this.#certificate.cantons) {
+            const option_element = document.createElement("option");
+            option_element.text = await this.#label_service.getCantonLabel(
+                canton
+            );
+            option_element.value = canton.id;
+            this.#form_element.inputs["matura-canton"].appendChild(option_element);
+        }
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async #renderUpperSecondarySchool() {
+        this.#form_element.clearSelectOptions(
+            this.#form_element.inputs["upper-secondary-school"]
+        );
+
+        this.#matura_canton = this.#certificate?.cantons?.find(canton => canton.id === this.#form_element.inputs["matura-canton"].value) ?? null;
+
+        await this.#renderCertificateCountries();
+
+        if (this.#matura_canton === null) {
+            return;
+        }
+
+        for (const school of this.#matura_canton.schools) {
+            const option_element = document.createElement("option");
+            option_element.text = await this.#label_service.getSchoolLabel(
+                school
+            );
+            option_element.value = school.id;
+            this.#form_element.inputs["upper-secondary-school"].appendChild(option_element);
         }
     }
 }

@@ -884,6 +884,8 @@ export class StudisSelfserviceFrontendApi {
                     return post_result;
                 },
                 async () => {
+                    this.#previous_get_result = null;
+
                     const back_loading_element = await this.#getLoadingElement();
 
                     const back_result = await this.#back();
@@ -915,6 +917,8 @@ export class StudisSelfserviceFrontendApi {
         await this.#main_element.replaceContent(
             page,
             this.#previous_get_result["can-logout"] ? async () => {
+                this.#previous_get_result = null;
+
                 const logout_loading_element = await this.#getLoadingElement();
 
                 const logout_result = await this.#logout();
