@@ -9,7 +9,7 @@ button {
     color: var(--form-button-text-color);
     display: block;
     font-size: 14px;
-    padding: 10px;
+    padding: var(--form-button-padding, 10px);
 }
 
 button:not(:disabled) {
