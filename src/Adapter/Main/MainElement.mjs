@@ -94,11 +94,11 @@ export class MainElement extends HTMLElement {
 
     /**
      * @param {HTMLElement} content_element
-     * @param {string | null} user_name
+     * @param {string | null} identification_number
      * @param {logoutFunction | null} logout_function
      * @returns {Promise<void>}
      */
-    async replaceContent(content_element, user_name = null, logout_function = null) {
+    async replaceContent(content_element, identification_number = null, logout_function = null) {
         this.#content_element.innerHTML = "";
         this.#content_element.appendChild(content_element);
 
@@ -107,15 +107,15 @@ export class MainElement extends HTMLElement {
             this.#user_element = null;
         }
 
-        if (user_name !== null || logout_function !== null) {
+        if (identification_number !== null || logout_function !== null) {
             this.#user_element = document.createElement("div");
             this.#user_element.classList.add("user");
 
-            if (user_name !== null) {
-                const user_name_element = document.createElement("div");
-                user_name_element.classList.add("user_name");
-                user_name_element.innerText = user_name;
-                this.#user_element.appendChild(user_name_element);
+            if (identification_number !== null) {
+                const identification_number_element = document.createElement("div");
+                identification_number_element.classList.add("identification_number");
+                identification_number_element.innerText = identification_number;
+                this.#user_element.appendChild(identification_number_element);
             }
 
             if (logout_function !== null) {

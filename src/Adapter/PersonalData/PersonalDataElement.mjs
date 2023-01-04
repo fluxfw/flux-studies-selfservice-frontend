@@ -2,6 +2,7 @@ import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs"
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_PERSONAL_DATA } from "../Page/PAGE.mjs";
+import { PHONE_TYPES } from "./PHONE_TYPES.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
@@ -141,11 +142,7 @@ export class PersonalDataElement extends HTMLElement {
                 "postal-office-box": this.#address_form_element.inputs["postal-office-box"].value,
                 "postal-code": this.#address_form_element.inputs["postal-code"].valueAsNumber,
                 place: this.#address_form_element.inputs.place.value,
-                ...[
-                    "home",
-                    "mobile",
-                    "business"
-                ].reduce((phones, phone_type) => ({
+                ...PHONE_TYPES.reduce((phones, phone_type) => ({
                     ...phones,
                     [`${phone_type}-phone-area-code`]: this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value,
                     [`${phone_type}-phone-number`]: this.#contact_form_element.inputs[`${phone_type}-phone-number`].value
@@ -462,11 +459,7 @@ export class PersonalDataElement extends HTMLElement {
             this.#css_api,
             this.#localization_api,
             async () => {
-                for (const phone_type of [
-                    "home",
-                    "mobile",
-                    "business"
-                ]) {
+                for (const phone_type of PHONE_TYPES) {
                     if (this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value === "" && this.#contact_form_element.inputs[`${phone_type}-phone-number`].value !== "") {
                         this.#contact_form_element.setCustomValidationMessage(
                             this.#contact_form_element.inputs[`${phone_type}-phone-area-code`],
@@ -488,6 +481,18 @@ export class PersonalDataElement extends HTMLElement {
                     }
                 }
 
+                if (this.#personal_data["required-phone"]) {
+                    if (!PHONE_TYPES.some(phone_type => this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value !== "")) {
+                        this.#contact_form_element.setCustomValidationMessage(
+                            this.#contact_form_element.inputs[`${PHONE_TYPES[0]}-phone-area-code`],
+                            await this.#localization_api.translate(
+                                "Please enter at least one phone!"
+                            )
+                        );
+                        return false;
+                    }
+                }
+
                 return true;
             }
         );
@@ -498,11 +503,7 @@ export class PersonalDataElement extends HTMLElement {
             )
         );
 
-        for (const phone_type of [
-            "home",
-            "mobile",
-            "business"
-        ]) {
+        for (const phone_type of PHONE_TYPES) {
             const area_code_element = this.#contact_form_element.addInput(
                 await this.#localization_api.translate(
                     `Phone ${phone_type} (Format {example})`,
@@ -517,7 +518,7 @@ export class PersonalDataElement extends HTMLElement {
                 true
             );
             area_code_element.dataset.small = true;
-            area_code_element.required = this.#personal_data[`required-${phone_type}`];
+            area_code_element.required = this.#personal_data[`required-phone-${phone_type}`];
 
             for (const area_code of this.#personal_data["area-codes"]) {
                 const option_element = document.createElement("option");
@@ -535,7 +536,7 @@ export class PersonalDataElement extends HTMLElement {
             );
             number_element.inputMode = "tel";
             number_element.pattern = this.#personal_data["phone-number-format"].substring(1, this.#personal_data["phone-number-format"].length - 1);
-            number_element.required = this.#personal_data[`required-${phone_type}`];
+            number_element.required = this.#personal_data[`required-phone-${phone_type}`];
 
             number_element.parentElement.remove();
             area_code_element.insertAdjacentElement("afterend", number_element);
@@ -770,11 +771,7 @@ export class PersonalDataElement extends HTMLElement {
 
             place_element.value = this.#personal_data.values.place;
 
-            for (const phone_type of [
-                "home",
-                "mobile",
-                "business"
-            ]) {
+            for (const phone_type of PHONE_TYPES) {
                 this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value = this.#personal_data.values[`${phone_type}-phone-area-code`];
 
                 this.#contact_form_element.inputs[`${phone_type}-phone-number`].value = this.#personal_data.values[`${phone_type}-phone-number`];

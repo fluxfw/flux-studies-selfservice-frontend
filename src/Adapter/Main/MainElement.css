@@ -97,10 +97,18 @@ flux-studis-selfservice-form-button {
     flex-shrink: 0;
 }
 
-.user_name {
+.user {
+    text-align: center;
+}
+
+.identification_number {
     font-size: 15px;
     font-weight: bold;
     padding: 5px;
+}
+
+.identification_number + flux-studis-selfservice-form-button {
+    --form-button-padding: 5px;
 }
 
 flux-studis-selfservice-form-button {
