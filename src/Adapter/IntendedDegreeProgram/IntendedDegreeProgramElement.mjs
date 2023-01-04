@@ -232,9 +232,10 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             await this.#renderCombinations();
 
             combination_element.value = this.#intended_degree_program.values.combination;
+            await this.#renderMandatory();
+        } else {
+            await this.#renderMandatory();
         }
-
-        await this.#renderMandatory();
     }
 
     /**
