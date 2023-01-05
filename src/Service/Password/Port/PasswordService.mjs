@@ -1,4 +1,5 @@
 /** @typedef {import("../../../Libs/flux-hash-api/src/Adapter/Api/HashApi.mjs").HashApi} HashApi */
+/** @typedef {import("../../../Adapter/Start/Start.mjs").Start} Start */
 
 export class PasswordService {
     /**
@@ -26,12 +27,18 @@ export class PasswordService {
 
     /**
      * @param {string} password
+     * @param {Start} start
      * @returns {Promise<string>}
      */
-    async hashPassword(password) {
+    async hashPassword(password, start) {
+        if (!start["hash-password-on-client"]) {
+            return password;
+        }
+
         return this.#hash_api.generateHash(
             password,
-            "sha-512"
+            start["hash-password-on-client-algorithm"],
+            start["hash-password-on-client-radix"]
         );
     }
 }

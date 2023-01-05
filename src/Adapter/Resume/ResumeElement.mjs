@@ -163,9 +163,10 @@ export class ResumeElement extends HTMLElement {
         const post_result = await this.#resume_function(
             {
                 "identification-number": this.#form_element.inputs["identification-number"].value,
-                password: this.#start["hash-password-on-client"] ? await this.#password_service.hashPassword(
-                    this.#form_element.inputs.password.value
-                ) : this.#form_element.inputs.password.value
+                password: await this.#password_service.hashPassword(
+                    this.#form_element.inputs.password.value,
+                    this.#start
+                )
             }
         );
 

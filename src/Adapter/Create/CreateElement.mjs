@@ -104,12 +104,14 @@ export class CreateElement extends HTMLElement {
         const post_result = await this.#create_function(
             {
                 semester: this.#form_element.inputs.semester.value,
-                password: this.#start["hash-password-on-client"] ? await this.#password_service.hashPassword(
-                    this.#form_element.inputs.password.value
-                ) : this.#form_element.inputs.password.value,
-                "confirm-password": this.#start["hash-password-on-client"] ? await this.#password_service.hashPassword(
-                    this.#form_element.inputs["confirm-password"].value
-                ) : this.#form_element.inputs["confirm-password"].value
+                password: await this.#password_service.hashPassword(
+                    this.#form_element.inputs.password.value,
+                    this.#start
+                ),
+                "confirm-password": await this.#password_service.hashPassword(
+                    this.#form_element.inputs["confirm-password"].value,
+                    this.#start
+                )
             }
         );
 
