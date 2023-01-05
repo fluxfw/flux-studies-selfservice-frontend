@@ -11,6 +11,7 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
+/** @typedef {import("../../Service/Password/Port/PasswordService.mjs").PasswordService} PasswordService */
 /** @typedef {import("../Resume/resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("./Start.mjs").Start} Start */
 
@@ -38,6 +39,10 @@ export class StartElement extends HTMLElement {
      */
     #localization_api;
     /**
+     * @type {PasswordService}
+     */
+    #password_service;
+    /**
      * @type {resumeFunction}
      */
     #resume_function;
@@ -54,17 +59,19 @@ export class StartElement extends HTMLElement {
      * @param {CssApi} css_api
      * @param {LabelService} label_service
      * @param {LocalizationApi} localization_api
+     * @param {LabelService} password_service
      * @param {Start} start
      * @param {createFunction} create_function
      * @param {resumeFunction} resume_function
      * @param {backFunction | null} back_function
      * @returns {StartElement}
      */
-    static new(css_api, label_service, localization_api, start, create_function, resume_function, back_function = null) {
+    static new(css_api, label_service, localization_api, password_service, start, create_function, resume_function, back_function = null) {
         return new this(
             css_api,
             label_service,
             localization_api,
+            password_service,
             start,
             create_function,
             resume_function,
@@ -76,18 +83,20 @@ export class StartElement extends HTMLElement {
      * @param {CssApi} css_api
      * @param {LabelService} label_service
      * @param {LocalizationApi} localization_api
+     * @param {LabelService} password_service
      * @param {Start} start
      * @param {createFunction} create_function
      * @param {resumeFunction} resume_function
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(css_api, label_service, localization_api, start, create_function, resume_function, back_function) {
+    constructor(css_api, label_service, localization_api, password_service, start, create_function, resume_function, back_function) {
         super();
 
         this.#css_api = css_api;
         this.#label_service = label_service;
         this.#localization_api = localization_api;
+        this.#password_service = password_service;
         this.#start = start;
         this.#create_function = create_function;
         this.#resume_function = resume_function;
@@ -124,6 +133,7 @@ export class StartElement extends HTMLElement {
             this.#css_api,
             this.#label_service,
             this.#localization_api,
+            this.#password_service,
             this.#start,
             this.#create_function
         ));
@@ -132,6 +142,7 @@ export class StartElement extends HTMLElement {
             this.#css_api,
             this.#label_service,
             this.#localization_api,
+            this.#password_service,
             this.#start,
             this.#resume_function,
             this.#back_function

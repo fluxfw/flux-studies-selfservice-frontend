@@ -6,6 +6,7 @@ import { PAGE_CREATE } from "../Page/PAGE.mjs";
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
+/** @typedef {import("../../Service/Password/Port/PasswordService.mjs").PasswordService} PasswordService */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -32,6 +33,10 @@ export class CreateElement extends HTMLElement {
      */
     #localization_api;
     /**
+     * @type {PasswordService}
+     */
+    #password_service;
+    /**
      * @type {ShadowRoot}
      */
     #shadow;
@@ -44,15 +49,17 @@ export class CreateElement extends HTMLElement {
      * @param {CssApi} css_api
      * @param {LabelService} label_service
      * @param {LocalizationApi} localization_api
+     * @param {LabelService} password_service
      * @param {Start} start
      * @param {createFunction} create_function
      * @returns {CreateElement}
      */
-    static new(css_api, label_service, localization_api, start, create_function) {
+    static new(css_api, label_service, localization_api, password_service, start, create_function) {
         return new this(
             css_api,
             label_service,
             localization_api,
+            password_service,
             start,
             create_function
         );
@@ -62,16 +69,18 @@ export class CreateElement extends HTMLElement {
      * @param {CssApi} css_api
      * @param {LabelService} label_service
      * @param {LocalizationApi} localization_api
+     * @param {LabelService} password_service
      * @param {Start} start
      * @param {createFunction} create_function
      * @private
      */
-    constructor(css_api, label_service, localization_api, start, create_function) {
+    constructor(css_api, label_service, localization_api, password_service, start, create_function) {
         super();
 
         this.#css_api = css_api;
         this.#label_service = label_service;
         this.#localization_api = localization_api;
+        this.#password_service = password_service;
         this.#start = start;
         this.#create_function = create_function;
 
@@ -95,8 +104,12 @@ export class CreateElement extends HTMLElement {
         const post_result = await this.#create_function(
             {
                 semester: this.#form_element.inputs.semester.value,
-                password: this.#form_element.inputs.password.value,
-                "confirm-password": this.#form_element.inputs["confirm-password"].value
+                password: this.#start["hash-password-on-client"] ? await this.#password_service.hashPassword(
+                    this.#form_element.inputs.password.value
+                ) : this.#form_element.inputs.password.value,
+                "confirm-password": this.#start["hash-password-on-client"] ? await this.#password_service.hashPassword(
+                    this.#form_element.inputs["confirm-password"].value
+                ) : this.#form_element.inputs["confirm-password"].value
             }
         );
 

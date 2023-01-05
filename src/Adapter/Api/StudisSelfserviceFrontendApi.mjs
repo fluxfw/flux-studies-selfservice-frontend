@@ -12,6 +12,7 @@ import { SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTA
 /** @typedef {import("../FormInvalid/FormInvalidElement.mjs").FormInvalidElement} FormInvalidElement */
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Loading/FullscreenLoadingElement.mjs").FullscreenLoadingElement} FullscreenLoadingElement */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
+/** @typedef {import("../../Libs/flux-hash-api/src/Adapter/Api/HashApi.mjs").HashApi} HashApi */
 /** @typedef {import("../../Libs/flux-http-api/src/Adapter/Api/HttpApi.mjs").HttpApi} HttpApi */
 /** @typedef {import("../IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
 /** @typedef {import("../IdentificationNumber/IdentificationNumberElement.mjs").IdentificationNumberElement} IdentificationNumberElement */
@@ -27,6 +28,7 @@ import { SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTA
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Api/LoadingApi.mjs").LoadingApi} LoadingApi */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../Main/MainElement.mjs").MainElement} MainElement */
+/** @typedef {import("../../Service/Password/Port/PasswordService.mjs").PasswordService} PasswordService */
 /** @typedef {import("../PersonalData/PersonalData.mjs").PersonalData} PersonalData */
 /** @typedef {import("../PersonalData/PersonalDataElement.mjs").PersonalDataElement} PersonalDataElement */
 /** @typedef {import("../../Service/Photo/Port/PhotoService.mjs").PhotoService} PhotoService */
@@ -57,6 +59,10 @@ export class StudisSelfserviceFrontendApi {
      */
     #css_api = null;
     /**
+     * @type {HashApi | null}
+     */
+    #hash_api = null;
+    /**
      * @type {HttpApi | null}
      */
     #http_api = null;
@@ -84,6 +90,10 @@ export class StudisSelfserviceFrontendApi {
      * @type {MainElement | null}
      */
     #main_element = null;
+    /**
+     * @type {PasswordService | null}
+     */
+    #password_service = null;
     /**
      * @type {PhotoService | null}
      */
@@ -371,6 +381,15 @@ export class StudisSelfserviceFrontendApi {
     }
 
     /**
+     * @returns {Promise<HashApi>}
+     */
+    async #getHashApi() {
+        this.#hash_api ??= (await import("../../Libs/flux-hash-api/src/Adapter/Api/HashApi.mjs")).HashApi.new();
+
+        return this.#hash_api;
+    }
+
+    /**
      * @returns {Promise<HttpApi>}
      */
     async #getHttpApi() {
@@ -646,6 +665,17 @@ export class StudisSelfserviceFrontendApi {
     }
 
     /**
+     * @returns {Promise<PasswordService>}
+     */
+    async #getPasswordService() {
+        this.#password_service ??= (await import("../../Service/Password/Port/PasswordService.mjs")).PasswordService.new(
+            await this.#getHashApi()
+        );
+
+        return this.#password_service;
+    }
+
+    /**
      * @param {PersonalData} personal_data
      * @param {postFunction} post_function
      * @param {backFunction | null} back_function
@@ -770,6 +800,7 @@ export class StudisSelfserviceFrontendApi {
             await this.#getCssApi(),
             await this.#getLabelService(),
             await this.#getLocalizationApi(),
+            await this.#getPasswordService(),
             start,
             async create => post_function(
                 {
