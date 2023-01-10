@@ -867,7 +867,6 @@ export class PersonalDataElement extends HTMLElement {
 
         if (!this.#parents_address_form_element.inputs["parents-address"].checked) {
             await this.#renderParentsAddress2();
-
             return;
         }
 
