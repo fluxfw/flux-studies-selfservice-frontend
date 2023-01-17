@@ -24,7 +24,7 @@ installLibrary flux-css-api https://github.com/fluxfw/flux-css-api/archive/refs/
 
 installLibrary flux-hash-api https://github.com/fluxfw/flux-hash-api/archive/refs/tags/v2023-01-06-2.tar.gz
 
-installLibrary flux-http-api https://github.com/fluxfw/flux-http-api/archive/refs/tags/v2023-01-16-2.tar.gz
+installLibrary flux-http-api https://github.com/fluxfw/flux-http-api/archive/refs/tags/v2023-01-17-1.tar.gz
 
 installLibrary flux-json-api https://github.com/fluxfw/flux-json-api/archive/refs/tags/v2023-01-06-1.tar.gz
 
@@ -34,7 +34,7 @@ installLibrary flux-localization-api https://github.com/fluxfw/flux-localization
 
 installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2022-12-20-1.tar.gz
 
-installLibrary flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2022-12-19-1.tar.gz
+installLibrary flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2023-01-17-1.tar.gz
 
 installLibrary flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2023-01-03-1.tar.gz
 
