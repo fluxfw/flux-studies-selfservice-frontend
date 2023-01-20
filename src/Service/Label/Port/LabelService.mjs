@@ -17,9 +17,9 @@
 /** @typedef {import("../../../Adapter/Portrait/Portrait.mjs").Portrait} Portrait */
 /** @typedef {import("../../../Adapter/Qualification/Qualification.mjs").Qualification} Qualification */
 /** @typedef {import("../../../Adapter/Salutation/Salutation.mjs").Salutation} Salutation */
-/** @typedef {import("../../../Adapter/Combination/SingleChoice.mjs").SingleChoice} SingleChoice */
 /** @typedef {import("../../../Adapter/School/School.mjs").School} School */
 /** @typedef {import("../../../Adapter/Semester/Semester.mjs").Semester} Semester */
+/** @typedef {import("../../../Adapter/Combination/SingleChoice.mjs").SingleChoice} SingleChoice */
 /** @typedef {import("../../../Adapter/Subject/Subject.mjs").Subject} Subject */
 
 export class LabelService {
@@ -51,9 +51,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getAgbLabel(legal) {
-        return await this.#getLabel(
-            legal["agb-label"]
-        ) ?? "";
+        return (await import("../Command/GetAgbLabelCommand.mjs")).GetAgbLabelCommand.new(
+            this
+        )
+            .getAgbLabel(
+                legal
+            );
     }
 
     /**
@@ -61,9 +64,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getAgbLink(legal) {
-        return await this.#getLabel(
-            legal["agb-links"]
-        ) ?? "";
+        return (await import("../Command/GetAgbLinkCommand.mjs")).GetAgbLinkCommand.new(
+            this
+        )
+            .getAgbLink(
+                legal
+            );
     }
 
     /**
@@ -71,9 +77,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getAreaCodeLabel(area_code) {
-        return await this.#getLabel(
-            area_code.label
-        ) ?? area_code.id ?? "";
+        return (await import("../Command/GetAreaCodeLabelCommand.mjs")).GetAreaCodeLabelCommand.new(
+            this
+        )
+            .getAreaCodeLabel(
+                area_code
+            );
     }
 
     /**
@@ -81,9 +90,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getCantonLabel(canton) {
-        return await this.#getLabel(
-            canton.label
-        ) ?? canton.id ?? "";
+        return (await import("../Command/GetCantonLabelCommand.mjs")).GetCantonLabelCommand.new(
+            this
+        )
+            .getCantonLabel(
+                canton
+            );
     }
 
     /**
@@ -91,9 +103,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getCertificateLabel(certificate) {
-        return await this.#getLabel(
-            certificate.label
-        ) ?? certificate.id ?? "";
+        return (await import("../Command/GetCertificateLabelCommand.mjs")).GetCertificateLabelCommand.new(
+            this
+        )
+            .getCertificateLabel(
+                certificate
+            );
     }
 
     /**
@@ -101,9 +116,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getCertificateTypeLabel(certificate_type) {
-        return await this.#getLabel(
-            certificate_type.label
-        ) ?? certificate_type.id ?? "";
+        return (await import("../Command/GetCertificateTypeLabelCommand.mjs")).GetCertificateTypeLabelCommand.new(
+            this
+        )
+            .getCertificateTypeLabel(
+                certificate_type
+            );
     }
 
     /**
@@ -111,9 +129,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getChoiceLabel(choice) {
-        return this.getSubjectLabel(
-            choice
-        );
+        return (await import("../Command/GetChoiceLabelCommand.mjs")).GetChoiceLabelCommand.new(
+            this
+        )
+            .getChoiceLabel(
+                choice
+            );
     }
 
     /**
@@ -121,9 +142,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getChoicesLabel(choices) {
-        return (await Promise.all(choices.map(async choice => this.getChoiceLabel(
-            choice
-        )))).join("\n");
+        return (await import("../Command/GetChoicesLabelCommand.mjs")).GetChoicesLabelCommand.new(
+            this
+        )
+            .getChoicesLabel(
+                choices
+            );
     }
 
     /**
@@ -131,22 +155,13 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getCombinationLabel(combination) {
-        return this.#localization_api.translate(
-            "{label} ({ect})",
-            null,
-            {
-                ect: await this.getEctLabel(
-                    [
-                        ...combination.mandatory?.map(mandatory => mandatory.ect) ?? [],
-                        ...combination["single-choice"]?.map(single_choice => single_choice.ect) ?? [],
-                        ...combination["multiple-choice"]?.map(multiple_choice => multiple_choice.ect) ?? []
-                    ]
-                ),
-                label: await this.#getLabel(
-                    combination.label
-                ) ?? combination.id ?? ""
-            }
-        );
+        return (await import("../Command/GetCombinationLabelCommand.mjs")).GetCombinationLabelCommand.new(
+            this,
+            this.#localization_api
+        )
+            .getCombinationLabel(
+                combination
+            );
     }
 
     /**
@@ -154,9 +169,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getCountryLabel(country) {
-        return await this.#getLabel(
-            country.label
-        ) ?? country.id ?? "";
+        return (await import("../Command/GetCountryLabelCommand.mjs")).GetCountryLabelCommand.new(
+            this
+        )
+            .getCountryLabel(
+                country
+            );
     }
 
     /**
@@ -164,9 +182,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getDegreeTitleLabel(degree_title) {
-        return await this.#getLabel(
-            degree_title.label
-        ) ?? degree_title.id ?? "";
+        return (await import("../Command/GetDegreeTitleLabelCommand.mjs")).GetDegreeTitleLabelCommand.new(
+            this
+        )
+            .getDegreeTitleLabel(
+                degree_title
+            );
     }
 
     /**
@@ -174,9 +195,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getDegreeProgramLabel(degree_program) {
-        return await this.#getLabel(
-            degree_program.label
-        ) ?? degree_program.id ?? "";
+        return (await import("../Command/GetDegreeProgramLabelCommand.mjs")).GetDegreeProgramLabelCommand.new(
+            this
+        )
+            .getDegreeProgramLabel(
+                degree_program
+            );
     }
 
     /**
@@ -184,20 +208,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getEctLabel(ect) {
-        let _ect;
-        if (Array.isArray(ect)) {
-            _ect = ect.join(", ");
-        } else {
-            _ect = ect;
-        }
-
-        return this.#localization_api.translate(
-            "{ect} ECT",
-            null,
-            {
-                ect: _ect
-            }
-        );
+        return (await import("../Command/GetEctLabelCommand.mjs")).GetEctLabelCommand.new(
+            this.#localization_api
+        )
+            .getEctLabel(
+                ect
+            );
     }
 
     /**
@@ -205,9 +221,25 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getErrorMessageLabel(error_message) {
-        return await this.#getLabel(
-            error_message
-        ) ?? "";
+        return (await import("../Command/GetErrorMessageLabelCommand.mjs")).GetErrorMessageLabelCommand.new(
+            this
+        )
+            .getErrorMessageLabel(
+                error_message
+            );
+    }
+
+    /**
+     * @param {Label} label
+     * @returns {Promise<string | null>}
+     */
+    async getLabel(label) {
+        return (await import("../Command/GetLabelCommand.mjs")).GetLabelCommand.new(
+            this.#localization_api
+        )
+            .getLabel(
+                label
+            );
     }
 
     /**
@@ -215,9 +247,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getLanguageLabel(language) {
-        return await this.#getLabel(
-            language.label
-        ) ?? language.id ?? "";
+        return (await import("../Command/GetLanguageLabelCommand.mjs")).GetLanguageLabelCommand.new(
+            this
+        )
+            .getLanguageLabel(
+                language
+            );
     }
 
     /**
@@ -225,9 +260,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getMandatoryLabel(mandatory) {
-        return this.getSubjectLabel(
-            mandatory
-        );
+        return (await import("../Command/GetMandatoryLabelCommand.mjs")).GetMandatoryLabelCommand.new(
+            this
+        )
+            .getMandatoryLabel(
+                mandatory
+            );
     }
 
     /**
@@ -235,9 +273,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getMultipleChoiceLabel(multiple_choice) {
-        return this.getSingleChoiceLabel(
-            multiple_choice
-        );
+        return (await import("../Command/GetMultipleChoiceLabelCommand.mjs")).GetMultipleChoiceLabelCommand.new(
+            this
+        )
+            .getMultipleChoiceLabel(
+                multiple_choice
+            );
     }
 
     /**
@@ -245,13 +286,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getMultipleMandatoryLabel(combination = null) {
-        if ((combination?.mandatory ?? null) === null) {
-            return "-";
-        }
-
-        return (await Promise.all(combination.mandatory.map(async mandatory => this.getMandatoryLabel(
-            mandatory
-        )))).join("\n");
+        return (await import("../Command/GetMultipleMandatoryLabelCommand.mjs")).GetMultipleMandatoryLabelCommand.new(
+            this
+        )
+            .getMultipleMandatoryLabel(
+                combination
+            );
     }
 
     /**
@@ -259,9 +299,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getPlaceLabel(place) {
-        return await this.#getLabel(
-            place.label
-        ) ?? place.id ?? "";
+        return (await import("../Command/GetPlaceLabelCommand.mjs")).GetPlaceLabelCommand.new(
+            this
+        )
+            .getPlaceLabel(
+                place
+            );
     }
 
     /**
@@ -269,9 +312,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getPhotoCriteriaLink(portrait) {
-        return await this.#getLabel(
-            portrait["photo-criteria-links"]
-        ) ?? "";
+        return (await import("../Command/GetPhotoCriteriaLinkCommand.mjs")).GetPhotoCriteriaLinkCommand.new(
+            this
+        )
+            .getPhotoCriteriaLink(
+                portrait
+            );
     }
 
     /**
@@ -279,9 +325,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getQualificationLabel(qualification) {
-        return await this.#getLabel(
-            qualification.label
-        ) ?? qualification.id ?? "";
+        return (await import("../Command/GetQualificationLabelCommand.mjs")).GetQualificationLabelCommand.new(
+            this
+        )
+            .getQualificationLabel(
+                qualification
+            );
     }
 
     /**
@@ -289,9 +338,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getSalutationLabel(salutation) {
-        return await this.#getLabel(
-            salutation.label
-        ) ?? salutation.id ?? "";
+        return (await import("../Command/GetSalutationLabelCommand.mjs")).GetSalutationLabelCommand.new(
+            this
+        )
+            .getSalutationLabel(
+                salutation
+            );
     }
 
     /**
@@ -299,9 +351,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getSchoolLabel(school) {
-        return await this.#getLabel(
-            school.label
-        ) ?? school.id ?? "";
+        return (await import("../Command/GetSchoolLabelCommand.mjs")).GetSchoolLabelCommand.new(
+            this
+        )
+            .getSchoolLabel(
+                school
+            );
     }
 
     /**
@@ -309,9 +364,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getSemesterLabel(semester) {
-        return await this.#getLabel(
-            semester.label
-        ) ?? semester.id ?? "";
+        return (await import("../Command/GetSemesterLabelCommand.mjs")).GetSemesterLabelCommand.new(
+            this
+        )
+            .getSemesterLabel(
+                semester
+            );
     }
 
     /**
@@ -319,9 +377,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getSingleChoiceLabel(single_choice) {
-        return this.getSubjectLabel(
-            single_choice
-        );
+        return (await import("../Command/GetSingleChoiceLabelCommand.mjs")).GetSingleChoiceLabelCommand.new(
+            this
+        )
+            .getSingleChoiceLabel(
+                single_choice
+            );
     }
 
     /**
@@ -329,25 +390,12 @@ export class LabelService {
      * @returns {Promise<string>}
      */
     async getSubjectLabel(subject) {
-        return this.#localization_api.translate(
-            "{label} ({ect})",
-            null,
-            {
-                ect: await this.getEctLabel(
-                    subject.ect
-                ),
-                label: await this.#getLabel(
-                    subject.label
-                ) ?? subject.id ?? ""
-            }
-        );
-    }
-
-    /**
-     * @param {Label} label
-     * @returns {Promise<string | null>}
-     */
-    async #getLabel(label) {
-        return label[(await this.#localization_api.getLanguage()).language] ?? label.en ?? null;
+        return (await import("../Command/GetSubjectLabelCommand.mjs")).GetSubjectLabelCommand.new(
+            this,
+            this.#localization_api
+        )
+            .getSubjectLabel(
+                subject
+            );
     }
 }
