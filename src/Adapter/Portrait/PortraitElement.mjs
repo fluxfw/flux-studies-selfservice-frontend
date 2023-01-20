@@ -180,12 +180,12 @@ export class PortraitElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #removePhoto() {
+    async #removePhoto() {
         this.#photo = null;
         this.#form_element.inputs.photo.value = "";
-        this.#photo_element.setImage();
+        await this.#photo_element.setImage();
     }
 
     /**
@@ -203,7 +203,7 @@ export class PortraitElement extends HTMLElement {
             this.#css_api,
             this.#localization_api,
             async () => {
-                const size = this.#photo_element.size;
+                const size = await this.#photo_element.getSize();
                 if (size !== null) {
                     if (size.width < this.#portrait["photo-min-width"] || size.height < this.#portrait["photo-min-height"]) {
                         this.#form_element.setCustomValidationMessage(
@@ -338,7 +338,7 @@ export class PortraitElement extends HTMLElement {
 
             if (photo === null) {
                 if (!final) {
-                    this.#removePhoto();
+                    await this.#removePhoto();
                 }
                 return;
             }
@@ -351,14 +351,14 @@ export class PortraitElement extends HTMLElement {
                 !final ? this.#portrait["photo-preview-max-width"] : this.#portrait["photo-max-width"],
                 !final ? this.#portrait["photo-preview-max-height"] : this.#portrait["photo-max-height"],
                 this.#portrait["photo-grayscale"],
-                !final ? null : this.#photo_element.crop
+                !final ? null : await this.#photo_element.getCrop()
             );
 
             if (final) {
                 return;
             }
 
-            this.#photo_element.setImage(
+            await this.#photo_element.setImage(
                 await this.#photo_service.toImageElement(
                     this.#photo,
                     this.#portrait["photo-type"]
@@ -384,7 +384,7 @@ export class PortraitElement extends HTMLElement {
 
             console.error(error);
 
-            this.#removePhoto();
+            await this.#removePhoto();
             this.#form_element.inputs.photo.dispatchEvent(new Event("input"));
 
             this.#form_element.setCustomValidationMessage(

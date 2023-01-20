@@ -104,6 +104,42 @@ export class PhotoElement extends HTMLElement {
     }
 
     /**
+     * @returns {Promise<PhotoCrop | null>}
+     */
+    async getCrop() {
+        if (this.#rectangle === null) {
+            return null;
+        }
+
+        return this.#photo_service.getCropFromRectangle(
+            this.#rectangle,
+            this.#image_element
+        );
+    }
+
+    /**
+     * @returns {Promise<PhotoSize | null>}
+     */
+    async getSize() {
+        if (this.#image_element.src === "") {
+            return null;
+        }
+
+        const crop = await this.getCrop();
+        if (crop !== null) {
+            return {
+                width: crop.width,
+                height: crop.height
+            };
+        }
+
+        return {
+            width: this.#image_element.naturalWidth,
+            height: this.#image_element.naturalHeight
+        };
+    }
+
+    /**
      * @param {Event} e
      * @returns {void}
      */
@@ -155,25 +191,11 @@ export class PhotoElement extends HTMLElement {
     }
 
     /**
-     * @returns {PhotoCrop | null}
-     */
-    get crop() {
-        if (this.#rectangle === null) {
-            return null;
-        }
-
-        return this.#photo_service.getCropFromRectangle(
-            this.#rectangle,
-            this.#image_element
-        );
-    }
-
-    /**
      * @param {HTMLImageElement | null} image_element
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    setImage(image_element = null) {
-        this.#removeRectangle();
+    async setImage(image_element = null) {
+        await this.#removeRectangle();
 
         if (image_element !== null) {
             this.#image_element.replaceWith(this.#image_element = image_element);
@@ -185,39 +207,17 @@ export class PhotoElement extends HTMLElement {
             this.#remove_crop_element.hidden = true;
         }
 
-        this.#updateRectangle();
-    }
-
-    /**
-     * @returns {PhotoSize | null}
-     */
-    get size() {
-        if (this.#image_element.src === "") {
-            return null;
-        }
-
-        const crop = this.crop;
-        if (crop !== null) {
-            return {
-                width: crop.width,
-                height: crop.height
-            };
-        }
-
-        return {
-            width: this.#image_element.naturalWidth,
-            height: this.#image_element.naturalHeight
-        };
+        await this.#updateRectangle();
     }
 
     /**
      * @param {MouseEvent} e
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #mouseDown(e) {
+    async #mouseDown(e) {
         e.preventDefault();
 
-        this.#stopDrag();
+        await this.#stopDrag();
 
         if (this.#image_element.src === "" || e.button !== 0) {
             return;
@@ -225,13 +225,13 @@ export class PhotoElement extends HTMLElement {
 
         this.#start = e;
 
-        this.#rectangle = this.#photo_service.getRectangleFromEvent(
+        this.#rectangle = await this.#photo_service.getRectangleFromEvent(
             this.#container_element,
             this.#start,
             this.#start
         );
 
-        this.#updateRectangle();
+        await this.#updateRectangle();
 
         document.addEventListener("mousemove", this);
         document.addEventListener("mouseup", this);
@@ -239,17 +239,17 @@ export class PhotoElement extends HTMLElement {
 
     /**
      * @param {MouseEvent} e
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #mouseMove(e) {
+    async #mouseMove(e) {
         e.preventDefault();
 
         if (this.#start === null || this.#image_element.src === "" || e.button !== 0) {
-            this.#stopDrag();
+            await this.#stopDrag();
             return;
         }
 
-        this.#rectangle = this.#photo_service.getRectangleFromEvent(
+        this.#rectangle = await this.#photo_service.getRectangleFromEvent(
             this.#container_element,
             this.#start,
             e
@@ -258,39 +258,39 @@ export class PhotoElement extends HTMLElement {
         this.#container_element.dataset.no_cursor = true;
         document.body.style.cursor = `${(e.clientX > this.#start.clientX && e.clientY < this.#start.clientY) || (e.clientX < this.#start.clientX && e.clientY > this.#start.clientY) ? "sw" : "nw"}-resize`;
 
-        this.#updateRectangle();
+        await this.#updateRectangle();
     }
 
     /**
      * @param {MouseEvent} e
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #mouseUp(e) {
+    async #mouseUp(e) {
         e.preventDefault();
 
         if (this.#start === null || this.#image_element.src === "" || e.button !== 0) {
-            this.#stopDrag();
+            await this.#stopDrag();
             return;
         }
 
-        this.#rectangle = this.#photo_service.getRectangleFromEvent(
+        this.#rectangle = await this.#photo_service.getRectangleFromEvent(
             this.#container_element,
             this.#start,
             e
         );
 
-        this.#updateRectangle();
+        await this.#updateRectangle();
 
-        this.#stopDrag();
+        await this.#stopDrag();
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #removeRectangle() {
+    async #removeRectangle() {
         this.#rectangle = null;
 
-        this.#stopDrag();
+        await this.#stopDrag();
     }
 
     /**
@@ -304,9 +304,9 @@ export class PhotoElement extends HTMLElement {
 
         this.#container_element.addEventListener("mousedown", this);
         this.#container_element.addEventListener("touchcancel", this);
-        this.#container_element.addEventListener("touchend", this);
-        this.#container_element.addEventListener("touchmove", this);
-        this.#container_element.addEventListener("touchstart", this);
+        this.#container_element.addEventListener("touchend", this, { passive: false });
+        this.#container_element.addEventListener("touchmove", this, { passive: false });
+        this.#container_element.addEventListener("touchstart", this, { passive: false });
         this.#shadow.appendChild(this.#container_element);
 
         this.#size_element = document.createElement("div");
@@ -337,9 +337,9 @@ export class PhotoElement extends HTMLElement {
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #stopDrag() {
+    async #stopDrag() {
         document.removeEventListener("mousemove", this);
         document.removeEventListener("mouseup", this);
 
@@ -348,61 +348,61 @@ export class PhotoElement extends HTMLElement {
         delete this.#container_element.dataset.no_cursor;
         document.body.style.cursor = "";
 
-        this.#updateRectangle();
+        await this.#updateRectangle();
     }
 
     /**
      * @param {TouchEvent} e
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #touchEnd(e) {
+    async #touchEnd(e) {
         e.preventDefault();
 
         if (this.#start === null || this.#image_element.src === "") {
-            this.#stopDrag();
+            await this.#stopDrag();
             return;
         }
 
-        /*this.#rectangle = this.#photo_service.getRectangle(
+        /*this.#rectangle = await this.#photo_service.getRectangleFromEvent(
             this.#container_element,
             this.#start,
             Array.from(e.touches).find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0]
         );
 
-        this.#updateRectangle();*/
+        await this.#updateRectangle();*/
 
-        this.#stopDrag();
+        await this.#stopDrag();
     }
 
     /**
      * @param {TouchEvent} e
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #touchMove(e) {
+    async #touchMove(e) {
         e.preventDefault();
 
         if (this.#start === null || this.#image_element.src === "") {
-            this.#stopDrag();
+            await this.#stopDrag();
             return;
         }
 
-        this.#rectangle = this.#photo_service.getRectangleFromEvent(
+        this.#rectangle = await this.#photo_service.getRectangleFromEvent(
             this.#container_element,
             this.#start,
             Array.from(e.touches).find(touch => touch.identifier === this.#start.identifier) ?? e.touches[0]
         );
 
-        this.#updateRectangle();
+        await this.#updateRectangle();
     }
 
     /**
      * @param {TouchEvent} e
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #touchStart(e) {
+    async #touchStart(e) {
         e.preventDefault();
 
-        this.#stopDrag();
+        await this.#stopDrag();
 
         if (this.#image_element.src === "") {
             return;
@@ -412,20 +412,20 @@ export class PhotoElement extends HTMLElement {
             this.#start
         ] = e.touches;
 
-        /*this.#rectangle = this.#photo_service.getRectangle(
+        /*this.#rectangle = await this.#photo_service.getRectangleFromEvent(
             this.#container_element,
             this.#start,
             this.#start
         );
 
-        this.#updateRectangle();*/
+        await this.#updateRectangle();*/
     }
 
     /**
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    #updateRectangle() {
-        const size = this.size;
+    async #updateRectangle() {
+        const size = await this.getSize();
         this.#size_element.innerText = size !== null ? `${size.width}px x ${size.height}px` : "";
 
         if (this.#rectangle === null) {

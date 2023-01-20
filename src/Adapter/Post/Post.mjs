@@ -1,5 +1,3 @@
-/** @typedef {import("../Page/PAGE.mjs").PAGE} PAGE */
-
 /**
- * @typedef {{page: PAGE, data: {[key: string]: *}}} Post
+ * @typedef {{page: string, data: {[key: string]: *}}} Post
  */
