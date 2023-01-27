@@ -1,6 +1,5 @@
 /** @typedef {import("../../../Adapter/Get/GetResult.mjs").GetResult} GetResult */
 /** @typedef {import("../../../Libs/flux-http-api/src/Adapter/Api/HttpApi.mjs").HttpApi} HttpApi */
-/** @typedef {import("../../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 /** @typedef {import("../../../Adapter/Post/Post.mjs").Post} Post */
 /** @typedef {import("../../../Adapter/Post/PostResult.mjs").PostResult} PostResult */
 
@@ -9,62 +8,51 @@ export class RequestService {
      * @type {HttpApi}
      */
     #http_api;
-    /**
-     * @type {LocalizationApi}
-     */
-    #localization_api;
 
     /**
      * @param {HttpApi} http_api
-     * @param {LocalizationApi} localization_api
      * @returns {RequestService}
      */
-    static new(http_api, localization_api) {
+    static new(http_api) {
         return new this(
-            http_api,
-            localization_api
+            http_api
         );
     }
 
     /**
      * @param {HttpApi} http_api
-     * @param {LocalizationApi} localization_api
      * @private
      */
-    constructor(http_api, localization_api) {
+    constructor(http_api) {
         this.#http_api = http_api;
-        this.#localization_api = localization_api;
     }
 
     /**
-     * @returns {Promise<PostResult>}
+     * @returns {Promise<void>}
      */
     async back() {
-        return (await import("../Command/BackCommand.mjs")).BackCommand.new(
-            this.#http_api,
-            this.#localization_api
+        await (await import("../Command/BackCommand.mjs")).BackCommand.new(
+            this.#http_api
         )
             .back();
     }
 
     /**
-     * @returns {Promise<GetResult | PostResult>}
+     * @returns {Promise<GetResult>}
      */
     async get() {
         return (await import("../Command/GetCommand.mjs")).GetCommand.new(
-            this.#http_api,
-            this.#localization_api
+            this.#http_api
         )
             .get();
     }
 
     /**
-     * @returns {Promise<PostResult>}
+     * @returns {Promise<void>}
      */
     async logout() {
-        return (await import("../Command/LogoutCommand.mjs")).LogoutCommand.new(
-            this.#http_api,
-            this.#localization_api
+        await (await import("../Command/LogoutCommand.mjs")).LogoutCommand.new(
+            this.#http_api
         )
             .logout();
     }
@@ -75,8 +63,7 @@ export class RequestService {
      */
     async post(post) {
         return (await import("../Command/PostCommand.mjs")).PostCommand.new(
-            this.#http_api,
-            this.#localization_api
+            this.#http_api
         )
             .post(
                 post

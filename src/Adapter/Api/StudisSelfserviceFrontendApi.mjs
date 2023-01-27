@@ -704,8 +704,7 @@ export class StudisSelfserviceFrontendApi {
      */
     async #getRequestService() {
         this.#request_service ??= (await import("../../Service/Request/Port/RequestService.mjs")).RequestService.new(
-            await this.#getHttpApi(),
-            await this.#getLocalizationApi()
+            await this.#getHttpApi()
         );
 
         return this.#request_service;
@@ -787,24 +786,62 @@ export class StudisSelfserviceFrontendApi {
 
         const get_loading_element = await this.#getLoadingElement();
 
-        if (!previous_get_result || this.#previous_get_result === null) {
-            this.#previous_get_result = await (await this.#getRequestService()).get();
+        try {
+            if (!previous_get_result || this.#previous_get_result === null) {
+                this.#previous_get_result = await (await this.#getRequestService()).get();
+            }
+        } catch (error) {
+            console.error(error);
+
+            this.#previous_get_result = null;
+
+            await this.#main_element.replaceContent(
+                await this.#getFormInvalidElement(
+                    await this.#localization_api.translate(
+                        error instanceof Response ? "Server error!" : "Network error!"
+                    )
+                )
+            );
+
+            return;
+        } finally {
+            get_loading_element.remove();
         }
 
-        get_loading_element.remove();
-
-        let page;
-        if (!("ok" in this.#previous_get_result)) {
-            page = await this.#getPage(
+        await this.#main_element.replaceContent(
+            await this.#getPage(
                 this.#previous_get_result,
                 async post => {
                     const post_loading_element = await this.#getLoadingElement();
 
-                    const post_result = await (await this.#getRequestService()).post(
-                        post
-                    );
+                    let post_result;
+                    try {
+                        post_result = await (await this.#getRequestService()).post(
+                            post
+                        );
+                    } catch (error) {
+                        console.error(error);
 
-                    post_loading_element.remove();
+                        return {
+                            ok: false,
+                            "error-messages": [
+                                Object.fromEntries(await Promise.all(Object.entries((await this.#localization_api.getLanguages()).all).map(async ([
+                                    language
+                                ]) => [
+                                        language,
+                                        await this.#localization_api.translate(
+                                            error instanceof Response ? "Server error!" : "Network error!",
+                                            null,
+                                            null,
+                                            language
+                                        )
+                                    ]
+                                )))
+                            ]
+                        };
+                    } finally {
+                        post_loading_element.remove();
+                    }
 
                     if (!post_result.ok) {
                         return post_result;
@@ -819,53 +856,49 @@ export class StudisSelfserviceFrontendApi {
 
                     const back_loading_element = await this.#getLoadingElement();
 
-                    const back_result = await (await this.#getRequestService()).back();
+                    try {
+                        await (await this.#getRequestService()).back();
+                    } catch (error) {
+                        console.error(error);
 
-                    back_loading_element.remove();
-
-                    if (!back_result.ok) {
                         await this.#main_element.replaceContent(
                             await this.#getFormInvalidElement(
-                                await (await this.#getLabelService()).getErrorMessageLabel(
-                                    back_result["error-messages"]?.[0] ?? {}
+                                await this.#localization_api.translate(
+                                    error instanceof Response ? "Server error!" : "Network error!"
                                 )
                             )
                         );
+
                         return;
+                    } finally {
+                        back_loading_element.remove();
                     }
 
                     this.#next();
                 }
-            );
-        } else {
-            page = await this.#getFormInvalidElement(
-                await (await this.#getLabelService()).getErrorMessageLabel(
-                    this.#previous_get_result["error-messages"]?.[0] ?? {}
-                )
-            );
-        }
-
-        await this.#main_element.replaceContent(
-            page,
+            ),
             this.#previous_get_result["identification-number"],
             this.#previous_get_result["can-logout"] ? async () => {
                 this.#previous_get_result = null;
 
                 const logout_loading_element = await this.#getLoadingElement();
 
-                const logout_result = await (await this.#getRequestService()).logout();
+                try {
+                    await (await this.#getRequestService()).logout();
+                } catch (error) {
+                    console.error(error);
 
-                logout_loading_element.remove();
-
-                if (!logout_result.ok) {
                     await this.#main_element.replaceContent(
                         await this.#getFormInvalidElement(
-                            await (await this.#getLabelService()).getErrorMessageLabel(
-                                logout_result["error-messages"]?.[0] ?? {}
+                            await this.#localization_api.translate(
+                                error instanceof Response ? "Server error!" : "Network error!"
                             )
                         )
                     );
+
                     return;
+                } finally {
+                    logout_loading_element.remove();
                 }
 
                 this.#next();

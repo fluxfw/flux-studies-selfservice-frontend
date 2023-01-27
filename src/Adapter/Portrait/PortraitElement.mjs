@@ -379,7 +379,7 @@ export class PortraitElement extends HTMLElement {
                     )
                 );
 
-                throw error;
+                return Promise.reject(error);
             }
 
             console.error(error);
