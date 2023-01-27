@@ -38,7 +38,7 @@ export class PostCommand {
      * @returns {Promise<PostResult>}
      */
     async post(post) {
-        return (await this.#http_api.fetch(
+        return (await this.#http_api.request(
             HttpClientRequest.json(
                 `${__dirname}/../../../api/post`,
                 post,
