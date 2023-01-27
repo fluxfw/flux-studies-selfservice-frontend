@@ -33,7 +33,7 @@ export class LogoutCommand {
      * @returns {Promise<void>}
      */
     async logout() {
-        await this.#http_api.fetch(
+        await this.#http_api.request(
             HttpClientRequest.new(
                 `${__dirname}/../../../api/logout`,
                 null,

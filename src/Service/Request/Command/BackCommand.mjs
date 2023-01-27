@@ -33,7 +33,7 @@ export class BackCommand {
      * @returns {Promise<void>}
      */
     async back() {
-        await this.#http_api.fetch(
+        await this.#http_api.request(
             HttpClientRequest.new(
                 `${__dirname}/../../../api/back`,
                 null,

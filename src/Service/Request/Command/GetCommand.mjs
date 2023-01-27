@@ -35,7 +35,7 @@ export class GetCommand {
      * @returns {Promise<GetResult>}
      */
     async get() {
-        return (await this.#http_api.fetch(
+        return (await this.#http_api.request(
             HttpClientRequest.new(
                 `${__dirname}/../../../api/get`,
                 null,
