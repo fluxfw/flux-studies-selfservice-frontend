@@ -36,6 +36,6 @@ installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/
 
 installLibrary flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2023-01-17-1.tar.gz
 
-installLibrary flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2023-01-03-1.tar.gz
+installLibrary flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2023-01-31-1.tar.gz
 
 installLibrary flux-shutdown-handler-api https://github.com/fluxfw/flux-shutdown-handler-api/archive/refs/tags/v2022-12-08-1.tar.gz
