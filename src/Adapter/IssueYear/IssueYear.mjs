@@ -1,0 +1,3 @@
+/**
+ * @typedef {{id: string}} IssueYear
+ */

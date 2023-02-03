@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 
@@ -451,6 +450,6 @@ export class PhotoElement extends HTMLElement {
     }
 }
 
-export const PHOTO_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}-photo`;
+export const PHOTO_ELEMENT_TAG_NAME = "flux-studis-selfservice-photo";
 
 customElements.define(PHOTO_ELEMENT_TAG_NAME, PhotoElement);

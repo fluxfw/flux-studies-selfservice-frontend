@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { PAGE_RESUME } from "../Page/PAGE.mjs";
 
@@ -192,6 +191,6 @@ export class ResumeElement extends HTMLElement {
     }
 }
 
-export const RESUME_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_RESUME}`;
+export const RESUME_ELEMENT_TAG_NAME = `flux-studis-selfservice-${PAGE_RESUME}`;
 
 customElements.define(RESUME_ELEMENT_TAG_NAME, ResumeElement);

@@ -40,7 +40,7 @@ export class PostCommand {
     async post(post) {
         return (await this.#http_api.request(
             HttpClientRequest.json(
-                `${__dirname}/../../../api/post`,
+                new URL(`${__dirname}/../../../api/post`),
                 post,
                 METHOD_POST,
                 {

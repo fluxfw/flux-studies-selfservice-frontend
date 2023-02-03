@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { PAGE_IDENTIFICATION_NUMBER } from "../Page/PAGE.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
@@ -174,6 +173,6 @@ export class IdentificationNumberElement extends HTMLElement {
     }
 }
 
-export const IDENTIFICATION_NUMBER_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_IDENTIFICATION_NUMBER}`;
+export const IDENTIFICATION_NUMBER_ELEMENT_TAG_NAME = `flux-studis-selfservice-${PAGE_IDENTIFICATION_NUMBER}`;
 
 customElements.define(IDENTIFICATION_NUMBER_ELEMENT_TAG_NAME, IdentificationNumberElement);

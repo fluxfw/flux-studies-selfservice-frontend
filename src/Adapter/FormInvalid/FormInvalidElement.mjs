@@ -1,5 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
-
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -60,6 +58,6 @@ export class FormInvalidElement extends HTMLElement {
     }
 }
 
-export const FORM_INVALID_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}form-invalid`;
+export const FORM_INVALID_ELEMENT_TAG_NAME = "flux-studis-selfservice-form-invalid";
 
 customElements.define(FORM_INVALID_ELEMENT_TAG_NAME, FormInvalidElement);

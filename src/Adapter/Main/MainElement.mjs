@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 
 /** @typedef {import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs").ColorSchemeApi} ColorSchemeApi */
@@ -237,6 +236,6 @@ export class MainElement extends HTMLElement {
     }
 }
 
-export const MAIN_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}main`;
+export const MAIN_ELEMENT_TAG_NAME = "flux-studis-selfservice-main";
 
 customElements.define(MAIN_ELEMENT_TAG_NAME, MainElement);

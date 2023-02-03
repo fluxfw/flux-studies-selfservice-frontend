@@ -35,7 +35,7 @@ export class LogoutCommand {
     async logout() {
         await this.#http_api.request(
             HttpClientRequest.new(
-                `${__dirname}/../../../api/logout`,
+                new URL(`${__dirname}/../../../api/logout`),
                 null,
                 METHOD_POST
             )

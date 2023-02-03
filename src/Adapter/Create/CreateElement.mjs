@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { PAGE_CREATE } from "../Page/PAGE.mjs";
 
@@ -222,6 +221,6 @@ export class CreateElement extends HTMLElement {
     }
 }
 
-export const CREATE_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_CREATE}`;
+export const CREATE_ELEMENT_TAG_NAME = `flux-studis-selfservice-${PAGE_CREATE}`;
 
 customElements.define(CREATE_ELEMENT_TAG_NAME, CreateElement);
