@@ -1,5 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
-
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 
@@ -63,6 +61,6 @@ export class MandatoryElement extends HTMLElement {
     }
 }
 
-export const MANDATORY_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}mandatory`;
+export const MANDATORY_ELEMENT_TAG_NAME = "flux-studis-selfservice-mandatory";
 
 customElements.define(MANDATORY_ELEMENT_TAG_NAME, MandatoryElement);

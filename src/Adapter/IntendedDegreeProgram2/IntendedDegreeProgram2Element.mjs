@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_INTENDED_DEGREE_PROGRAM_2 } from "../Page/PAGE.mjs";
@@ -376,6 +375,6 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
     }
 }
 
-export const INTENDED_DEGREE_PROGRAM_2_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_INTENDED_DEGREE_PROGRAM_2}`;
+export const INTENDED_DEGREE_PROGRAM_2_ELEMENT_TAG_NAME = `flux-studis-selfservice-${PAGE_INTENDED_DEGREE_PROGRAM_2}`;
 
 customElements.define(INTENDED_DEGREE_PROGRAM_2_ELEMENT_TAG_NAME, IntendedDegreeProgram2Element);

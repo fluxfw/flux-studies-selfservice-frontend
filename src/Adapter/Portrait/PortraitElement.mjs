@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_PORTRAIT } from "../Page/PAGE.mjs";
@@ -399,6 +398,6 @@ export class PortraitElement extends HTMLElement {
     }
 }
 
-export const PORTRAIT_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_PORTRAIT}`;
+export const PORTRAIT_ELEMENT_TAG_NAME = `flux-studis-selfservice-${PAGE_PORTRAIT}`;
 
 customElements.define(PORTRAIT_ELEMENT_TAG_NAME, PortraitElement);

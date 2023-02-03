@@ -35,7 +35,7 @@ export class BackCommand {
     async back() {
         await this.#http_api.request(
             HttpClientRequest.new(
-                `${__dirname}/../../../api/back`,
+                new URL(`${__dirname}/../../../api/back`),
                 null,
                 METHOD_POST
             )

@@ -30,6 +30,6 @@ export class GetLabelCommand {
      * @returns {Promise<string | null>}
      */
     async getLabel(label) {
-        return label[(await this.#localization_api.getLanguage()).language] ?? label.en ?? Object.values(label)[0] ?? null;
+        return typeof label === "string" ? label : label[(await this.#localization_api.getLanguage()).language] ?? label.en ?? Object.values(label)[0] ?? null;
     }
 }

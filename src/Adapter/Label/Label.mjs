@@ -1,3 +1,3 @@
 /**
- * @typedef {{[key: string]: string}} Label
+ * @typedef {{[key: string]: string} | string} Label
  */

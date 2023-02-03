@@ -7,6 +7,7 @@
 /** @typedef {import("../../../Adapter/Country/Country.mjs").Country} Country */
 /** @typedef {import("../../../Adapter/DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
 /** @typedef {import("../../../Adapter/DegreeTitle/DegreeTitle.mjs").DegreeTitle} DegreeTitle */
+/** @typedef {import("../../../Adapter/IssueYear/IssueYear.mjs").IssueYear} IssueYear */
 /** @typedef {import("../../../Adapter/Label/Label.mjs").Label} Label */
 /** @typedef {import("../../../Adapter/Language/Language.mjs").Language} Language */
 /** @typedef {import("../../../Adapter/Legal/Legal.mjs").Legal} Legal */
@@ -226,6 +227,17 @@ export class LabelService {
         )
             .getErrorMessageLabel(
                 error_message
+            );
+    }
+
+    /**
+     * @param {IssueYear} issue_year
+     * @returns {Promise<string>}
+     */
+    async getIssueYearLabel(issue_year) {
+        return (await import("../Command/GetIssueYearLabelCommand.mjs")).GetIssueYearLabelCommand.new()
+            .getIssueYearLabel(
+                issue_year
             );
     }
 

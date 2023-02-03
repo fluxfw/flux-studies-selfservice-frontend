@@ -1,5 +1,4 @@
 import { CreateElement } from "../Create/CreateElement.mjs";
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_START } from "../Page/PAGE.mjs";
 import { ResumeElement } from "../Resume/ResumeElement.mjs";
@@ -155,6 +154,6 @@ export class StartElement extends HTMLElement {
     }
 }
 
-export const START_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_START}`;
+export const START_ELEMENT_TAG_NAME = `flux-studis-selfservice-${PAGE_START}`;
 
 customElements.define(START_ELEMENT_TAG_NAME, StartElement);

@@ -1,6 +1,7 @@
-/** @typedef {import("../CertificateType/CertificateTypeWithCertificates.mjs").CertificateTypeWithCertificates} CertificateTypeWithCertificates */
 /** @typedef {import("./ChosenUniversityEntranceQualification.mjs").ChosenUniversityEntranceQualification} ChosenUniversityEntranceQualification */
+/** @typedef {import("./UniversityEntranceQualificationData.mjs").UniversityEntranceQualificationData} UniversityEntranceQualificationData */
+/** @typedef {import("./UniversityEntranceQualificationSelect.mjs").UniversityEntranceQualificationSelect} UniversityEntranceQualificationSelect */
 
 /**
- * @typedef {{"certificate-types": CertificateTypeWithCertificates[], values: ChosenUniversityEntranceQualification | null}} UniversityEntranceQualification
+ * @typedef {{data: UniversityEntranceQualificationData[][], "select-to-data": [string, number][], selects: UniversityEntranceQualificationSelect[], "select-index": number, values: ChosenUniversityEntranceQualification | null}} UniversityEntranceQualification
  */

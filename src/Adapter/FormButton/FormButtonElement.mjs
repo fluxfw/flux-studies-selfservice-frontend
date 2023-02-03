@@ -1,5 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
-
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -72,6 +70,6 @@ export class FormButtonElement extends HTMLElement {
     }
 }
 
-export const FORM_BUTTON_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}form-button`;
+export const FORM_BUTTON_ELEMENT_TAG_NAME = "flux-studis-selfservice-form-button";
 
 customElements.define(FORM_BUTTON_ELEMENT_TAG_NAME, FormButtonElement);

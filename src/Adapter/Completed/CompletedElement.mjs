@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { PAGE_COMPLETED } from "../Page/PAGE.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
@@ -93,6 +92,6 @@ export class CompletedElement extends HTMLElement {
     }
 }
 
-export const COMPLETED_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_COMPLETED}`;
+export const COMPLETED_ELEMENT_TAG_NAME = `flux-studis-selfservice-${PAGE_COMPLETED}`;
 
 customElements.define(COMPLETED_ELEMENT_TAG_NAME, CompletedElement);

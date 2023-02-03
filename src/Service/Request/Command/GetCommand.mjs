@@ -37,7 +37,7 @@ export class GetCommand {
     async get() {
         return (await this.#http_api.request(
             HttpClientRequest.new(
-                `${__dirname}/../../../api/get`,
+                new URL(`${__dirname}/../../../api/get`),
                 null,
                 null,
                 {

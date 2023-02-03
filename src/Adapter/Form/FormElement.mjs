@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormButtonsElement } from "../FormButtons/FormButtonsElement.mjs";
 import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
@@ -381,6 +380,6 @@ export class FormElement extends HTMLElement {
     }
 }
 
-export const FORM_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}form`;
+export const FORM_ELEMENT_TAG_NAME = "flux-studis-selfservice-form";
 
 customElements.define(FORM_ELEMENT_TAG_NAME, FormElement);

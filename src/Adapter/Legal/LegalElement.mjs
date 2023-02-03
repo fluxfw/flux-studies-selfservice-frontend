@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_LEGAL } from "../Page/PAGE.mjs";
@@ -401,6 +400,6 @@ export class LegalElement extends HTMLElement {
     }
 }
 
-export const LEGAL_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}${PAGE_LEGAL}`;
+export const LEGAL_ELEMENT_TAG_NAME = `flux-studis-selfservice-${PAGE_LEGAL}`;
 
 customElements.define(LEGAL_ELEMENT_TAG_NAME, LegalElement);

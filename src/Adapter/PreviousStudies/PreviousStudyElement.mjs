@@ -1,4 +1,3 @@
-import { ELEMENT_TAG_NAME_PREFIX } from "../Element/ELEMENT_TAG_NAME_PREFIX.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 
@@ -339,6 +338,6 @@ export class PreviousStudyElement extends HTMLElement {
     }
 }
 
-export const PREVIOUS_STUDY_ELEMENT_TAG_NAME = `${ELEMENT_TAG_NAME_PREFIX}previous-study`;
+export const PREVIOUS_STUDY_ELEMENT_TAG_NAME = "flux-studis-selfservice-previous-study";
 
 customElements.define(PREVIOUS_STUDY_ELEMENT_TAG_NAME, PreviousStudyElement);
