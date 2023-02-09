@@ -9,6 +9,8 @@ RUN /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-f
 
 RUN cp -L -R /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-frontend/src /build/flux-studis-selfservice-frontend && rm -rf /build/flux-studis-selfservice-frontend-build
 
+RUN (cd /build && tar -czf build.tar.gz flux-studis-selfservice-frontend && rm -rf flux-studis-selfservice-frontend)
+
 FROM scratch
 
 COPY --from=build /build /
