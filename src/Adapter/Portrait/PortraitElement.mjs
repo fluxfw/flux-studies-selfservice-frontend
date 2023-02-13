@@ -4,7 +4,7 @@ import { PAGE_PORTRAIT } from "../Page/PAGE.mjs";
 import { PhotoElement } from "../Photo/PhotoElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
-/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
+/** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenPortraitFunction.mjs").chosenPortraitFunction} chosenPortraitFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("./getLoadingElement.mjs").getLoadingElement} getLoadingElement */

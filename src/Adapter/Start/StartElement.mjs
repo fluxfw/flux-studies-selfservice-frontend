@@ -5,7 +5,7 @@ import { ResumeElement } from "../Resume/ResumeElement.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
-/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
+/** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../Create/createFunction.mjs").createFunction} createFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */

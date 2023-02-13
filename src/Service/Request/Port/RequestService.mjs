@@ -58,6 +58,19 @@ export class RequestService {
     }
 
     /**
+     * @param {string} id
+     * @returns {Promise<void>}
+     */
+    async menu(id) {
+        await (await import("../Command/MenuCommand.mjs")).MenuCommand.new(
+            this.#http_api
+        )
+            .menu(
+                id
+            );
+    }
+
+    /**
      * @param {Post} post
      * @returns {Promise<PostResult>}
      */

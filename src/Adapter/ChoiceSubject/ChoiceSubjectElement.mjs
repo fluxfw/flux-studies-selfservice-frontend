@@ -3,7 +3,7 @@ import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_CHOICE_SUBJECT } from "../Page/PAGE.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
-/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
+/** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("./chosenSubjectFunction.mjs").chosenSubjectFunction} chosenSubjectFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */

@@ -1,10 +1,13 @@
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
+import { MENU_ID_APPLICATION_LOGIN } from "../Menu/MENU_ID.mjs";
 
 /** @typedef {import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs").ColorSchemeApi} ColorSchemeApi */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../Layout/Layout.mjs").Layout} Layout */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
-/** @typedef {import("../Post/logoutFunction.mjs").logoutFunction} logoutFunction */
+/** @typedef {import("../Logout/logoutFunction.mjs").logoutFunction} logoutFunction */
+/** @typedef {import("../Menu/Menu.mjs").Menu} Menu */
+/** @typedef {import("../Menu/menuFunction.mjs").menuFunction} menuFunction */
 /** @typedef {import("../Api/StudisSelfserviceFrontendApi.mjs").StudisSelfserviceFrontendApi} StudisSelfserviceFrontendApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
@@ -34,6 +37,10 @@ export class MainElement extends HTMLElement {
      * @type {LocalizationApi}
      */
     #localization_api;
+    /**
+     * @type {HTMLDivElement}
+     */
+    #menu_element;
     /**
      * @type {StudisSelfserviceFrontendApi}
      */
@@ -93,28 +100,74 @@ export class MainElement extends HTMLElement {
 
     /**
      * @param {HTMLElement} content_element
-     * @param {string | null} identification_number
+     * @param {Menu | null} menu
+     * @param {menuFunction | null} menu_function
+     * @param {string | null} user_name
      * @param {logoutFunction | null} logout_function
      * @returns {Promise<void>}
      */
-    async replaceContent(content_element, identification_number = null, logout_function = null) {
+    async replaceContent(content_element, menu = null, menu_function = null, user_name = null, logout_function = null) {
         this.#content_element.innerHTML = "";
         this.#content_element.appendChild(content_element);
+
+        this.#menu_element.innerHTML = "";
+        if (menu !== null) {
+            for (const id of menu.ids) {
+                let label;
+                switch (id) {
+                    case MENU_ID_APPLICATION_LOGIN:
+                        label = "Application / Login";
+                        break;
+
+                    default:
+                        continue;
+                }
+
+                const menu_element = document.createElement("div");
+                menu_element.classList.add("menu");
+
+                if (id === menu.id) {
+                    menu_element.dataset.active = true;
+                }
+
+                menu_element.innerText = await this.#localization_api.translate(
+                    label
+                );
+                if (menu_function !== null) {
+                    menu_element.addEventListener("click", () => {
+                        if (menu_element.dataset.active) {
+                            return;
+                        }
+
+                        for (const _menu_element of this.#shadow.querySelectorAll(".menu[data-active]")) {
+                            delete _menu_element.dataset.active;
+                        }
+
+                        menu_element.dataset.active = true;
+
+                        menu_function(
+                            id
+                        );
+                    });
+                    this.#menu_element.appendChild(menu_element);
+                }
+            }
+        }
 
         if (this.#user_element !== null) {
             this.#user_element.remove();
             this.#user_element = null;
         }
 
-        if (identification_number !== null || logout_function !== null) {
+        if (user_name !== null || logout_function !== null) {
             this.#user_element = document.createElement("div");
             this.#user_element.classList.add("user");
 
-            if (identification_number !== null) {
-                const identification_number_element = document.createElement("div");
-                identification_number_element.classList.add("identification_number");
-                identification_number_element.innerText = identification_number;
-                this.#user_element.appendChild(identification_number_element);
+            if (user_name !== null) {
+                const user_name_element = document.createElement("div");
+                user_name_element.classList.add("user_name");
+                user_name_element.innerText = user_name;
+                this.#user_element.appendChild(user_name_element);
             }
 
             if (logout_function !== null) {
@@ -151,17 +204,10 @@ export class MainElement extends HTMLElement {
         );
         left_element.appendChild(title_element);
 
-        const menu_element = document.createElement("div");
-        menu_element.classList.add("menu");
-        menu_element.dataset.active = true;
-        menu_element.innerText = await this.#localization_api.translate(
-            "Application / Login"
-        );
-        left_element.appendChild(menu_element);
+        this.#menu_element = document.createElement("div");
+        left_element.appendChild(this.#menu_element);
 
-        const select_color_scheme_placeholder_element = document.createElement("div");
-        select_color_scheme_placeholder_element.hidden = true;
-        left_element.appendChild(select_color_scheme_placeholder_element);
+        left_element.appendChild(await this.#color_scheme_api.getSelectColorSchemeElement());
 
         const logo_link_element = document.createElement("a");
         logo_link_element.classList.add("logo");
@@ -182,9 +228,7 @@ export class MainElement extends HTMLElement {
         this.#header_element = document.createElement("div");
         this.#header_element.classList.add("header");
 
-        const select_language_placeholder_element = document.createElement("div");
-        select_language_placeholder_element.hidden = true;
-        this.#header_element.appendChild(select_language_placeholder_element);
+        this.#header_element.appendChild(await this.#studis_selfservice_frontend_api.getSelectLanguageElement());
 
         const print_button_element = FormButtonElement.new(
             this.#css_api,
@@ -218,14 +262,6 @@ export class MainElement extends HTMLElement {
         container_element.appendChild(right_element);
 
         this.#shadow.appendChild(container_element);
-
-        (async () => {
-            select_color_scheme_placeholder_element.replaceWith(await this.#color_scheme_api.getSelectColorSchemeElement());
-        })();
-
-        (async () => {
-            select_language_placeholder_element.replaceWith(await this.#studis_selfservice_frontend_api.getSelectLanguageElement());
-        })();
     }
 
     /**

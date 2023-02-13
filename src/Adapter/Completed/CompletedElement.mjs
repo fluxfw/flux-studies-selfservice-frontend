@@ -3,7 +3,7 @@ import { PAGE_COMPLETED } from "../Page/PAGE.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
-/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
+/** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs").LocalizationApi} LocalizationApi */
 

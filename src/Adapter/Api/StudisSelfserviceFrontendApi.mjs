@@ -1,8 +1,9 @@
+import { HttpClientResponse } from "../../Libs/flux-http-api/src/Adapter/Client/HttpClientResponse.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_PREVIOUS_STUDIES, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
 import { SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTATION_STORE_NAME, SETTINGS_STORAGE_IMPLEMENTATION_KEY_PREFIX } from "../Settings/SETTINGS_IMPLEMENTATION.mjs";
 
-/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
+/** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("../ChoiceSubject/ChoiceSubjectElement.mjs").ChoiceSubjectElement} ChoiceSubjectElement */
 /** @typedef {import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs").ColorSchemeApi} ColorSchemeApi */
@@ -798,7 +799,7 @@ export class StudisSelfserviceFrontendApi {
             await this.#main_element.replaceContent(
                 await this.#getFormInvalidElement(
                     await this.#localization_api.translate(
-                        error instanceof Response ? "Server error!" : "Network error!"
+                        error instanceof HttpClientResponse ? "Server error!" : "Network error!"
                     )
                 )
             );
@@ -830,7 +831,7 @@ export class StudisSelfserviceFrontendApi {
                                 ]) => [
                                         language,
                                         await this.#localization_api.translate(
-                                            error instanceof Response ? "Server error!" : "Network error!",
+                                            error instanceof HttpClientResponse ? "Server error!" : "Network error!",
                                             null,
                                             null,
                                             language
@@ -864,7 +865,7 @@ export class StudisSelfserviceFrontendApi {
                         await this.#main_element.replaceContent(
                             await this.#getFormInvalidElement(
                                 await this.#localization_api.translate(
-                                    error instanceof Response ? "Server error!" : "Network error!"
+                                    error instanceof HttpClientResponse ? "Server error!" : "Network error!"
                                 )
                             )
                         );
@@ -877,7 +878,35 @@ export class StudisSelfserviceFrontendApi {
                     this.#next();
                 }
             ),
-            this.#previous_get_result["identification-number"],
+            this.#previous_get_result["menu"],
+            async id => {
+                this.#previous_get_result = null;
+
+                const logout_loading_element = await this.#getLoadingElement();
+
+                try {
+                    await (await this.#getRequestService()).menu(
+                        id
+                    );
+                } catch (error) {
+                    console.error(error);
+
+                    await this.#main_element.replaceContent(
+                        await this.#getFormInvalidElement(
+                            await this.#localization_api.translate(
+                                error instanceof HttpClientResponse ? "Server error!" : "Network error!"
+                            )
+                        )
+                    );
+
+                    return;
+                } finally {
+                    logout_loading_element.remove();
+                }
+
+                this.#next();
+            },
+            this.#previous_get_result["user-name"],
             this.#previous_get_result["can-logout"] ? async () => {
                 this.#previous_get_result = null;
 
@@ -891,7 +920,7 @@ export class StudisSelfserviceFrontendApi {
                     await this.#main_element.replaceContent(
                         await this.#getFormInvalidElement(
                             await this.#localization_api.translate(
-                                error instanceof Response ? "Server error!" : "Network error!"
+                                error instanceof HttpClientResponse ? "Server error!" : "Network error!"
                             )
                         )
                     );

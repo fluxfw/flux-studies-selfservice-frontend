@@ -37,7 +37,10 @@ export class LogoutCommand {
             HttpClientRequest.new(
                 new URL(`${__dirname}/../../../api/logout`),
                 null,
-                METHOD_POST
+                METHOD_POST,
+                null,
+                null,
+                false
             )
         );
     }

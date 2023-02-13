@@ -3,7 +3,7 @@ import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_INTENDED_DEGREE_PROGRAM_2 } from "../Page/PAGE.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
-/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
+/** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenIntendedDegreeProgram2Function.mjs").chosenIntendedDegreeProgram2Function} chosenIntendedDegreeProgram2Function */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
 /** @typedef {import("./IntendedDegreeProgram2.mjs").IntendedDegreeProgram2} IntendedDegreeProgram2 */

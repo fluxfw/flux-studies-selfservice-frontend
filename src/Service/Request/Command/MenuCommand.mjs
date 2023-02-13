@@ -1,3 +1,5 @@
+import { CONTENT_TYPE_JSON } from "../../../Libs/flux-http-api/src/Adapter/ContentType/CONTENT_TYPE.mjs";
+import { HEADER_ACCEPT } from "../../../Libs/flux-http-api/src/Adapter/Header/HEADER.mjs";
 import { HttpClientRequest } from "../../../Libs/flux-http-api/src/Adapter/Client/HttpClientRequest.mjs";
 import { METHOD_POST } from "../../../Libs/flux-http-api/src/Adapter/Method/METHOD.mjs";
 
@@ -5,7 +7,7 @@ import { METHOD_POST } from "../../../Libs/flux-http-api/src/Adapter/Method/METH
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
-export class BackCommand {
+export class MenuCommand {
     /**
      * @type {HttpApi}
      */
@@ -13,7 +15,7 @@ export class BackCommand {
 
     /**
      * @param {HttpApi} http_api
-     * @returns {BackCommand}
+     * @returns {MenuCommand}
      */
     static new(http_api) {
         return new this(
@@ -30,15 +32,18 @@ export class BackCommand {
     }
 
     /**
+     * @param {string} id
      * @returns {Promise<void>}
      */
-    async back() {
+    async menu(id) {
         await this.#http_api.request(
-            HttpClientRequest.new(
-                new URL(`${__dirname}/../../../api/back`),
-                null,
+            HttpClientRequest.json(
+                new URL(`${__dirname}/../../../api/menu`),
+                id,
                 METHOD_POST,
-                null,
+                {
+                    [HEADER_ACCEPT]: CONTENT_TYPE_JSON
+                },
                 null,
                 false
             )

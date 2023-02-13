@@ -5,7 +5,7 @@ import { PAGE_PREVIOUS_STUDIES } from "../Page/PAGE.mjs";
 import { PreviousStudyElement } from "./PreviousStudyElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
-/** @typedef {import("../Post/backFunction.mjs").backFunction} backFunction */
+/** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenPreviousStudiesFunction.mjs").chosenPreviousStudiesFunction} chosenPreviousStudiesFunction */
 /** @typedef {import("./ChosenPreviousStudy.mjs").ChosenPreviousStudy} ChosenPreviousStudy */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
