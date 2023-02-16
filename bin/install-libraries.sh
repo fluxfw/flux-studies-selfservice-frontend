@@ -25,7 +25,7 @@ installLibrary flux-css-api https://github.com/fluxfw/flux-css-api/archive/refs/
 
 installLibrary flux-hash-api https://github.com/fluxfw/flux-hash-api/archive/refs/tags/v2023-02-09-1.tar.gz
 
-installLibrary flux-http-api https://github.com/fluxfw/flux-http-api/archive/refs/tags/v2023-02-13-1.tar.gz
+installLibrary flux-http-api https://github.com/fluxfw/flux-http-api/archive/refs/tags/v2023-02-16-1.tar.gz
 
 installLibrary flux-json-api https://github.com/fluxfw/flux-json-api/archive/refs/tags/v2023-02-09-1.tar.gz
 
