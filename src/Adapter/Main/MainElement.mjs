@@ -191,6 +191,8 @@ export class MainElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
+        this.#content_element = document.createElement("div");
+
         const container_element = document.createElement("div");
         container_element.classList.add("container");
 
@@ -255,7 +257,6 @@ export class MainElement extends HTMLElement {
 
         right_element.appendChild(header2_element);
 
-        this.#content_element = document.createElement("div");
         this.#content_element.classList.add("content");
         right_element.appendChild(this.#content_element);
 
