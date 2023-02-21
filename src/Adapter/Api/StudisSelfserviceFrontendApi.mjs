@@ -12,7 +12,6 @@ import { SETTINGS_CACHE_IMPLEMENTATION_CACHE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTA
 /** @typedef {import("../FormInvalid/FormInvalidElement.mjs").FormInvalidElement} FormInvalidElement */
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Loading/FullscreenLoadingElement.mjs").FullscreenLoadingElement} FullscreenLoadingElement */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
-/** @typedef {import("../../Libs/flux-hash-api/src/Adapter/Api/HashApi.mjs").HashApi} HashApi */
 /** @typedef {import("../../Libs/flux-http-api/src/Adapter/Api/HttpApi.mjs").HttpApi} HttpApi */
 /** @typedef {import("../IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
 /** @typedef {import("../IdentificationNumber/IdentificationNumberElement.mjs").IdentificationNumberElement} IdentificationNumberElement */
@@ -57,10 +56,6 @@ export class StudisSelfserviceFrontendApi {
      * @type {CssApi | null}
      */
     #css_api = null;
-    /**
-     * @type {HashApi | null}
-     */
-    #hash_api = null;
     /**
      * @type {HttpApi | null}
      */
@@ -305,15 +300,6 @@ export class StudisSelfserviceFrontendApi {
             await this.#getCssApi(),
             message
         );
-    }
-
-    /**
-     * @returns {Promise<HashApi>}
-     */
-    async #getHashApi() {
-        this.#hash_api ??= (await import("../../Libs/flux-hash-api/src/Adapter/Api/HashApi.mjs")).HashApi.new();
-
-        return this.#hash_api;
     }
 
     /**
@@ -595,9 +581,7 @@ export class StudisSelfserviceFrontendApi {
      * @returns {Promise<PasswordService>}
      */
     async #getPasswordService() {
-        this.#password_service ??= (await import("../../Service/Password/Port/PasswordService.mjs")).PasswordService.new(
-            await this.#getHashApi()
-        );
+        this.#password_service ??= (await import("../../Service/Password/Port/PasswordService.mjs")).PasswordService.new();
 
         return this.#password_service;
     }

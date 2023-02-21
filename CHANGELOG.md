@@ -6,6 +6,13 @@ Changes:
 
 \-
 
+## v2023-02-21-1
+
+Changes:
+
+- Hash password padding config
+- Remove hash api
+
 ## v2023-02-17-2
 
 Changes:
