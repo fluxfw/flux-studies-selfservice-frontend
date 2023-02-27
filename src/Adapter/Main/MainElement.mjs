@@ -42,13 +42,13 @@ export class MainElement extends HTMLElement {
      */
     #menu_element;
     /**
-     * @type {StudisSelfserviceFrontendApi}
-     */
-    #studis_selfservice_frontend_api;
-    /**
      * @type {ShadowRoot}
      */
     #shadow;
+    /**
+     * @type {StudisSelfserviceFrontendApi}
+     */
+    #studis_selfservice_frontend_api;
     /**
      * @type {HTMLDivElement | null}
      */
