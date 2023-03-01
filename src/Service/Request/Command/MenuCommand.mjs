@@ -44,7 +44,7 @@ export class MenuCommand {
                 {
                     [HEADER_ACCEPT]: CONTENT_TYPE_JSON
                 },
-                null,
+                true,
                 false
             )
         );

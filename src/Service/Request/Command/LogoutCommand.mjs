@@ -39,7 +39,7 @@ export class LogoutCommand {
                 null,
                 METHOD_POST,
                 null,
-                null,
+                true,
                 false
             )
         );

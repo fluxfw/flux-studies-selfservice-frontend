@@ -39,7 +39,7 @@ export class BackCommand {
                 null,
                 METHOD_POST,
                 null,
-                null,
+                true,
                 false
             )
         );

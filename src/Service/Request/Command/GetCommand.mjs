@@ -42,7 +42,8 @@ export class GetCommand {
                 null,
                 {
                     [HEADER_ACCEPT]: CONTENT_TYPE_JSON
-                }
+                },
+                true
             )
         )).body.json();
     }

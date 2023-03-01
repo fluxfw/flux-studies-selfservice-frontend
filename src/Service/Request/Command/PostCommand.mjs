@@ -45,7 +45,8 @@ export class PostCommand {
                 METHOD_POST,
                 {
                     [HEADER_ACCEPT]: CONTENT_TYPE_JSON
-                }
+                },
+                true
             )
         )).body.json();
     }
