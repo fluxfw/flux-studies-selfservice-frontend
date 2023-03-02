@@ -23,7 +23,7 @@ installLibrary flux-color-scheme-api https://github.com/fluxfw/flux-color-scheme
 
 installLibrary flux-css-api https://github.com/fluxfw/flux-css-api/archive/refs/tags/v2023-03-01-1.tar.gz
 
-installLibrary flux-http-api https://github.com/fluxfw/flux-http-api/archive/refs/tags/v2023-03-01-1.tar.gz
+installLibrary flux-http-api https://github.com/fluxfw/flux-http-api/archive/refs/tags/v2023-03-02-2.tar.gz
 
 installLibrary flux-json-api https://github.com/fluxfw/flux-json-api/archive/refs/tags/v2023-03-01-1.tar.gz
 
