@@ -6,6 +6,13 @@ Changes:
 
 \-
 
+## v2023-03-10-1
+
+Changes:
+
+- remove cache and storage settings
+- remove force orientation
+
 ## v2023-03-01-1
 
 Changes:
