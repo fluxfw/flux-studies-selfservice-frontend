@@ -12,8 +12,6 @@ build_name="$name-$tag-build.tar.gz"
 
 "$bin/build.sh"
 
-#"$bin/lint.sh"
-
 tag-release "$root"
 create-github-release "$root"
 
