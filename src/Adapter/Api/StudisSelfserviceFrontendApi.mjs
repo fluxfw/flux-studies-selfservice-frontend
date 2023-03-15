@@ -19,7 +19,6 @@ import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMP
 /** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgramElement.mjs").IntendedDegreeProgramElement} IntendedDegreeProgramElement */
 /** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2.mjs").IntendedDegreeProgram2} IntendedDegreeProgram2 */
 /** @typedef {import("../IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs").IntendedDegreeProgram2Element} IntendedDegreeProgram2Element */
-/** @typedef {import("../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs").JsonApi} JsonApi */
 /** @typedef {import("../../Service/Label/Port/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../Layout/Layout.mjs").Layout} Layout */
 /** @typedef {import("../Legal/Legal.mjs").Legal} Legal */
@@ -60,10 +59,6 @@ export class StudisSelfserviceFrontendApi {
      * @type {HttpApi | null}
      */
     #http_api = null;
-    /**
-     * @type {JsonApi | null}
-     */
-    #json_api = null;
     /**
      * @type {LabelService | null}
      */
@@ -378,17 +373,6 @@ export class StudisSelfserviceFrontendApi {
     }
 
     /**
-     * @returns {Promise<JsonApi>}
-     */
-    async #getJsonApi() {
-        this.#json_api ??= (await import("../../Libs/flux-json-api/src/Adapter/Api/JsonApi.mjs")).JsonApi.new(
-            await this.#getHttpApi()
-        );
-
-        return this.#json_api;
-    }
-
-    /**
      * @returns {Promise<LabelService>}
      */
     async #getLabelService() {
@@ -460,8 +444,8 @@ export class StudisSelfserviceFrontendApi {
     async #getLocalizationApi() {
         if (this.#localization_api === null) {
             this.#localization_api ??= (await import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs")).LocalizationApi.new(
-                await this.#getJsonApi(),
                 await this.#getCssApi(),
+                await this.#getHttpApi(),
                 await this.#getSettingsApi()
             );
 
@@ -670,7 +654,7 @@ export class StudisSelfserviceFrontendApi {
         if (this.#pwa_api === null) {
             this.#pwa_api ??= (await import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs")).PwaApi.new(
                 await this.#getCssApi(),
-                await this.#getJsonApi(),
+                await this.#getHttpApi(),
                 await this.#getLoadingApi(),
                 await this.#getLocalizationApi(),
                 await this.#getSettingsApi()
