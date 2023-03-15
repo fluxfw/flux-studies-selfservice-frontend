@@ -1,5 +1,6 @@
 /** @typedef {import("../../../Adapter/Get/GetResult.mjs").GetResult} GetResult */
 /** @typedef {import("../../../Libs/flux-http-api/src/Adapter/Api/HttpApi.mjs").HttpApi} HttpApi */
+/** @typedef {import("../../../Adapter/Layout/Layout.mjs").Layout} Layout */
 /** @typedef {import("../../../Adapter/Post/Post.mjs").Post} Post */
 /** @typedef {import("../../../Adapter/Post/PostResult.mjs").PostResult} PostResult */
 
@@ -45,6 +46,16 @@ export class RequestService {
             this.#http_api
         )
             .get();
+    }
+
+    /**
+     * @returns {Promise<Layout>}
+     */
+    async layout() {
+        return (await import("../Command/LayoutCommand.mjs")).LayoutCommand.new(
+            this.#http_api
+        )
+            .layout();
     }
 
     /**

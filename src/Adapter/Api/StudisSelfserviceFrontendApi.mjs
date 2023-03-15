@@ -403,9 +403,7 @@ export class StudisSelfserviceFrontendApi {
      * @returns {Promise<Layout>}
      */
     async #getLayout() {
-        this.#layout ??= await (await this.#getJsonApi()).importJson(
-            `${__dirname}/../../api/layout`
-        );
+        this.#layout ??= await (await this.#getRequestService()).layout();
 
         return this.#layout;
     }
