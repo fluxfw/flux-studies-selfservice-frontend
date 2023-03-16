@@ -1,31 +1,31 @@
+/** @typedef {import("../../../Libs/flux-http-api/src/FluxHttpApi.mjs").FluxHttpApi} FluxHttpApi */
 /** @typedef {import("../../../Adapter/Get/GetResult.mjs").GetResult} GetResult */
-/** @typedef {import("../../../Libs/flux-http-api/src/Adapter/Api/HttpApi.mjs").HttpApi} HttpApi */
 /** @typedef {import("../../../Adapter/Layout/Layout.mjs").Layout} Layout */
 /** @typedef {import("../../../Adapter/Post/Post.mjs").Post} Post */
 /** @typedef {import("../../../Adapter/Post/PostResult.mjs").PostResult} PostResult */
 
 export class RequestService {
     /**
-     * @type {HttpApi}
+     * @type {FluxHttpApi}
      */
-    #http_api;
+    #flux_http_api;
 
     /**
-     * @param {HttpApi} http_api
+     * @param {FluxHttpApi} flux_http_api
      * @returns {RequestService}
      */
-    static new(http_api) {
+    static new(flux_http_api) {
         return new this(
-            http_api
+            flux_http_api
         );
     }
 
     /**
-     * @param {HttpApi} http_api
+     * @param {FluxHttpApi} flux_http_api
      * @private
      */
-    constructor(http_api) {
-        this.#http_api = http_api;
+    constructor(flux_http_api) {
+        this.#flux_http_api = flux_http_api;
     }
 
     /**
@@ -33,7 +33,7 @@ export class RequestService {
      */
     async back() {
         await (await import("../Command/BackCommand.mjs")).BackCommand.new(
-            this.#http_api
+            this.#flux_http_api
         )
             .back();
     }
@@ -43,7 +43,7 @@ export class RequestService {
      */
     async get() {
         return (await import("../Command/GetCommand.mjs")).GetCommand.new(
-            this.#http_api
+            this.#flux_http_api
         )
             .get();
     }
@@ -53,7 +53,7 @@ export class RequestService {
      */
     async layout() {
         return (await import("../Command/LayoutCommand.mjs")).LayoutCommand.new(
-            this.#http_api
+            this.#flux_http_api
         )
             .layout();
     }
@@ -63,7 +63,7 @@ export class RequestService {
      */
     async logout() {
         await (await import("../Command/LogoutCommand.mjs")).LogoutCommand.new(
-            this.#http_api
+            this.#flux_http_api
         )
             .logout();
     }
@@ -74,7 +74,7 @@ export class RequestService {
      */
     async menu(id) {
         await (await import("../Command/MenuCommand.mjs")).MenuCommand.new(
-            this.#http_api
+            this.#flux_http_api
         )
             .menu(
                 id
@@ -87,7 +87,7 @@ export class RequestService {
      */
     async post(post) {
         return (await import("../Command/PostCommand.mjs")).PostCommand.new(
-            this.#http_api
+            this.#flux_http_api
         )
             .post(
                 post

@@ -1,4 +1,4 @@
-import { HttpClientResponse } from "../../Libs/flux-http-api/src/Adapter/Client/HttpClientResponse.mjs";
+import { HttpClientResponse } from "../../Libs/flux-http-api/src/Client/HttpClientResponse.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "../../Libs/flux-color-scheme-api/src/Adapter/ColorScheme/COLOR_SCHEME.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_PREVIOUS_STUDIES, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
 import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTATION_STORE_NAME } from "../Settings/SETTINGS_IMPLEMENTATION.mjs";
@@ -9,10 +9,10 @@ import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMP
 /** @typedef {import("../../Libs/flux-color-scheme-api/src/Adapter/Api/ColorSchemeApi.mjs").ColorSchemeApi} ColorSchemeApi */
 /** @typedef {import("../Completed/CompletedElement.mjs").CompletedElement} CompletedElement */
 /** @typedef {import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs").CssApi} CssApi */
+/** @typedef {import("../../Libs/flux-http-api/src/FluxHttpApi.mjs").FluxHttpApi} FluxHttpApi */
 /** @typedef {import("../FormInvalid/FormInvalidElement.mjs").FormInvalidElement} FormInvalidElement */
 /** @typedef {import("../../Libs/flux-loading-api/src/Adapter/Loading/FullscreenLoadingElement.mjs").FullscreenLoadingElement} FullscreenLoadingElement */
 /** @typedef {import("../Get/GetResult.mjs").GetResult} GetResult */
-/** @typedef {import("../../Libs/flux-http-api/src/Adapter/Api/HttpApi.mjs").HttpApi} HttpApi */
 /** @typedef {import("../IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
 /** @typedef {import("../IdentificationNumber/IdentificationNumberElement.mjs").IdentificationNumberElement} IdentificationNumberElement */
 /** @typedef {import("../IntendedDegreeProgram/IntendedDegreeProgram.mjs").IntendedDegreeProgram} IntendedDegreeProgram */
@@ -56,9 +56,9 @@ export class StudisSelfserviceFrontendApi {
      */
     #css_api = null;
     /**
-     * @type {HttpApi | null}
+     * @type {FluxHttpApi | null}
      */
-    #http_api = null;
+    #flux_http_api = null;
     /**
      * @type {LabelService | null}
      */
@@ -277,13 +277,22 @@ export class StudisSelfserviceFrontendApi {
     async #getCssApi() {
         if (this.#css_api === null) {
             this.#css_api ??= (await import("../../Libs/flux-css-api/src/Adapter/Api/CssApi.mjs")).CssApi.new(
-                await this.#getHttpApi()
+                await this.#getFluxHttpApi()
             );
 
             await this.#css_api.init();
         }
 
         return this.#css_api;
+    }
+
+    /**
+     * @returns {Promise<FluxHttpApi>}
+     */
+    async #getFluxHttpApi() {
+        this.#flux_http_api ??= (await import("../../Libs/flux-http-api/src/FluxHttpApi.mjs")).FluxHttpApi.new();
+
+        return this.#flux_http_api;
     }
 
     /**
@@ -295,15 +304,6 @@ export class StudisSelfserviceFrontendApi {
             await this.#getCssApi(),
             message
         );
-    }
-
-    /**
-     * @returns {Promise<HttpApi>}
-     */
-    async #getHttpApi() {
-        this.#http_api ??= (await import("../../Libs/flux-http-api/src/Adapter/Api/HttpApi.mjs")).HttpApi.new();
-
-        return this.#http_api;
     }
 
     /**
@@ -445,7 +445,7 @@ export class StudisSelfserviceFrontendApi {
         if (this.#localization_api === null) {
             this.#localization_api ??= (await import("../../Libs/flux-localization-api/src/Adapter/Api/LocalizationApi.mjs")).LocalizationApi.new(
                 await this.#getCssApi(),
-                await this.#getHttpApi(),
+                await this.#getFluxHttpApi(),
                 await this.#getSettingsApi()
             );
 
@@ -654,7 +654,7 @@ export class StudisSelfserviceFrontendApi {
         if (this.#pwa_api === null) {
             this.#pwa_api ??= (await import("../../Libs/flux-pwa-api/src/Adapter/Api/PwaApi.mjs")).PwaApi.new(
                 await this.#getCssApi(),
-                await this.#getHttpApi(),
+                await this.#getFluxHttpApi(),
                 await this.#getLoadingApi(),
                 await this.#getLocalizationApi(),
                 await this.#getSettingsApi()
@@ -671,7 +671,7 @@ export class StudisSelfserviceFrontendApi {
      */
     async #getRequestService() {
         this.#request_service ??= (await import("../../Service/Request/Port/RequestService.mjs")).RequestService.new(
-            await this.#getHttpApi()
+            await this.#getFluxHttpApi()
         );
 
         return this.#request_service;
