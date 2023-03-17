@@ -6,27 +6,27 @@ let flux_shutdown_handler = null;
 try {
     flux_shutdown_handler = (await import("../../flux-shutdown-handler/src/FluxShutdownHandler.mjs")).FluxShutdownHandler.new();
 
-    const localization_api = (await import("../../flux-localization-api/src/Adapter/Api/LocalizationApi.mjs")).LocalizationApi.new();
-    await localization_api.init();
+    const flux_localization_api = (await import("../../flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new();
+    await flux_localization_api.init();
 
-    const pwa_generator_api = (await import("../../flux-pwa-generator-api/src/Adapter/Api/PwaGeneratorApi.mjs")).PwaGeneratorApi.new(
-        localization_api
+    const flux_pwa_generator = (await import("../../flux-pwa-generator/src/FluxPwaGenerator.mjs")).FluxPwaGenerator.new(
+        flux_localization_api
     );
 
     const __dirname = dirname(fileURLToPath(import.meta.url));
 
     const web_root = join(__dirname, "..", "src");
-    const manifest_json_file = join(web_root, "Adapter", "Pwa", "manifest.json");
+    const manifest_json_file = join(web_root, "Pwa", "manifest.json");
 
-    await pwa_generator_api.generateManifestJsons(
+    await flux_pwa_generator.generateManifestJsons(
         manifest_json_file,
-        join(web_root, "Adapter", "Localization")
+        join(web_root, "Localization")
     );
 
-    await pwa_generator_api.generateIndexHtmls(
+    await flux_pwa_generator.generateIndexHtmls(
         manifest_json_file,
         join(web_root, "index.html"),
-        "Adapter/Pwa/manifest.json",
+        "Pwa/manifest.json",
         "index.mjs"
     );
 } catch (error) {

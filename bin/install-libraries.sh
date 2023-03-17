@@ -19,20 +19,20 @@ installLibrary() {
 
 checkAlreadyInstalled
 
-installLibrary flux-color-scheme-api https://github.com/fluxfw/flux-color-scheme-api/archive/refs/tags/v2023-02-09-1.tar.gz
+installLibrary flux-color-scheme https://github.com/fluxfw/flux-color-scheme/archive/refs/tags/v2023-03-17-1.tar.gz
 
-installLibrary flux-css-api https://github.com/fluxfw/flux-css-api/archive/refs/tags/v2023-03-16-1.tar.gz
+installLibrary flux-css-api https://github.com/fluxfw/flux-css-api/archive/refs/tags/v2023-03-17-1.tar.gz
 
 installLibrary flux-http-api https://github.com/fluxfw/flux-http-api/archive/refs/tags/v2023-03-16-1.tar.gz
 
-installLibrary flux-loading-api https://github.com/fluxfw/flux-loading-api/archive/refs/tags/v2023-02-09-1.tar.gz
+installLibrary flux-loading-api https://github.com/fluxfw/flux-loading-api/archive/refs/tags/v2023-03-17-1.tar.gz
 
-installLibrary flux-localization-api https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2023-03-16-1.tar.gz
+installLibrary flux-localization-api https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2023-03-17-1.tar.gz
 
-installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2023-03-16-1.tar.gz
+installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2023-03-17-1.tar.gz
 
-installLibrary flux-pwa-generator-api https://github.com/fluxfw/flux-pwa-generator-api/archive/refs/tags/v2023-03-15-1.tar.gz
+installLibrary flux-pwa-generator https://github.com/fluxfw/flux-pwa-generator/archive/refs/tags/v2023-03-17-1.tar.gz
 
-installLibrary flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2023-03-16-1.tar.gz
+installLibrary flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2023-03-17-1.tar.gz
 
 installLibrary flux-shutdown-handler https://github.com/fluxfw/flux-shutdown-handler/archive/refs/tags/v2023-03-16-1.tar.gz

@@ -3,5 +3,5 @@
 !bin/install-libraries.sh
 !src
 !src/**
-src/Adapter/Pwa/manifest-*.json
 src/index.html
+src/Pwa/manifest-*.json
