@@ -27,7 +27,7 @@ installLibrary flux-http-api https://github.com/fluxfw/flux-http-api/archive/ref
 
 installLibrary flux-loading-api https://github.com/fluxfw/flux-loading-api/archive/refs/tags/v2023-03-17-1.tar.gz
 
-installLibrary flux-localization-api https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2023-03-17-2.tar.gz
+installLibrary flux-localization-api https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2023-03-17-3.tar.gz
 
 installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2023-03-17-1.tar.gz
 
