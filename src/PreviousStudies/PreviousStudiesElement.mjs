@@ -109,8 +109,8 @@ export class PreviousStudiesElement extends HTMLElement {
     #addPreviousStudy(values = null) {
         const previous_study_element = PreviousStudyElement.new(
             this.#flux_css_api,
-            this.#label_service,
             this.#flux_localization_api,
+            this.#label_service,
             this.#previous_studies,
             () => {
                 this.#removePreviousStudy(

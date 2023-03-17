@@ -130,8 +130,8 @@ export class StartElement extends HTMLElement {
 
         this.#shadow.appendChild(CreateElement.new(
             this.#flux_css_api,
-            this.#label_service,
             this.#flux_localization_api,
+            this.#label_service,
             this.#password_service,
             this.#start,
             this.#create_function
@@ -139,8 +139,8 @@ export class StartElement extends HTMLElement {
 
         this.#shadow.appendChild(ResumeElement.new(
             this.#flux_css_api,
-            this.#label_service,
             this.#flux_localization_api,
+            this.#label_service,
             this.#password_service,
             this.#start,
             this.#resume_function,
