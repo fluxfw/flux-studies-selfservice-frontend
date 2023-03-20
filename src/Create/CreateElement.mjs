@@ -4,8 +4,8 @@ import { PAGE_CREATE } from "../Page/PAGE.mjs";
 /** @typedef {import("./createFunction.mjs").createFunction} createFunction */
 /** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
-/** @typedef {import("../Label/Port/LabelService.mjs").LabelService} LabelService */
-/** @typedef {import("../Password/Port/PasswordService.mjs").PasswordService} PasswordService */
+/** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../Password/PasswordService.mjs").PasswordService} PasswordService */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));

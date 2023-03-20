@@ -9,9 +9,9 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("./getLoadingElement.mjs").getLoadingElement} getLoadingElement */
-/** @typedef {import("../Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../Photo/Photo.mjs").Photo} Photo */
-/** @typedef {import("../Photo/Port/PhotoService.mjs").PhotoService} PhotoService */
+/** @typedef {import("../Photo/PhotoService.mjs").PhotoService} PhotoService */
 /** @typedef {import("./Portrait.mjs").Portrait} Portrait */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));

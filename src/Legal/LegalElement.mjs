@@ -7,7 +7,7 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
-/** @typedef {import("../Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./Legal.mjs").Legal} Legal */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));

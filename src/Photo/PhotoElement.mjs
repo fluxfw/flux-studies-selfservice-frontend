@@ -4,7 +4,7 @@ import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 /** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("./PhotoCrop.mjs").PhotoCrop} PhotoCrop */
-/** @typedef {import("../Photo/Port/PhotoService.mjs").PhotoService} PhotoService */
+/** @typedef {import("./PhotoService.mjs").PhotoService} PhotoService */
 /** @typedef {import("./PhotoSize.mjs").PhotoSize} PhotoSize */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));

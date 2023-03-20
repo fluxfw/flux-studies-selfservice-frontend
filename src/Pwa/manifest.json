@@ -26,8 +26,8 @@
     "id": "flux-studis-selfservice",
     "lang": "en",
     "name": "Studis selfservice",
-    "scope": "../..",
+    "scope": "..",
     "short_name": "Selfservice",
-    "start_url": "../..",
+    "start_url": "..",
     "theme_color": "#e3003d"
 }

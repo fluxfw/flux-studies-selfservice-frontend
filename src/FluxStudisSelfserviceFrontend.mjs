@@ -23,21 +23,21 @@ import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMP
 /** @typedef {import("./IntendedDegreeProgram/IntendedDegreeProgramElement.mjs").IntendedDegreeProgramElement} IntendedDegreeProgramElement */
 /** @typedef {import("./IntendedDegreeProgram2/IntendedDegreeProgram2.mjs").IntendedDegreeProgram2} IntendedDegreeProgram2 */
 /** @typedef {import("./IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs").IntendedDegreeProgram2Element} IntendedDegreeProgram2Element */
-/** @typedef {import("./Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("./Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./Layout/Layout.mjs").Layout} Layout */
 /** @typedef {import("./Legal/Legal.mjs").Legal} Legal */
 /** @typedef {import("./Legal/LegalElement.mjs").LegalElement} LegalElement */
 /** @typedef {import("./Main/MainElement.mjs").MainElement} MainElement */
-/** @typedef {import("./Password/Port/PasswordService.mjs").PasswordService} PasswordService */
+/** @typedef {import("./Password/PasswordService.mjs").PasswordService} PasswordService */
 /** @typedef {import("./PersonalData/PersonalData.mjs").PersonalData} PersonalData */
 /** @typedef {import("./PersonalData/PersonalDataElement.mjs").PersonalDataElement} PersonalDataElement */
-/** @typedef {import("./Photo/Port/PhotoService.mjs").PhotoService} PhotoService */
+/** @typedef {import("./Photo/PhotoService.mjs").PhotoService} PhotoService */
 /** @typedef {import("./Portrait/Portrait.mjs").Portrait} Portrait */
 /** @typedef {import("./Portrait/PortraitElement.mjs").PortraitElement} PortraitElement */
 /** @typedef {import("./PreviousStudies/PreviousStudies.mjs").PreviousStudies} PreviousStudies */
 /** @typedef {import("./PreviousStudies/PreviousStudiesElement.mjs").PreviousStudiesElement} PreviousStudiesElement */
 /** @typedef {import("./Post/postFunction.mjs").postFunction} postFunction */
-/** @typedef {import("./Request/Port/RequestService.mjs").RequestService} RequestService */
+/** @typedef {import("./Request/RequestService.mjs").RequestService} RequestService */
 /** @typedef {import("./Libs/flux-localization-api/src/SelectLanguage/SelectLanguageElement.mjs").SelectLanguageElement} SelectLanguageElement */
 /** @typedef {import("./Start/Start.mjs").Start} Start */
 /** @typedef {import("./Start/StartElement.mjs").StartElement} StartElement */
@@ -142,7 +142,7 @@ export class FluxStudisSelfserviceFrontend {
 
         await flux_color_scheme.renderColorScheme();
 
-        await (await this.#getFluxLocalizationApi()).selectDefaultLanguage();
+        await flux_localization_api.selectDefaultLanguage();
         await this.#afterSelectLanguage();
     }
 
@@ -437,7 +437,7 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<LabelService>}
      */
     async #getLabelService() {
-        this.#label_service ??= (await import("./Label/Port/LabelService.mjs")).LabelService.new(
+        this.#label_service ??= (await import("./Label/LabelService.mjs")).LabelService.new(
             await this.#getFluxLocalizationApi()
         );
 
@@ -592,7 +592,7 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<PasswordService>}
      */
     async #getPasswordService() {
-        this.#password_service ??= (await import("./Password/Port/PasswordService.mjs")).PasswordService.new();
+        this.#password_service ??= (await import("./Password/PasswordService.mjs")).PasswordService.new();
 
         return this.#password_service;
     }
@@ -623,7 +623,7 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<PhotoService>}
      */
     async #getPhotoService() {
-        this.#photo_service ??= (await import("./Photo/Port/PhotoService.mjs")).PhotoService.new(
+        this.#photo_service ??= (await import("./Photo/PhotoService.mjs")).PhotoService.new(
             await this.#getFluxLocalizationApi()
         );
 
@@ -680,7 +680,7 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<RequestService>}
      */
     async #getRequestService() {
-        this.#request_service ??= (await import("./Request/Port/RequestService.mjs")).RequestService.new(
+        this.#request_service ??= (await import("./Request/RequestService.mjs")).RequestService.new(
             await this.#getFluxHttpApi()
         );
 

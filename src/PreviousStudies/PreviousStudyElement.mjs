@@ -4,7 +4,7 @@ import { FormElement } from "../Form/FormElement.mjs";
 /** @typedef {import("./ChosenPreviousStudy.mjs").ChosenPreviousStudy} ChosenPreviousStudy */
 /** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
-/** @typedef {import("../Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./PreviousStudies.mjs").PreviousStudies} PreviousStudies */
 /** @typedef {import("./removePreviousStudyFunction.mjs").removePreviousStudyFunction} removePreviousStudyFunction */
 

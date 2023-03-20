@@ -9,8 +9,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Create/createFunction.mjs").createFunction} createFunction */
 /** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
-/** @typedef {import("../Label/Port/LabelService.mjs").LabelService} LabelService */
-/** @typedef {import("../Password/Port/PasswordService.mjs").PasswordService} PasswordService */
+/** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../Password/PasswordService.mjs").PasswordService} PasswordService */
 /** @typedef {import("../Resume/resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("./Start.mjs").Start} Start */
 

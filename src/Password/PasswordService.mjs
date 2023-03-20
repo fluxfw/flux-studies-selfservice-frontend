@@ -1,8 +1,8 @@
-/** @typedef {import("../../Start/Start.mjs").Start} Start */
+/** @typedef {import("../Start/Start.mjs").Start} Start */
 
-export class HashPasswordCommand {
+export class PasswordService {
     /**
-     * @returns {HashPasswordCommand}
+     * @returns {PasswordService}
      */
     static new() {
         return new this();

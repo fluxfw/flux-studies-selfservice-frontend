@@ -10,7 +10,7 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("./filledPersonalDataFunction.mjs").filledPersonalDataFunction} filledPersonalDataFunction */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
-/** @typedef {import("../Label/Port/LabelService.mjs").LabelService} LabelService */
+/** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./PersonalData.mjs").PersonalData} PersonalData */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
