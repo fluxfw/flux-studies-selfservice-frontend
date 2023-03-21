@@ -1,7 +1,7 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("./PhotoCrop.mjs").PhotoCrop} PhotoCrop */
 /** @typedef {import("./PhotoService.mjs").PhotoService} PhotoService */
@@ -9,15 +9,15 @@ import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
+const css = await flux_css_api.import(
+    `${__dirname}/PhotoElement.css`
+);
+
 export class PhotoElement extends HTMLElement {
     /**
      * @type {HTMLDivElement}
      */
     #container_element;
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -60,36 +60,32 @@ export class PhotoElement extends HTMLElement {
     #subtitle_element;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {PhotoService} photo_service
      * @returns {PhotoElement}
      */
-    static new(flux_css_api, flux_localization_api, photo_service) {
+    static new(flux_localization_api, photo_service) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             photo_service
         );
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {PhotoService} photo_service
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, photo_service) {
+    constructor(flux_localization_api, photo_service) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#photo_service = photo_service;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -319,7 +315,6 @@ export class PhotoElement extends HTMLElement {
         this.#shadow.appendChild(this.#size_element);
 
         this.#subtitle_element = FormSubtitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "The photo can crop by dragging a rectangle with holding primary mouse button or touchscreen"
             )
@@ -328,7 +323,6 @@ export class PhotoElement extends HTMLElement {
         this.#shadow.appendChild(this.#subtitle_element);
 
         this.#remove_crop_element = FormButtonElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Remove crop"
             )

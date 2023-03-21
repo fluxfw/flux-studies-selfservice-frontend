@@ -1,3 +1,4 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormButtonsElement } from "../FormButtons/FormButtonsElement.mjs";
 import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
@@ -5,12 +6,15 @@ import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 import { FormTitleElement } from "../FormTitle/FormTitleElement.mjs";
 
 /** @typedef {import("./customValidationFunction.mjs").customValidationFunction} customValidationFunction */
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../FormButtons/formButtonAction.mjs").formButtonAction} formButtonAction */
 /** @typedef {import("./InputElement.mjs").InputElement} InputElement */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
+
+const css = await flux_css_api.import(
+    `${__dirname}/FormElement.css`
+);
 
 export class FormElement extends HTMLElement {
     /**
@@ -21,10 +25,6 @@ export class FormElement extends HTMLElement {
      * @type {customValidationFunction | null}
      */
     #custom_validation_function;
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -47,37 +47,33 @@ export class FormElement extends HTMLElement {
     #shadow;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {customValidationFunction | null} custom_validation_function
      * @returns {FormElement}
      */
-    static new(flux_css_api, flux_localization_api, custom_validation_function = null) {
+    static new(flux_localization_api, custom_validation_function = null) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             custom_validation_function
         );
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {customValidationFunction | null} custom_validation_function
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, custom_validation_function) {
+    constructor(flux_localization_api, custom_validation_function) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#custom_validation_function = custom_validation_function;
         this.#has_custom_validation_messages = false;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -93,7 +89,6 @@ export class FormElement extends HTMLElement {
         this.removeButtons();
 
         this.#buttons_element = FormButtonsElement.new(
-            this.#flux_css_api,
             [
                 ...continue_function !== null ? [
                     {
@@ -168,7 +163,6 @@ export class FormElement extends HTMLElement {
 
             if (type === "file") {
                 const remove_element = FormButtonElement.new(
-                    this.#flux_css_api,
                     "X"
                 );
                 remove_element.button.disabled = true;
@@ -205,7 +199,6 @@ export class FormElement extends HTMLElement {
      */
     addInvalidMessage(message) {
         const invalid_element = FormInvalidElement.new(
-            this.#flux_css_api,
             message
         );
 
@@ -228,7 +221,6 @@ export class FormElement extends HTMLElement {
      */
     addSubtitle(subtitle) {
         const subtitle_element = FormSubtitleElement.new(
-            this.#flux_css_api,
             subtitle
         );
         this.#form_element.appendChild(subtitle_element);
@@ -241,7 +233,6 @@ export class FormElement extends HTMLElement {
      */
     addTitle(title) {
         const title_element = FormTitleElement.new(
-            this.#flux_css_api,
             title
         );
         this.#shadow.prepend(title_element);

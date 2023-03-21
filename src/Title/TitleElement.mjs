@@ -1,12 +1,12 @@
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
+const css = await flux_css_api.import(
+    `${__dirname}/TitleElement.css`
+);
+
 export class TitleElement extends HTMLElement {
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {ShadowRoot}
      */
@@ -17,32 +17,28 @@ export class TitleElement extends HTMLElement {
     #title;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {string} title
      * @returns {TitleElement}
      */
-    static new(flux_css_api, title) {
+    static new(title) {
         return new this(
-            flux_css_api,
             title
         );
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {string} title
      * @private
      */
-    constructor(flux_css_api, title) {
+    constructor(title) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#title = title;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();

@@ -1,3 +1,4 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_PERSONAL_DATA } from "../Page/PAGE.mjs";
@@ -7,13 +8,16 @@ import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("./filledPersonalDataFunction.mjs").filledPersonalDataFunction} filledPersonalDataFunction */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./PersonalData.mjs").PersonalData} PersonalData */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
+
+const css = await flux_css_api.import(
+    `${__dirname}/PersonalDataElement.css`
+);
 
 export class PersonalDataElement extends HTMLElement {
     /**
@@ -32,10 +36,6 @@ export class PersonalDataElement extends HTMLElement {
      * @type {filledPersonalDataFunction}
      */
     #filled_personal_data_function;
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -70,7 +70,6 @@ export class PersonalDataElement extends HTMLElement {
     #shadow;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {PersonalData} personal_data
@@ -78,9 +77,8 @@ export class PersonalDataElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @returns {PersonalDataElement}
      */
-    static new(flux_css_api, flux_localization_api, label_service, personal_data, filled_personal_data_function, back_function = null) {
+    static new(flux_localization_api, label_service, personal_data, filled_personal_data_function, back_function = null) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             label_service,
             personal_data,
@@ -90,7 +88,6 @@ export class PersonalDataElement extends HTMLElement {
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {PersonalData} personal_data
@@ -98,10 +95,9 @@ export class PersonalDataElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, label_service, personal_data, filled_personal_data_function, back_function) {
+    constructor(flux_localization_api, label_service, personal_data, filled_personal_data_function, back_function) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#label_service = label_service;
         this.#personal_data = personal_data;
@@ -109,9 +105,9 @@ export class PersonalDataElement extends HTMLElement {
         this.#back_function = back_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -222,21 +218,18 @@ export class PersonalDataElement extends HTMLElement {
      */
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Personal data"
             )
         ));
 
         this.#shadow.appendChild(SubtitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Please pay attention to use the correct spelling (Upper and lower case letters)"
             )
         ));
 
         this.#address_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api,
             async () => {
                 const additional_first_names = this.#address_form_element.getTextareaValue(
@@ -458,7 +451,6 @@ export class PersonalDataElement extends HTMLElement {
         this.#shadow.appendChild(this.#address_form_element);
 
         this.#contact_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api,
             async () => {
                 for (const phone_type of PHONE_TYPES) {
@@ -592,7 +584,6 @@ export class PersonalDataElement extends HTMLElement {
         this.#shadow.appendChild(this.#contact_form_element);
 
         this.#personal_information_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
@@ -651,7 +642,6 @@ export class PersonalDataElement extends HTMLElement {
         this.#shadow.appendChild(this.#personal_information_form_element);
 
         this.#origin_place_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
@@ -682,7 +672,6 @@ export class PersonalDataElement extends HTMLElement {
         this.#shadow.appendChild(this.#origin_place_form_element);
 
         this.#parents_address_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api,
             async () => {
                 if (this.#parents_address_form_element.inputs["parents-address"].checked) {
@@ -743,7 +732,6 @@ export class PersonalDataElement extends HTMLElement {
         this.#shadow.appendChild(this.#parents_address_form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         ));
 
@@ -921,7 +909,6 @@ export class PersonalDataElement extends HTMLElement {
         await this.#renderParentsAddress2();
 
         this.#postal_address_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 

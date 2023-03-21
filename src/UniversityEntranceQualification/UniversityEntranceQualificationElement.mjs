@@ -1,3 +1,4 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
@@ -6,7 +7,6 @@ import { UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE, UNIVERSITY_E
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenUniversityEntranceQualificationFunction.mjs").chosenUniversityEntranceQualificationFunction} chosenUniversityEntranceQualificationFunction */
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./UniversityEntranceQualification.mjs").UniversityEntranceQualification} UniversityEntranceQualification */
@@ -14,6 +14,10 @@ import { UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE, UNIVERSITY_E
 /** @typedef {import("./UniversityEntranceQualificationSelectOption.mjs").UniversityEntranceQualificationSelectOption} UniversityEntranceQualificationSelectOption */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
+
+const css = await flux_css_api.import(
+    `${__dirname}/UniversityEntranceQualificationElement.css`
+);
 
 export class UniversityEntranceQualificationElement extends HTMLElement {
     /**
@@ -24,10 +28,6 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
      * @type {chosenUniversityEntranceQualificationFunction}
      */
     #chosen_university_entrance_qualification_function;
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -54,7 +54,6 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
     #university_entrance_qualification;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {UniversityEntranceQualification} university_entrance_qualification
@@ -62,9 +61,8 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @returns {UniversityEntranceQualificationElement}
      */
-    static new(flux_css_api, flux_localization_api, label_service, university_entrance_qualification, chosen_university_entrance_qualification_function, back_function = null) {
+    static new(flux_localization_api, label_service, university_entrance_qualification, chosen_university_entrance_qualification_function, back_function = null) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             label_service,
             university_entrance_qualification,
@@ -74,7 +72,6 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {UniversityEntranceQualification} university_entrance_qualification
@@ -82,10 +79,9 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, label_service, university_entrance_qualification, chosen_university_entrance_qualification_function, back_function) {
+    constructor(flux_localization_api, label_service, university_entrance_qualification, chosen_university_entrance_qualification_function, back_function) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#label_service = label_service;
         this.#university_entrance_qualification = university_entrance_qualification;
@@ -94,9 +90,9 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         this.#selects = [];
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -155,14 +151,12 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
      */
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "University entrance qualification"
             )
         ));
 
         this.#form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
@@ -192,7 +186,6 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         this.#shadow.appendChild(this.#form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         ));
 

@@ -1,13 +1,14 @@
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
+
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
+const css = await flux_css_api.import(
+    `${__dirname}/MandatoryElement.css`
+);
+
 export class MandatoryElement extends HTMLElement {
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -18,32 +19,28 @@ export class MandatoryElement extends HTMLElement {
     #shadow;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @returns {MandatoryElement}
      */
-    static new(flux_css_api, flux_localization_api) {
+    static new(flux_localization_api) {
         return new this(
-            flux_css_api,
             flux_localization_api
         );
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @private
      */
-    constructor(flux_css_api, flux_localization_api) {
+    constructor(flux_localization_api) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();

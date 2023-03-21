@@ -1,3 +1,4 @@
+import { flux_css_api } from "../../flux-css-api/src/FluxCssApi.mjs";
 import { HttpClientResponse } from "./Libs/flux-http-api/src/Client/HttpClientResponse.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "./Libs/flux-color-scheme/src/ColorScheme/COLOR_SCHEME.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_PREVIOUS_STUDIES, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "./Page/PAGE.mjs";
@@ -7,7 +8,6 @@ import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMP
 /** @typedef {import("./ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("./ChoiceSubject/ChoiceSubjectElement.mjs").ChoiceSubjectElement} ChoiceSubjectElement */
 /** @typedef {import("./Completed/CompletedElement.mjs").CompletedElement} CompletedElement */
-/** @typedef {import("./Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("./Libs/flux-color-scheme/src/FluxColorScheme.mjs").FluxColorScheme} FluxColorScheme */
 /** @typedef {import("./Libs/flux-http-api/src/FluxHttpApi.mjs").FluxHttpApi} FluxHttpApi */
 /** @typedef {import("./Libs/flux-loading-api/src/FluxLoadingApi.mjs").FluxLoadingApi} FluxLoadingApi */
@@ -51,10 +51,6 @@ export class FluxStudisSelfserviceFrontend {
      * @type {FluxColorScheme | null}
      */
     #flux_color_scheme = null;
-    /**
-     * @type {FluxCssApi | null}
-     */
-    #flux_css_api = null;
     /**
      * @type {FluxHttpApi | null}
      */
@@ -123,24 +119,22 @@ export class FluxStudisSelfserviceFrontend {
      */
     async init() {
         const flux_color_scheme = await this.#getFluxColorScheme();
-        const flux_css_api = await this.#getFluxCssApi();
         await this.#getFluxLoadingApi();
         const flux_localization_api = await this.#getFluxLocalizationApi();
         await this.#getFluxPwaApi();
 
-        await flux_css_api.importCss(
-            `${__dirname}/Layout/style.css`
-        );
-        flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             document,
-            `${__dirname}/Layout/style.css`
-        );
-
-        await flux_localization_api.addModule(
-            `${__dirname}/Localization`
+            await flux_css_api.import(
+                `${__dirname}/Layout/style.css`
+            )
         );
 
         await flux_color_scheme.renderColorScheme();
+
+        flux_localization_api.addModule(
+            `${__dirname}/Localization`
+        );
 
         await flux_localization_api.selectDefaultLanguage();
         await this.#afterSelectLanguage();
@@ -153,7 +147,6 @@ export class FluxStudisSelfserviceFrontend {
     async showFrontend(previous_get_result = false) {
         document.body.appendChild(this.#main_element = (await import("./Main/MainElement.mjs")).MainElement.new(
             await this.#getFluxColorScheme(),
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             this,
             await this.#getLayout()
@@ -206,7 +199,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getChoiceSubjectElement(choice_subject, post_function, back_function = null) {
         return (await import("./ChoiceSubject/ChoiceSubjectElement.mjs")).ChoiceSubjectElement.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             await this.#getLabelService(),
             choice_subject,
@@ -226,7 +218,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getCompletedElement(back_function = null) {
         return (await import("./Completed/CompletedElement.mjs")).CompletedElement.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             back_function
         );
@@ -236,50 +227,34 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<FluxColorScheme>}
      */
     async #getFluxColorScheme() {
-        if (this.#flux_color_scheme === null) {
-            this.#flux_color_scheme ??= (await import("./Libs/flux-color-scheme/src/FluxColorScheme.mjs")).FluxColorScheme.new(
-                [
-                    {
-                        color_scheme: COLOR_SCHEME_LIGHT,
-                        name: "light"
-                    },
-                    {
-                        color_scheme: COLOR_SCHEME_DARK,
-                        name: "dark"
-                    }
-                ],
-                await this.#getFluxCssApi(),
-                await this.#getFluxLocalizationApi(),
-                await this.#getFluxSettingsApi(),
+        this.#flux_color_scheme ??= (await import("./Libs/flux-color-scheme/src/FluxColorScheme.mjs")).FluxColorScheme.new(
+            [
                 {
-                    [COLOR_SCHEME_LIGHT]: "light",
-                    [COLOR_SCHEME_DARK]: "dark"
+                    color_scheme: COLOR_SCHEME_LIGHT,
+                    name: "light"
                 },
-                [
-                    "container-border-color",
-                    "form-background-color",
-                    "form-buttons-background-color",
-                    "input-border-color",
-                    "left-background-color",
-                    "left-border-color"
-                ]
-            );
-
-            await this.#flux_color_scheme.init();
-        }
-
-        return this.#flux_color_scheme;
-    }
-
-    /**
-     * @returns {Promise<FluxCssApi>}
-     */
-    async #getFluxCssApi() {
-        this.#flux_css_api ??= (await import("./Libs/flux-css-api/src/FluxCssApi.mjs")).FluxCssApi.new(
-            await this.#getFluxHttpApi()
+                {
+                    color_scheme: COLOR_SCHEME_DARK,
+                    name: "dark"
+                }
+            ],
+            await this.#getFluxLocalizationApi(),
+            await this.#getFluxSettingsApi(),
+            {
+                [COLOR_SCHEME_LIGHT]: "light",
+                [COLOR_SCHEME_DARK]: "dark"
+            },
+            [
+                "container-border-color",
+                "form-background-color",
+                "form-buttons-background-color",
+                "input-border-color",
+                "left-background-color",
+                "left-border-color"
+            ]
         );
 
-        return this.#flux_css_api;
+        return this.#flux_color_scheme;
     }
 
     /**
@@ -295,13 +270,7 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<FluxLoadingApi>}
      */
     async #getFluxLoadingApi() {
-        if (this.#flux_loading_api === null) {
-            this.#flux_loading_api ??= (await import("./Libs/flux-loading-api/src/FluxLoadingApi.mjs")).FluxLoadingApi.new(
-                await this.#getFluxCssApi()
-            );
-
-            await this.#flux_loading_api.init();
-        }
+        this.#flux_loading_api ??= (await import("./Libs/flux-loading-api/src/FluxLoadingApi.mjs")).FluxLoadingApi.new();
 
         return this.#flux_loading_api;
     }
@@ -310,15 +279,10 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<FluxLocalizationApi>}
      */
     async #getFluxLocalizationApi() {
-        if (this.#flux_localization_api === null) {
-            this.#flux_localization_api ??= (await import("./Libs/flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new(
-                await this.#getFluxCssApi(),
-                await this.#getFluxHttpApi(),
-                await this.#getFluxSettingsApi()
-            );
-
-            await this.#flux_localization_api.init();
-        }
+        this.#flux_localization_api ??= (await import("./Libs/flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new(
+            await this.#getFluxHttpApi(),
+            await this.#getFluxSettingsApi()
+        );
 
         return this.#flux_localization_api;
     }
@@ -327,17 +291,12 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<FluxPwaApi>}
      */
     async #getFluxPwaApi() {
-        if (this.#flux_pwa_api === null) {
-            this.#flux_pwa_api ??= (await import("./Libs/flux-pwa-api/src/FluxPwaApi.mjs")).FluxPwaApi.new(
-                await this.#getFluxCssApi(),
-                await this.#getFluxHttpApi(),
-                await this.#getFluxLoadingApi(),
-                await this.#getFluxLocalizationApi(),
-                await this.#getFluxSettingsApi()
-            );
-
-            await this.#flux_pwa_api.init();
-        }
+        this.#flux_pwa_api ??= (await import("./Libs/flux-pwa-api/src/FluxPwaApi.mjs")).FluxPwaApi.new(
+            await this.#getFluxHttpApi(),
+            await this.#getFluxLoadingApi(),
+            await this.#getFluxLocalizationApi(),
+            await this.#getFluxSettingsApi()
+        );
 
         return this.#flux_pwa_api;
     }
@@ -362,7 +321,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getFormInvalidElement(message) {
         return (await import("./FormInvalid/FormInvalidElement.mjs")).FormInvalidElement.new(
-            await this.#getFluxCssApi(),
             message
         );
     }
@@ -375,7 +333,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getIdentificationNumberElement(identification_number, post_function, back_function = null) {
         return (await import("./IdentificationNumber/IdentificationNumberElement.mjs")).IdentificationNumberElement.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             await this.#getLabelService(),
             identification_number,
@@ -397,7 +354,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getIntendedDegreeProgramElement(intended_degree_program, post_function, back_function = null) {
         return (await import("./IntendedDegreeProgram/IntendedDegreeProgramElement.mjs")).IntendedDegreeProgramElement.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             await this.#getLabelService(),
             intended_degree_program,
@@ -419,7 +375,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getIntendedDegreeProgram2Element(intended_degree_program_2, post_function, back_function = null) {
         return (await import("./IntendedDegreeProgram2/IntendedDegreeProgram2Element.mjs")).IntendedDegreeProgram2Element.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             await this.#getLabelService(),
             intended_degree_program_2,
@@ -461,7 +416,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getLegalElement(legal, post_function, back_function = null) {
         return (await import("./Legal/LegalElement.mjs")).LegalElement.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             await this.#getLabelService(),
             legal,
@@ -605,7 +559,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getPersonalDataElement(personal_data, post_function, back_function = null) {
         return (await import("./PersonalData/PersonalDataElement.mjs")).PersonalDataElement.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             await this.#getLabelService(),
             personal_data,
@@ -638,7 +591,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getPortraitElement(portrait, post_function, back_function = null) {
         return (await import("./Portrait/PortraitElement.mjs")).PortraitElement.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             async () => this.#getLoadingElement(),
             await this.#getLabelService(),
@@ -662,7 +614,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getPreviousStudiesElement(previous_studies, post_function, back_function = null) {
         return (await import("./PreviousStudies/PreviousStudiesElement.mjs")).PreviousStudiesElement.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             await this.#getLabelService(),
             previous_studies,
@@ -695,7 +646,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getStartElement(start, post_function, back_function = null) {
         return (await import("./Start/StartElement.mjs")).StartElement.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             await this.#getLabelService(),
             await this.#getPasswordService(),
@@ -724,7 +674,6 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getUniversityEntranceQualificationElement(university_entrance_qualification, post_function, back_function = null) {
         return (await import("./UniversityEntranceQualification/UniversityEntranceQualificationElement.mjs")).UniversityEntranceQualificationElement.new(
-            await this.#getFluxCssApi(),
             await this.#getFluxLocalizationApi(),
             await this.#getLabelService(),
             university_entrance_qualification,

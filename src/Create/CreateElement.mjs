@@ -1,8 +1,8 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { PAGE_CREATE } from "../Page/PAGE.mjs";
 
 /** @typedef {import("./createFunction.mjs").createFunction} createFunction */
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../Password/PasswordService.mjs").PasswordService} PasswordService */
@@ -10,15 +10,15 @@ import { PAGE_CREATE } from "../Page/PAGE.mjs";
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
+const css = await flux_css_api.import(
+    `${__dirname}/CreateElement.css`
+);
+
 export class CreateElement extends HTMLElement {
     /**
      * @type {createFunction}
      */
     #create_function;
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -45,7 +45,6 @@ export class CreateElement extends HTMLElement {
     #start;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {LabelService} password_service
@@ -53,9 +52,8 @@ export class CreateElement extends HTMLElement {
      * @param {createFunction} create_function
      * @returns {CreateElement}
      */
-    static new(flux_css_api, flux_localization_api, label_service, password_service, start, create_function) {
+    static new(flux_localization_api, label_service, password_service, start, create_function) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             label_service,
             password_service,
@@ -65,7 +63,6 @@ export class CreateElement extends HTMLElement {
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {LabelService} password_service
@@ -73,10 +70,9 @@ export class CreateElement extends HTMLElement {
      * @param {createFunction} create_function
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, label_service, password_service, start, create_function) {
+    constructor(flux_localization_api, label_service, password_service, start, create_function) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#label_service = label_service;
         this.#password_service = password_service;
@@ -84,9 +80,9 @@ export class CreateElement extends HTMLElement {
         this.#create_function = create_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -140,7 +136,6 @@ export class CreateElement extends HTMLElement {
      */
     async #render() {
         this.#form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api,
             async () => {
                 if (this.#form_element.inputs.password.value !== this.#form_element.inputs["confirm-password"].value) {

@@ -1,8 +1,8 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 
 /** @typedef {import("./ChosenPreviousStudy.mjs").ChosenPreviousStudy} ChosenPreviousStudy */
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./PreviousStudies.mjs").PreviousStudies} PreviousStudies */
@@ -10,11 +10,11 @@ import { FormElement } from "../Form/FormElement.mjs";
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
+const css = await flux_css_api.import(
+    `${__dirname}/PreviousStudyElement.css`
+);
+
 export class PreviousStudyElement extends HTMLElement {
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -45,7 +45,6 @@ export class PreviousStudyElement extends HTMLElement {
     #values;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {PreviousStudies} previous_studies
@@ -53,9 +52,8 @@ export class PreviousStudyElement extends HTMLElement {
      * @param {ChosenPreviousStudy | null} values
      * @returns {PreviousStudyElement}
      */
-    static new(flux_css_api, flux_localization_api, label_service, previous_studies, remove_previous_study_function, values = null) {
+    static new(flux_localization_api, label_service, previous_studies, remove_previous_study_function, values = null) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             label_service,
             previous_studies,
@@ -65,7 +63,6 @@ export class PreviousStudyElement extends HTMLElement {
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {PreviousStudies} previous_studies
@@ -73,10 +70,9 @@ export class PreviousStudyElement extends HTMLElement {
      * @param {ChosenPreviousStudy | null} values
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, label_service, previous_studies, remove_previous_study_function, values) {
+    constructor(flux_localization_api, label_service, previous_studies, remove_previous_study_function, values) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#label_service = label_service;
         this.#previous_studies = previous_studies;
@@ -84,9 +80,9 @@ export class PreviousStudyElement extends HTMLElement {
         this.#values = values;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -122,7 +118,6 @@ export class PreviousStudyElement extends HTMLElement {
      */
     async #render() {
         this.#form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api,
             async () => {
                 if (this.#form_element.inputs["end-date"].valueAsNumber < this.#form_element.inputs["start-date"].valueAsNumber) {
@@ -146,7 +141,6 @@ export class PreviousStudyElement extends HTMLElement {
         );
 
         const remove_previous_study_element = FormButtonElement.new(
-            this.#flux_css_api,
             "X"
         );
         remove_previous_study_element.button.addEventListener("click", () => {

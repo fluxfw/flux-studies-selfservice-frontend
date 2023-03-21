@@ -6,11 +6,8 @@ let flux_shutdown_handler = null;
 try {
     flux_shutdown_handler = (await import("../../flux-shutdown-handler/src/FluxShutdownHandler.mjs")).FluxShutdownHandler.new();
 
-    const flux_localization_api = (await import("../../flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new();
-    await flux_localization_api.init();
-
     const flux_pwa_generator = (await import("../../flux-pwa-generator/src/FluxPwaGenerator.mjs")).FluxPwaGenerator.new(
-        flux_localization_api
+        (await import("../../flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new()
     );
 
     const __dirname = dirname(fileURLToPath(import.meta.url));

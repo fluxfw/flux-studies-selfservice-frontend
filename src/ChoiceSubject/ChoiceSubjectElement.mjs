@@ -1,3 +1,4 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_CHOICE_SUBJECT } from "../Page/PAGE.mjs";
@@ -7,11 +8,14 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("./ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("./chosenSubjectFunction.mjs").chosenSubjectFunction} chosenSubjectFunction */
 /** @typedef {import("../DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
+
+const css = await flux_css_api.import(
+    `${__dirname}/ChoiceSubjectElement.css`
+);
 
 export class ChoiceSubjectElement extends HTMLElement {
     /**
@@ -26,10 +30,6 @@ export class ChoiceSubjectElement extends HTMLElement {
      * @type {chosenSubjectFunction}
      */
     #chosen_subject_function;
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -52,7 +52,6 @@ export class ChoiceSubjectElement extends HTMLElement {
     #shadow;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {ChoiceSubject} choice_subject
@@ -60,9 +59,8 @@ export class ChoiceSubjectElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @returns {ChoiceSubjectElement}
      */
-    static new(flux_css_api, flux_localization_api, label_service, choice_subject, chosen_subject_function, back_function = null) {
+    static new(flux_localization_api, label_service, choice_subject, chosen_subject_function, back_function = null) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             label_service,
             choice_subject,
@@ -72,7 +70,6 @@ export class ChoiceSubjectElement extends HTMLElement {
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {ChoiceSubject} choice_subject
@@ -80,10 +77,9 @@ export class ChoiceSubjectElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, label_service, choice_subject, chosen_subject_function, back_function) {
+    constructor(flux_localization_api, label_service, choice_subject, chosen_subject_function, back_function) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#label_service = label_service;
         this.#choice_subject = choice_subject;
@@ -91,9 +87,9 @@ export class ChoiceSubjectElement extends HTMLElement {
         this.#back_function = back_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -147,14 +143,12 @@ export class ChoiceSubjectElement extends HTMLElement {
      */
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Choice of subject"
             )
         ));
 
         this.#degree_program_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
@@ -185,7 +179,6 @@ export class ChoiceSubjectElement extends HTMLElement {
         this.#shadow.appendChild(this.#degree_program_form_element);
 
         this.#qualifications_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
@@ -205,7 +198,6 @@ export class ChoiceSubjectElement extends HTMLElement {
         this.#shadow.appendChild(this.#qualifications_form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         ));
 

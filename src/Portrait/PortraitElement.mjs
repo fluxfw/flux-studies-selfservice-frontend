@@ -1,3 +1,4 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_PORTRAIT } from "../Page/PAGE.mjs";
@@ -6,7 +7,6 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenPortraitFunction.mjs").chosenPortraitFunction} chosenPortraitFunction */
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("./getLoadingElement.mjs").getLoadingElement} getLoadingElement */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
@@ -15,6 +15,10 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("./Portrait.mjs").Portrait} Portrait */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
+
+const css = await flux_css_api.import(
+    `${__dirname}/PortraitElement.css`
+);
 
 export class PortraitElement extends HTMLElement {
     /**
@@ -25,10 +29,6 @@ export class PortraitElement extends HTMLElement {
      * @type {chosenPortraitFunction}
      */
     #chosen_portrait_function;
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -67,7 +67,6 @@ export class PortraitElement extends HTMLElement {
     #shadow;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {getLoadingElement} get_loading_element
      * @param {LabelService} label_service
@@ -77,9 +76,8 @@ export class PortraitElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @returns {PortraitElement}
      */
-    static new(flux_css_api, flux_localization_api, get_loading_element, label_service, photo_service, portrait, chosen_portrait, back_function = null) {
+    static new(flux_localization_api, get_loading_element, label_service, photo_service, portrait, chosen_portrait, back_function = null) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             get_loading_element,
             label_service,
@@ -91,7 +89,6 @@ export class PortraitElement extends HTMLElement {
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {getLoadingElement} get_loading_element
      * @param {LabelService} label_service
@@ -101,10 +98,9 @@ export class PortraitElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, get_loading_element, label_service, photo_service, portrait, chosen_portrait, back_function) {
+    constructor(flux_localization_api, get_loading_element, label_service, photo_service, portrait, chosen_portrait, back_function) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#get_loading_element = get_loading_element;
         this.#label_service = label_service;
@@ -114,9 +110,9 @@ export class PortraitElement extends HTMLElement {
         this.#back_function = back_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -192,14 +188,12 @@ export class PortraitElement extends HTMLElement {
      */
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Portrait"
             )
         ));
 
         this.#form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api,
             async () => {
                 const size = await this.#photo_element.getSize();
@@ -275,7 +269,6 @@ export class PortraitElement extends HTMLElement {
         input_element.required = this.#portrait["required-photo"];
 
         input_element.parentElement.parentElement.parentElement.appendChild(this.#photo_element = PhotoElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api,
             this.#photo_service
         ));
@@ -307,7 +300,6 @@ export class PortraitElement extends HTMLElement {
         this.#shadow.appendChild(this.#form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         ));
 

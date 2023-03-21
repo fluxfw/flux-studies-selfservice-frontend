@@ -1,7 +1,7 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { MENU_ID_APPLICATION_LOGIN } from "../Menu/MENU_ID.mjs";
 
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-color-scheme/src/FluxColorScheme.mjs").FluxColorScheme} FluxColorScheme */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../FluxStudisSelfserviceFrontend.mjs").FluxStudisSelfserviceFrontend} FluxStudisSelfserviceFrontend */
@@ -12,15 +12,15 @@ import { MENU_ID_APPLICATION_LOGIN } from "../Menu/MENU_ID.mjs";
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
 
+const css = await flux_css_api.import(
+    `${__dirname}/MainElement.css`
+);
+
 export class MainElement extends HTMLElement {
     /**
      * @type {HTMLElement}
      */
     #content_element;
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxColorScheme}
      */
@@ -56,16 +56,14 @@ export class MainElement extends HTMLElement {
 
     /**
      * @param {FluxColorScheme} flux_color_scheme
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {FluxStudisSelfserviceFrontend} flux_studis_selfservice_frontend
      * @param {Layout} layout
      * @returns {MainElement}
      */
-    static new(flux_color_scheme, flux_css_api, flux_localization_api, flux_studis_selfservice_frontend, layout) {
+    static new(flux_color_scheme, flux_localization_api, flux_studis_selfservice_frontend, layout) {
         return new this(
             flux_color_scheme,
-            flux_css_api,
             flux_localization_api,
             flux_studis_selfservice_frontend,
             layout
@@ -74,25 +72,23 @@ export class MainElement extends HTMLElement {
 
     /**
      * @param {FluxColorScheme} flux_color_scheme
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {FluxStudisSelfserviceFrontend} flux_studis_selfservice_frontend
      * @param {Layout} layout
      * @private
      */
-    constructor(flux_color_scheme, flux_css_api, flux_localization_api, flux_studis_selfservice_frontend, layout) {
+    constructor(flux_color_scheme, flux_localization_api, flux_studis_selfservice_frontend, layout) {
         super();
 
         this.#flux_color_scheme = flux_color_scheme;
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#flux_studis_selfservice_frontend = flux_studis_selfservice_frontend;
         this.#layout = layout;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -172,7 +168,6 @@ export class MainElement extends HTMLElement {
 
             if (logout_function !== null) {
                 const logout_button_element = FormButtonElement.new(
-                    this.#flux_css_api,
                     await this.#flux_localization_api.translate(
                         "Logout"
                     )
@@ -231,7 +226,6 @@ export class MainElement extends HTMLElement {
         this.#header_element.appendChild(await this.#flux_studis_selfservice_frontend.getSelectLanguageElement());
 
         const print_button_element = FormButtonElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Print page"
             )

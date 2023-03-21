@@ -1,4 +1,5 @@
 import { CreateElement } from "../Create/CreateElement.mjs";
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_START } from "../Page/PAGE.mjs";
 import { ResumeElement } from "../Resume/ResumeElement.mjs";
@@ -7,7 +8,6 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../Create/createFunction.mjs").createFunction} createFunction */
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../Password/PasswordService.mjs").PasswordService} PasswordService */
@@ -15,6 +15,10 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("./Start.mjs").Start} Start */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
+
+const css = await flux_css_api.import(
+    `${__dirname}/StartElement.css`
+);
 
 export class StartElement extends HTMLElement {
     /**
@@ -25,10 +29,6 @@ export class StartElement extends HTMLElement {
      * @type {createFunction}
      */
     #create_function;
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -55,7 +55,6 @@ export class StartElement extends HTMLElement {
     #start;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {LabelService} password_service
@@ -65,9 +64,8 @@ export class StartElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @returns {StartElement}
      */
-    static new(flux_css_api, flux_localization_api, label_service, password_service, start, create_function, resume_function, back_function = null) {
+    static new(flux_localization_api, label_service, password_service, start, create_function, resume_function, back_function = null) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             label_service,
             password_service,
@@ -79,7 +77,6 @@ export class StartElement extends HTMLElement {
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {LabelService} password_service
@@ -89,10 +86,9 @@ export class StartElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, label_service, password_service, start, create_function, resume_function, back_function) {
+    constructor(flux_localization_api, label_service, password_service, start, create_function, resume_function, back_function) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#label_service = label_service;
         this.#password_service = password_service;
@@ -102,9 +98,9 @@ export class StartElement extends HTMLElement {
         this.#back_function = back_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -115,21 +111,18 @@ export class StartElement extends HTMLElement {
      */
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Login"
             )
         ));
 
         this.#shadow.appendChild(SubtitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Create a new application by entering a password of you choice, or continue with your application by using your application identification number and your password"
             )
         ));
 
         this.#shadow.appendChild(CreateElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api,
             this.#label_service,
             this.#password_service,
@@ -138,7 +131,6 @@ export class StartElement extends HTMLElement {
         ));
 
         this.#shadow.appendChild(ResumeElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api,
             this.#label_service,
             this.#password_service,
@@ -148,7 +140,6 @@ export class StartElement extends HTMLElement {
         ));
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         ));
     }

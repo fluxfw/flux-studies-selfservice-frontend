@@ -1,3 +1,4 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_LEGAL } from "../Page/PAGE.mjs";
@@ -5,12 +6,15 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("./acceptedLegalFunction.mjs").acceptedLegalFunction} acceptedLegalFunction */
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./Legal.mjs").Legal} Legal */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
+
+const css = await flux_css_api.import(
+    `${__dirname}/LegalElement.css`
+);
 
 export class LegalElement extends HTMLElement {
     /**
@@ -42,10 +46,6 @@ export class LegalElement extends HTMLElement {
      */
     #disqualification_form_element;
     /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
-    /**
      * @type {FluxLocalizationApi}
      */
     #flux_localization_api;
@@ -63,7 +63,6 @@ export class LegalElement extends HTMLElement {
     #shadow;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {Legal} legal
@@ -71,9 +70,8 @@ export class LegalElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @returns {LegalElement}
      */
-    static new(flux_css_api, flux_localization_api, label_service, legal, accepted_legal_function, back_function = null) {
+    static new(flux_localization_api, label_service, legal, accepted_legal_function, back_function = null) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             label_service,
             legal,
@@ -83,7 +81,6 @@ export class LegalElement extends HTMLElement {
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {Legal} legal
@@ -91,10 +88,9 @@ export class LegalElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, label_service, legal, accepted_legal_function, back_function) {
+    constructor(flux_localization_api, label_service, legal, accepted_legal_function, back_function) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#label_service = label_service;
         this.#legal = legal;
@@ -102,9 +98,9 @@ export class LegalElement extends HTMLElement {
         this.#back_function = back_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -155,14 +151,12 @@ export class LegalElement extends HTMLElement {
      */
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Legal"
             )
         ));
 
         this.#degree_program_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
@@ -254,7 +248,6 @@ export class LegalElement extends HTMLElement {
         this.#shadow.appendChild(this.#degree_program_form_element);
 
         this.#disqualification_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
@@ -276,7 +269,6 @@ export class LegalElement extends HTMLElement {
         this.#shadow.appendChild(this.#disqualification_form_element);
 
         this.#agb_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
@@ -313,7 +305,6 @@ export class LegalElement extends HTMLElement {
         this.#shadow.appendChild(this.#agb_form_element);
 
         this.#complete_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
@@ -335,7 +326,6 @@ export class LegalElement extends HTMLElement {
         this.#shadow.appendChild(this.#complete_form_element);
 
         this.#comments_form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
@@ -382,7 +372,6 @@ export class LegalElement extends HTMLElement {
         this.#shadow.appendChild(this.#comments_form_element);
 
         this.#shadow.appendChild(MandatoryElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         ));
 

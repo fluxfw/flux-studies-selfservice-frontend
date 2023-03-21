@@ -1,3 +1,4 @@
+import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { PAGE_IDENTIFICATION_NUMBER } from "../Page/PAGE.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
@@ -5,12 +6,15 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./confirmedIdentificationNumberFunction.mjs").confirmedIdentificationNumberFunction} confirmedIdentificationNumberFunction */
-/** @typedef {import("../Libs/flux-css-api/src/FluxCssApi.mjs").FluxCssApi} FluxCssApi */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("./IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 
 const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
+
+const css = await flux_css_api.import(
+    `${__dirname}/IdentificationNumberElement.css`
+);
 
 export class IdentificationNumberElement extends HTMLElement {
     /**
@@ -21,10 +25,6 @@ export class IdentificationNumberElement extends HTMLElement {
      * @type {confirmedIdentificationNumberFunction}
      */
     #confirmed_identification_number_function;
-    /**
-     * @type {FluxCssApi}
-     */
-    #flux_css_api;
     /**
      * @type {FluxLocalizationApi}
      */
@@ -47,7 +47,6 @@ export class IdentificationNumberElement extends HTMLElement {
     #shadow;
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {IdentificationNumber} identification_number
@@ -55,9 +54,8 @@ export class IdentificationNumberElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @returns {IdentificationNumberElement}
      */
-    static new(flux_css_api, flux_localization_api, label_service, identification_number, confirmed_identification_number_function, back_function = null) {
+    static new(flux_localization_api, label_service, identification_number, confirmed_identification_number_function, back_function = null) {
         return new this(
-            flux_css_api,
             flux_localization_api,
             label_service,
             identification_number,
@@ -67,7 +65,6 @@ export class IdentificationNumberElement extends HTMLElement {
     }
 
     /**
-     * @param {FluxCssApi} flux_css_api
      * @param {FluxLocalizationApi} flux_localization_api
      * @param {LabelService} label_service
      * @param {IdentificationNumber} identification_number
@@ -75,10 +72,9 @@ export class IdentificationNumberElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(flux_css_api, flux_localization_api, label_service, identification_number, confirmed_identification_number_function, back_function) {
+    constructor(flux_localization_api, label_service, identification_number, confirmed_identification_number_function, back_function) {
         super();
 
-        this.#flux_css_api = flux_css_api;
         this.#flux_localization_api = flux_localization_api;
         this.#label_service = label_service;
         this.#identification_number = identification_number;
@@ -86,9 +82,9 @@ export class IdentificationNumberElement extends HTMLElement {
         this.#back_function = back_function;
 
         this.#shadow = this.attachShadow({ mode: "closed" });
-        this.#flux_css_api.importCssToRoot(
+        flux_css_api.adopt(
             this.#shadow,
-            `${__dirname}/${this.constructor.name}.css`
+            css
         );
 
         this.#render();
@@ -132,33 +128,28 @@ export class IdentificationNumberElement extends HTMLElement {
      */
     async #render() {
         this.#shadow.appendChild(TitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Your personal identification number"
             )
         ));
 
         this.#shadow.appendChild(SubtitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Your data will be saved under the following number"
             )
         ));
 
         this.#form_element = FormElement.new(
-            this.#flux_css_api,
             this.#flux_localization_api
         );
 
         const identification_number_element = SubtitleElement.new(
-            this.#flux_css_api,
             this.#identification_number["identification-number"]
         );
         identification_number_element.classList.add("identification-number");
         this.#shadow.appendChild(identification_number_element);
 
         this.#shadow.appendChild(SubtitleElement.new(
-            this.#flux_css_api,
             await this.#flux_localization_api.translate(
                 "Please keep your identification number safe so that you can access your data at a later stage"
             )
