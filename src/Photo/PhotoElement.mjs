@@ -303,9 +303,15 @@ export class PhotoElement extends HTMLElement {
 
         this.#container_element.addEventListener("mousedown", this);
         this.#container_element.addEventListener("touchcancel", this);
-        this.#container_element.addEventListener("touchend", this, { passive: false });
-        this.#container_element.addEventListener("touchmove", this, { passive: false });
-        this.#container_element.addEventListener("touchstart", this, { passive: false });
+        this.#container_element.addEventListener("touchend", this, {
+            passive: false
+        });
+        this.#container_element.addEventListener("touchmove", this, {
+            passive: false
+        });
+        this.#container_element.addEventListener("touchstart", this, {
+            passive: false
+        });
         this.#shadow.appendChild(this.#container_element);
 
         this.#size_element = document.createElement("div");

@@ -214,7 +214,10 @@ export class FormElement extends HTMLElement {
 
         this.#form_element.prepend(invalid_element);
 
-        invalid_element.scrollIntoView({ block: "nearest", inline: "nearest" });
+        invalid_element.scrollIntoView({
+            block: "nearest",
+            inline: "nearest"
+        });
 
         return invalid_element;
     }

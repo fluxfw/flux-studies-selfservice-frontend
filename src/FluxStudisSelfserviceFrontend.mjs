@@ -750,6 +750,10 @@ export class FluxStudisSelfserviceFrontend {
         try {
             if (!previous_get_result || this.#previous_get_result === null) {
                 this.#previous_get_result = await (await this.#getRequestService()).get();
+            } else {
+                await new Promise(resolve => {
+                    setTimeout(resolve, 10);
+                });
             }
         } catch (error) {
             console.error(error);
