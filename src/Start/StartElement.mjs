@@ -1,5 +1,5 @@
 import { CreateElement } from "../Create/CreateElement.mjs";
-import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
+import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_START } from "../Page/PAGE.mjs";
 import { ResumeElement } from "../Resume/ResumeElement.mjs";

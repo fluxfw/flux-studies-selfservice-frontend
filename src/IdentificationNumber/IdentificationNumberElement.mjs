@@ -1,4 +1,4 @@
-import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
+import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { PAGE_IDENTIFICATION_NUMBER } from "../Page/PAGE.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";

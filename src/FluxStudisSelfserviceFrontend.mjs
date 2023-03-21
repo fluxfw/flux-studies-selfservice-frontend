@@ -1,4 +1,4 @@
-import { flux_css_api } from "../../flux-css-api/src/FluxCssApi.mjs";
+import { flux_css_api } from "./Libs/flux-css-api/src/FluxCssApi.mjs";
 import { HttpClientResponse } from "./Libs/flux-http-api/src/Client/HttpClientResponse.mjs";
 import { COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT } from "./Libs/flux-color-scheme/src/ColorScheme/COLOR_SCHEME.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_PREVIOUS_STUDIES, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "./Page/PAGE.mjs";

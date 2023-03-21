@@ -1,4 +1,4 @@
-import { flux_css_api } from "../../../flux-css-api/src/FluxCssApi.mjs";
+import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 
