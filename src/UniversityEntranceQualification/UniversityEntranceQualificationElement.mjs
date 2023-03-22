@@ -10,7 +10,6 @@ import { UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE, UNIVERSITY_E
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./UniversityEntranceQualification.mjs").UniversityEntranceQualification} UniversityEntranceQualification */
-/** @typedef {import("./UniversityEntranceQualificationData.mjs").UniversityEntranceQualificationData} UniversityEntranceQualificationData */
 /** @typedef {import("./UniversityEntranceQualificationSelectOption.mjs").UniversityEntranceQualificationSelectOption} UniversityEntranceQualificationSelectOption */
 
 const css = await flux_css_api.import(
@@ -39,7 +38,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
      */
     #label_service;
     /**
-     * @type {[HTMLSelectElement, UniversityEntranceQualificationData[], UniversityEntranceQualificationSelectOption[]][]}
+     * @type {[HTMLSelectElement, UniversityEntranceQualificationSelectOption[]][]}
      */
     #selects;
     /**
@@ -292,13 +291,13 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         select_element.required = true;
 
         for (const select_option of select_options) {
-            const option = data[typeof select_option === "number" ? select_option : select_option[0]];
+            const option_id = typeof select_option === "string" ? select_option : select_option[0];
 
             const option_element = document.createElement("option");
             option_element.text = await this.#label_service[get_option_label](
-                option
+                data[option_id]
             );
-            option_element.value = option.id;
+            option_element.value = option_id;
             select_element.appendChild(option_element);
         }
 
@@ -310,7 +309,6 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         this.#selects.push([
             select_element,
-            data,
             select_options
         ]);
     }
@@ -340,15 +338,12 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         const [
             ,
-            data,
             select_options
         ] = this.#selects[select_index];
 
-        const data_index = data.findIndex(option => option.id === select_element.value);
+        const select_option = select_options.find(_select_option => (typeof _select_option === "string" ? _select_option : _select_option[0]) === select_element.value) ?? null;
 
-        const select_option = select_options.find(_select_option => (typeof _select_option === "number" ? _select_option : _select_option[0]) === data_index) ?? null;
-
-        if (select_option === null || typeof select_option === "number") {
+        if (select_option === null || typeof select_option === "string") {
             return;
         }
 

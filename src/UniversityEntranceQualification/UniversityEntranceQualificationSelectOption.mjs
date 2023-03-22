@@ -1,3 +1,3 @@
 /**
- * @typedef {[number, number] | number} UniversityEntranceQualificationSelectOption
+ * @typedef {[string, number] | string} UniversityEntranceQualificationSelectOption
  */
