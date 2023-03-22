@@ -10,9 +10,7 @@ try {
         (await import("../../flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new()
     );
 
-    const __dirname = dirname(fileURLToPath(import.meta.url));
-
-    const web_root = join(__dirname, "..", "src");
+    const web_root = join(dirname(fileURLToPath(import.meta.url)), "..", "src");
     const manifest_json_file = join(web_root, "Pwa", "manifest.json");
 
     await flux_pwa_generator.generateManifestJsons(

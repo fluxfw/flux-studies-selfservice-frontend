@@ -2,10 +2,8 @@ import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/MandatoryElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/MandatoryElement.css`
 );
 
 export class MandatoryElement extends HTMLElement {

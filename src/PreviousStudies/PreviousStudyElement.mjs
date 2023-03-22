@@ -8,10 +8,8 @@ import { FormElement } from "../Form/FormElement.mjs";
 /** @typedef {import("./PreviousStudies.mjs").PreviousStudies} PreviousStudies */
 /** @typedef {import("./removePreviousStudyFunction.mjs").removePreviousStudyFunction} removePreviousStudyFunction */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/PreviousStudyElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/PreviousStudyElement.css`
 );
 
 export class PreviousStudyElement extends HTMLElement {

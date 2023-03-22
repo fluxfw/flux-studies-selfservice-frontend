@@ -9,10 +9,8 @@ import { PAGE_RESUME } from "../Page/PAGE.mjs";
 /** @typedef {import("./resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/ResumeElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/ResumeElement.css`
 );
 
 export class ResumeElement extends HTMLElement {

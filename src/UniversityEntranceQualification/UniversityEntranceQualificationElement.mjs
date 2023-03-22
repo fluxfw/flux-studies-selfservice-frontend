@@ -13,10 +13,8 @@ import { UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE, UNIVERSITY_E
 /** @typedef {import("./UniversityEntranceQualificationData.mjs").UniversityEntranceQualificationData} UniversityEntranceQualificationData */
 /** @typedef {import("./UniversityEntranceQualificationSelectOption.mjs").UniversityEntranceQualificationSelectOption} UniversityEntranceQualificationSelectOption */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/UniversityEntranceQualificationElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/UniversityEntranceQualificationElement.css`
 );
 
 export class UniversityEntranceQualificationElement extends HTMLElement {

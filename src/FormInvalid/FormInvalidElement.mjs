@@ -1,9 +1,7 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/FormInvalidElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/FormInvalidElement.css`
 );
 
 export class FormInvalidElement extends HTMLElement {

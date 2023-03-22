@@ -11,10 +11,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../Subject/SubjectWithCombinations.mjs").SubjectWithCombinations} SubjectWithCombinations */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/IntendedDegreeProgramElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/IntendedDegreeProgramElement.css`
 );
 
 export class IntendedDegreeProgramElement extends HTMLElement {

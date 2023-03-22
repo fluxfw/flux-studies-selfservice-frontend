@@ -11,10 +11,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/ChoiceSubjectElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/ChoiceSubjectElement.css`
 );
 
 export class ChoiceSubjectElement extends HTMLElement {

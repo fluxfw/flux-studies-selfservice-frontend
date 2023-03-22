@@ -14,10 +14,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Resume/resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("./Start.mjs").Start} Start */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/StartElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/StartElement.css`
 );
 
 export class StartElement extends HTMLElement {

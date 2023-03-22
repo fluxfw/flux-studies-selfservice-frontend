@@ -14,10 +14,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Photo/PhotoService.mjs").PhotoService} PhotoService */
 /** @typedef {import("./Portrait.mjs").Portrait} Portrait */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/PortraitElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/PortraitElement.css`
 );
 
 export class PortraitElement extends HTMLElement {

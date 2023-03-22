@@ -10,10 +10,8 @@ import { FormTitleElement } from "../FormTitle/FormTitleElement.mjs";
 /** @typedef {import("../FormButtons/formButtonAction.mjs").formButtonAction} formButtonAction */
 /** @typedef {import("./InputElement.mjs").InputElement} InputElement */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/FormElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/FormElement.css`
 );
 
 export class FormElement extends HTMLElement {

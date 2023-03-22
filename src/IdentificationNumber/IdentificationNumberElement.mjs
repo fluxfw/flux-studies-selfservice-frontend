@@ -10,10 +10,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("./IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/IdentificationNumberElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/IdentificationNumberElement.css`
 );
 
 export class IdentificationNumberElement extends HTMLElement {

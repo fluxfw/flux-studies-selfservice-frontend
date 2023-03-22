@@ -7,10 +7,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/CompletedElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/CompletedElement.css`
 );
 
 export class CompletedElement extends HTMLElement {

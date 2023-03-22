@@ -10,10 +10,8 @@ import { MENU_ID_APPLICATION_LOGIN } from "../Menu/MENU_ID.mjs";
 /** @typedef {import("../Menu/Menu.mjs").Menu} Menu */
 /** @typedef {import("../Menu/menuFunction.mjs").menuFunction} menuFunction */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/MainElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/MainElement.css`
 );
 
 export class MainElement extends HTMLElement {

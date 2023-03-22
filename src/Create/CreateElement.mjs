@@ -8,10 +8,8 @@ import { PAGE_CREATE } from "../Page/PAGE.mjs";
 /** @typedef {import("../Password/PasswordService.mjs").PasswordService} PasswordService */
 /** @typedef {import("../Start/Start.mjs").Start} Start */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/CreateElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/CreateElement.css`
 );
 
 export class CreateElement extends HTMLElement {

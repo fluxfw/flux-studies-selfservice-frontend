@@ -10,10 +10,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("./IntendedDegreeProgram2.mjs").IntendedDegreeProgram2} IntendedDegreeProgram2 */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/IntendedDegreeProgram2Element.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/IntendedDegreeProgram2Element.css`
 );
 
 export class IntendedDegreeProgram2Element extends HTMLElement {

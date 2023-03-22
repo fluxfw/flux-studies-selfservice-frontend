@@ -7,10 +7,8 @@ import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 /** @typedef {import("./PhotoService.mjs").PhotoService} PhotoService */
 /** @typedef {import("./PhotoSize.mjs").PhotoSize} PhotoSize */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/PhotoElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/PhotoElement.css`
 );
 
 export class PhotoElement extends HTMLElement {

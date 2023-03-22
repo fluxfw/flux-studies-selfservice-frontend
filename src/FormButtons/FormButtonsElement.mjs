@@ -4,10 +4,8 @@ import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 
 /** @typedef {import("./FormButton.mjs").FormButton} FormButton */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/FormButtonsElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/FormButtonsElement.css`
 );
 
 export class FormButtonsElement extends HTMLElement {

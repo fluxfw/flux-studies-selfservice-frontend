@@ -44,7 +44,12 @@ import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMP
 /** @typedef {import("./UniversityEntranceQualification/UniversityEntranceQualification.mjs").UniversityEntranceQualification} UniversityEntranceQualification */
 /** @typedef {import("./UniversityEntranceQualification/UniversityEntranceQualificationElement.mjs").UniversityEntranceQualificationElement} UniversityEntranceQualificationElement */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
+flux_css_api.adopt(
+    document,
+    await flux_css_api.import(
+        `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Layout/style.css`
+    )
+);
 
 export class FluxStudisSelfserviceFrontend {
     /**
@@ -115,36 +120,14 @@ export class FluxStudisSelfserviceFrontend {
     }
 
     /**
+     * @param {boolean | null} previous_get_result
      * @returns {Promise<void>}
      */
-    async init() {
-        const flux_color_scheme = await this.#getFluxColorScheme();
-        await this.#getFluxLoadingApi();
-        const flux_localization_api = await this.#getFluxLocalizationApi();
-        await this.#getFluxPwaApi();
+    async showFrontend(previous_get_result = null) {
+        if (previous_get_result === null) {
+            await this.#init();
+        }
 
-        flux_css_api.adopt(
-            document,
-            await flux_css_api.import(
-                `${__dirname}/Layout/style.css`
-            )
-        );
-
-        await flux_color_scheme.renderColorScheme();
-
-        flux_localization_api.addModule(
-            `${__dirname}/Localization`
-        );
-
-        await flux_localization_api.selectDefaultLanguage();
-        await this.#afterSelectLanguage();
-    }
-
-    /**
-     * @param {boolean} previous_get_result
-     * @returns {Promise<void>}
-     */
-    async showFrontend(previous_get_result = false) {
         document.body.appendChild(this.#main_element = (await import("./Main/MainElement.mjs")).MainElement.new(
             await this.#getFluxColorScheme(),
             await this.#getFluxLocalizationApi(),
@@ -171,15 +154,15 @@ export class FluxStudisSelfserviceFrontend {
     }
 
     /**
-     * @param {boolean} ui
+     * @param {boolean | null} ui
      * @returns {Promise<void>}
      */
-    async #afterSelectLanguage(ui = false) {
+    async #afterSelectLanguage(ui = null) {
         await (await this.#getFluxPwaApi()).initPwa(
-            `${__dirname}/Pwa/manifest.json`
+            `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Pwa/manifest.json`
         );
 
-        if (!ui) {
+        if (!(ui ?? false)) {
             return;
         }
 
@@ -688,16 +671,28 @@ export class FluxStudisSelfserviceFrontend {
     }
 
     /**
-     * @param {boolean} previous_get_result
      * @returns {Promise<void>}
      */
-    async #next(previous_get_result = false) {
+    async #init() {
+        const flux_localization_api = await this.#getFluxLocalizationApi();
+        flux_localization_api.addModule(
+            `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Localization`
+        );
+        await flux_localization_api.selectDefaultLanguage();
+        await this.#afterSelectLanguage();
+    }
+
+    /**
+     * @param {boolean | null} previous_get_result
+     * @returns {Promise<void>}
+     */
+    async #next(previous_get_result = null) {
         scroll(0, 0);
 
         const get_loading_element = await this.#getLoadingElement();
 
         try {
-            if (!previous_get_result || this.#previous_get_result === null) {
+            if (!(previous_get_result ?? false) || this.#previous_get_result === null) {
                 this.#previous_get_result = await (await this.#getRequestService()).get();
             } else {
                 await new Promise(resolve => {

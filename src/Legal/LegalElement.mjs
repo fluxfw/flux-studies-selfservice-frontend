@@ -10,10 +10,8 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./Legal.mjs").Legal} Legal */
 
-const __dirname = import.meta.url.substring(0, import.meta.url.lastIndexOf("/"));
-
 const css = await flux_css_api.import(
-    `${__dirname}/LegalElement.css`
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/LegalElement.css`
 );
 
 export class LegalElement extends HTMLElement {
