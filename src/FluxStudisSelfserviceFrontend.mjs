@@ -10,12 +10,10 @@ import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMP
 /** @typedef {import("./Completed/CompletedElement.mjs").CompletedElement} CompletedElement */
 /** @typedef {import("./Libs/flux-color-scheme/src/FluxColorScheme.mjs").FluxColorScheme} FluxColorScheme */
 /** @typedef {import("./Libs/flux-http-api/src/FluxHttpApi.mjs").FluxHttpApi} FluxHttpApi */
-/** @typedef {import("./Libs/flux-loading-api/src/FluxLoadingApi.mjs").FluxLoadingApi} FluxLoadingApi */
 /** @typedef {import("./Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("./Libs/flux-pwa-api/src/FluxPwaApi.mjs").FluxPwaApi} FluxPwaApi */
 /** @typedef {import("./Libs/flux-settings-api/src/FluxSettingsApi.mjs").FluxSettingsApi} FluxSettingsApi */
 /** @typedef {import("./FormInvalid/FormInvalidElement.mjs").FormInvalidElement} FormInvalidElement */
-/** @typedef {import("./Libs/flux-loading-api/src/Loading/FullscreenLoadingElement.mjs").FullscreenLoadingElement} FullscreenLoadingElement */
 /** @typedef {import("./Get/GetResult.mjs").GetResult} GetResult */
 /** @typedef {import("./IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
 /** @typedef {import("./IdentificationNumber/IdentificationNumberElement.mjs").IdentificationNumberElement} IdentificationNumberElement */
@@ -60,10 +58,6 @@ export class FluxStudisSelfserviceFrontend {
      * @type {FluxHttpApi | null}
      */
     #flux_http_api = null;
-    /**
-     * @type {FluxLoadingApi | null}
-     */
-    #flux_loading_api = null;
     /**
      * @type {FluxLocalizationApi | null}
      */
@@ -250,15 +244,6 @@ export class FluxStudisSelfserviceFrontend {
     }
 
     /**
-     * @returns {Promise<FluxLoadingApi>}
-     */
-    async #getFluxLoadingApi() {
-        this.#flux_loading_api ??= (await import("./Libs/flux-loading-api/src/FluxLoadingApi.mjs")).FluxLoadingApi.new();
-
-        return this.#flux_loading_api;
-    }
-
-    /**
      * @returns {Promise<FluxLocalizationApi>}
      */
     async #getFluxLocalizationApi() {
@@ -276,7 +261,6 @@ export class FluxStudisSelfserviceFrontend {
     async #getFluxPwaApi() {
         this.#flux_pwa_api ??= (await import("./Libs/flux-pwa-api/src/FluxPwaApi.mjs")).FluxPwaApi.new(
             await this.#getFluxHttpApi(),
-            await this.#getFluxLoadingApi(),
             await this.#getFluxLocalizationApi(),
             await this.#getFluxSettingsApi()
         );
@@ -410,15 +394,6 @@ export class FluxStudisSelfserviceFrontend {
             ),
             back_function
         );
-    }
-
-    /**
-     * @returns {Promise<FullscreenLoadingElement>}
-     */
-    async #getLoadingElement() {
-        const loading_element = await (await this.#getFluxLoadingApi()).getFullscreenLoadingElement();
-        document.body.appendChild(loading_element);
-        return loading_element;
     }
 
     /**
@@ -575,7 +550,6 @@ export class FluxStudisSelfserviceFrontend {
     async #getPortraitElement(portrait, post_function, back_function = null) {
         return (await import("./Portrait/PortraitElement.mjs")).PortraitElement.new(
             await this.#getFluxLocalizationApi(),
-            async () => this.#getLoadingElement(),
             await this.#getLabelService(),
             await this.#getPhotoService(),
             portrait,
@@ -689,7 +663,7 @@ export class FluxStudisSelfserviceFrontend {
     async #next(previous_get_result = null) {
         scroll(0, 0);
 
-        const get_loading_element = await this.#getLoadingElement();
+        const get_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
 
         try {
             if (!(previous_get_result ?? false) || this.#previous_get_result === null) {
@@ -714,14 +688,14 @@ export class FluxStudisSelfserviceFrontend {
 
             return;
         } finally {
-            get_loading_element.remove();
+            get_flux_fullscreen_loading_spinner_element.remove();
         }
 
         await this.#main_element.replaceContent(
             await this.#getPage(
                 this.#previous_get_result,
                 async post => {
-                    const post_loading_element = await this.#getLoadingElement();
+                    const post_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
 
                     let post_result;
                     try {
@@ -749,7 +723,7 @@ export class FluxStudisSelfserviceFrontend {
                             ]
                         };
                     } finally {
-                        post_loading_element.remove();
+                        post_flux_fullscreen_loading_spinner_element.remove();
                     }
 
                     if (!post_result.ok) {
@@ -763,7 +737,7 @@ export class FluxStudisSelfserviceFrontend {
                 async () => {
                     this.#previous_get_result = null;
 
-                    const back_loading_element = await this.#getLoadingElement();
+                    const back_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
 
                     try {
                         await (await this.#getRequestService()).back();
@@ -780,7 +754,7 @@ export class FluxStudisSelfserviceFrontend {
 
                         return;
                     } finally {
-                        back_loading_element.remove();
+                        back_flux_fullscreen_loading_spinner_element.remove();
                     }
 
                     this.#next();
@@ -790,7 +764,7 @@ export class FluxStudisSelfserviceFrontend {
             async id => {
                 this.#previous_get_result = null;
 
-                const logout_loading_element = await this.#getLoadingElement();
+                const logout_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
 
                 try {
                     await (await this.#getRequestService()).menu(
@@ -809,7 +783,7 @@ export class FluxStudisSelfserviceFrontend {
 
                     return;
                 } finally {
-                    logout_loading_element.remove();
+                    logout_flux_fullscreen_loading_spinner_element.remove();
                 }
 
                 this.#next();
@@ -818,7 +792,7 @@ export class FluxStudisSelfserviceFrontend {
             this.#previous_get_result["can-logout"] ? async () => {
                 this.#previous_get_result = null;
 
-                const logout_loading_element = await this.#getLoadingElement();
+                const logout_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
 
                 try {
                     await (await this.#getRequestService()).logout();
@@ -835,7 +809,7 @@ export class FluxStudisSelfserviceFrontend {
 
                     return;
                 } finally {
-                    logout_loading_element.remove();
+                    logout_flux_fullscreen_loading_spinner_element.remove();
                 }
 
                 this.#next();

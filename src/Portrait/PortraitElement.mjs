@@ -8,7 +8,6 @@ import { TitleElement } from "../Title/TitleElement.mjs";
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenPortraitFunction.mjs").chosenPortraitFunction} chosenPortraitFunction */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
-/** @typedef {import("./getLoadingElement.mjs").getLoadingElement} getLoadingElement */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../Photo/Photo.mjs").Photo} Photo */
 /** @typedef {import("../Photo/PhotoService.mjs").PhotoService} PhotoService */
@@ -36,10 +35,6 @@ export class PortraitElement extends HTMLElement {
      */
     #form_element;
     /**
-     * @type {getLoadingElement}
-     */
-    #get_loading_element;
-    /**
      * @type {LabelService}
      */
     #label_service;
@@ -66,7 +61,6 @@ export class PortraitElement extends HTMLElement {
 
     /**
      * @param {FluxLocalizationApi} flux_localization_api
-     * @param {getLoadingElement} get_loading_element
      * @param {LabelService} label_service
      * @param {PhotoService} photo_service
      * @param {Portrait} portrait
@@ -74,10 +68,9 @@ export class PortraitElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @returns {PortraitElement}
      */
-    static new(flux_localization_api, get_loading_element, label_service, photo_service, portrait, chosen_portrait, back_function = null) {
+    static new(flux_localization_api, label_service, photo_service, portrait, chosen_portrait, back_function = null) {
         return new this(
             flux_localization_api,
-            get_loading_element,
             label_service,
             photo_service,
             portrait,
@@ -88,7 +81,6 @@ export class PortraitElement extends HTMLElement {
 
     /**
      * @param {FluxLocalizationApi} flux_localization_api
-     * @param {getLoadingElement} get_loading_element
      * @param {LabelService} label_service
      * @param {PhotoService} photo_service
      * @param {Portrait} portrait
@@ -96,11 +88,10 @@ export class PortraitElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(flux_localization_api, get_loading_element, label_service, photo_service, portrait, chosen_portrait, back_function) {
+    constructor(flux_localization_api, label_service, photo_service, portrait, chosen_portrait, back_function) {
         super();
 
         this.#flux_localization_api = flux_localization_api;
-        this.#get_loading_element = get_loading_element;
         this.#label_service = label_service;
         this.#photo_service = photo_service;
         this.#portrait = portrait;
@@ -318,7 +309,8 @@ export class PortraitElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #setPhoto(final = false) {
-        const loading_element = await this.#get_loading_element();
+        const flux_fullscreen_loading_spinner_element = (await import("../Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
+        document.body.appendChild(flux_fullscreen_loading_spinner_element);
 
         try {
             const photo = await this.#photo_service.fromInputElement(
@@ -383,7 +375,7 @@ export class PortraitElement extends HTMLElement {
                 )
             );
         } finally {
-            loading_element.remove();
+            flux_fullscreen_loading_spinner_element.remove();
         }
     }
 }
