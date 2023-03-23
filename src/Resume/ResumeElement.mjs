@@ -86,7 +86,10 @@ export class ResumeElement extends HTMLElement {
         this.#resume_function = resume_function;
         this.#back_function = back_function;
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

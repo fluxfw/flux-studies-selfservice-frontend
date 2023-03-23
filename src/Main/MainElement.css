@@ -10,7 +10,7 @@
 }
 
 .left {
-    background-color: var(--color-scheme-left-background-color);
+    background-color: var(--flux-color-scheme-left-background-color);
     flex-grow: 0;
     flex-shrink: 0;
     min-height: 100vh;
@@ -20,8 +20,8 @@
 }
 
 .left::after {
-    background-color: var(--color-scheme-left-border-color);
-    border: 1px solid var(--color-scheme-container-border-color);
+    background-color: var(--flux-color-scheme-left-border-color);
+    border: 1px solid var(--flux-color-scheme-container-border-color);
     border-bottom: none;
     border-top: none;
     content: "";
@@ -39,8 +39,8 @@
 }
 
 .menu {
-    background-color: var(--color-scheme-background);
-    color: var(--color-scheme-foreground);
+    background-color: var(--flux-color-scheme-background);
+    color: var(--flux-color-scheme-foreground);
     font-size: 13px;
     padding: 18px 30px;
 }
@@ -50,8 +50,8 @@
 }
 
 .menu[data-active] {
-    background-color: var(--color-scheme-accent);
-    color: var(--color-scheme-accent-foreground);
+    background-color: var(--flux-color-scheme-accent);
+    color: var(--flux-color-scheme-accent-foreground);
 }
 
 flux-select-color-scheme {
@@ -80,7 +80,7 @@ flux-select-color-scheme {
 }
 
 .header {
-    border-bottom: 1px solid var(--color-scheme-container-border-color);
+    border-bottom: 1px solid var(--flux-color-scheme-container-border-color);
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -112,17 +112,17 @@ flux-studis-selfservice-form-button {
 }
 
 flux-studis-selfservice-form-button {
-    --form-button-background-color: var(--color-scheme-background);
-    --form-button-text-color: var(--color-scheme-foreground);
+    --form-button-background-color: var(--flux-color-scheme-background);
+    --form-button-text-color: var(--flux-color-scheme-foreground);
 }
 
 .header2 {
-    border-bottom: 1px solid var(--color-scheme-container-border-color);
+    border-bottom: 1px solid var(--flux-color-scheme-container-border-color);
     padding: 23px 66px;
 }
 
 .arrow {
-    border: 1px solid var(--color-scheme-container-border-color);
+    border: 1px solid var(--flux-color-scheme-container-border-color);
     border-right: none;
     padding: 8px 11px;
     position: relative;
@@ -130,7 +130,7 @@ flux-studis-selfservice-form-button {
 }
 
 .arrow::after {
-    border: 1px solid var(--color-scheme-container-border-color);
+    border: 1px solid var(--flux-color-scheme-container-border-color);
     border-bottom: none;
     border-left: none;
     content: "";

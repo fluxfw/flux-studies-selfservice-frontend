@@ -86,7 +86,10 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         this.#back_function = back_function;
         this.#selects = [];
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

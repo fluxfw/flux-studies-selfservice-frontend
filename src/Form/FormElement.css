@@ -4,7 +4,7 @@
 }
 
 form {
-    background-color: var(--color-scheme-form-background-color);
+    background-color: var(--flux-color-scheme-form-background-color);
     padding: 30px 40px;
 }
 
@@ -37,10 +37,10 @@ label {
 .input_field,
 .input_select,
 .input_textarea {
-    background-color: var(--color-scheme-background);
-    border: 1px solid var(--color-scheme-input-border-color);
+    background-color: var(--flux-color-scheme-background);
+    border: 1px solid var(--flux-color-scheme-input-border-color);
     border-radius: 3px;
-    color: var(--color-scheme-foreground);
+    color: var(--flux-color-scheme-foreground);
     outline: none;
 }
 
@@ -53,7 +53,7 @@ label {
 .input:focus,
 .input_select:focus,
 .input_textarea:focus {
-    border-color: var(--color-scheme-foreground);
+    border-color: var(--flux-color-scheme-foreground);
 }
 
 .input_select[data-small] {

@@ -1,5 +1,5 @@
 :host {
-    background-color: var(--color-scheme-form-buttons-background-color);
+    background-color: var(--flux-color-scheme-form-buttons-background-color);
     display: block;
     min-height: 35px;
     padding: 10px 25px;

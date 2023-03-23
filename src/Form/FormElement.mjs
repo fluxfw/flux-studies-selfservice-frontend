@@ -68,7 +68,10 @@ export class FormElement extends HTMLElement {
         this.#custom_validation_function = custom_validation_function;
         this.#has_custom_validation_messages = false;
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

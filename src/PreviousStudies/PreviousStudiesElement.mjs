@@ -87,7 +87,10 @@ export class PreviousStudiesElement extends HTMLElement {
         this.#back_function = back_function;
         this.#previous_study_elements = [];
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

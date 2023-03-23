@@ -84,7 +84,10 @@ export class ChoiceSubjectElement extends HTMLElement {
         this.#chosen_subject_function = chosen_subject_function;
         this.#back_function = back_function;
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

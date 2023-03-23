@@ -88,7 +88,10 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         this.#chosen_intended_degree_program_function = chosen_intended_degree_program_function;
         this.#back_function = back_function;
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

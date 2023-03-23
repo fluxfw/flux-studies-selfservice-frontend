@@ -33,7 +33,10 @@ export class SubtitleElement extends HTMLElement {
 
         this.#subtitle = subtitle;
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

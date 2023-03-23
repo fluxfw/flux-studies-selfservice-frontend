@@ -77,7 +77,10 @@ export class CreateElement extends HTMLElement {
         this.#start = start;
         this.#create_function = create_function;
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

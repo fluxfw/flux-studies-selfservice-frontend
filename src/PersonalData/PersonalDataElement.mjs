@@ -102,7 +102,10 @@ export class PersonalDataElement extends HTMLElement {
         this.#filled_personal_data_function = filled_personal_data_function;
         this.#back_function = back_function;
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

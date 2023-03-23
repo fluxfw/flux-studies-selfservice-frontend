@@ -98,7 +98,10 @@ export class PortraitElement extends HTMLElement {
         this.#chosen_portrait_function = chosen_portrait;
         this.#back_function = back_function;
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

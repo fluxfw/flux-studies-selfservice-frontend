@@ -1,5 +1,5 @@
 :host {
-    background-color: var(--color-scheme-form-background-color);
+    background-color: var(--flux-color-scheme-form-background-color);
     display: inline-block;
     font-size: 14px;
     font-weight: bold;

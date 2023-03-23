@@ -33,7 +33,10 @@ export class FormTitleElement extends HTMLElement {
 
         this.#title = title;
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css

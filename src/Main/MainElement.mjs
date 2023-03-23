@@ -83,7 +83,10 @@ export class MainElement extends HTMLElement {
         this.#flux_studis_selfservice_frontend = flux_studis_selfservice_frontend;
         this.#layout = layout;
 
-        this.#shadow = this.attachShadow({ mode: "closed" });
+        this.#shadow = this.attachShadow({
+            mode: "closed"
+        });
+
         flux_css_api.adopt(
             this.#shadow,
             css
