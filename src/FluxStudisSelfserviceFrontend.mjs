@@ -664,6 +664,7 @@ export class FluxStudisSelfserviceFrontend {
         scroll(0, 0);
 
         const get_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
+        document.body.appendChild(get_flux_fullscreen_loading_spinner_element);
 
         try {
             if (!(previous_get_result ?? false) || this.#previous_get_result === null) {
@@ -696,6 +697,7 @@ export class FluxStudisSelfserviceFrontend {
                 this.#previous_get_result,
                 async post => {
                     const post_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
+                    document.body.appendChild(post_flux_fullscreen_loading_spinner_element);
 
                     let post_result;
                     try {
@@ -738,6 +740,7 @@ export class FluxStudisSelfserviceFrontend {
                     this.#previous_get_result = null;
 
                     const back_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
+                    document.body.appendChild(back_flux_fullscreen_loading_spinner_element);
 
                     try {
                         await (await this.#getRequestService()).back();
@@ -764,7 +767,8 @@ export class FluxStudisSelfserviceFrontend {
             async id => {
                 this.#previous_get_result = null;
 
-                const logout_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
+                const menu_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
+                document.body.appendChild(menu_flux_fullscreen_loading_spinner_element);
 
                 try {
                     await (await this.#getRequestService()).menu(
@@ -783,7 +787,7 @@ export class FluxStudisSelfserviceFrontend {
 
                     return;
                 } finally {
-                    logout_flux_fullscreen_loading_spinner_element.remove();
+                    menu_flux_fullscreen_loading_spinner_element.remove();
                 }
 
                 this.#next();
@@ -793,6 +797,7 @@ export class FluxStudisSelfserviceFrontend {
                 this.#previous_get_result = null;
 
                 const logout_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
+                document.body.appendChild(logout_flux_fullscreen_loading_spinner_element);
 
                 try {
                     await (await this.#getRequestService()).logout();
