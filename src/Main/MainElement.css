@@ -86,8 +86,11 @@ flux-select-color-scheme {
     flex-wrap: nowrap;
 }
 
-flux-select-language-buttons {
-    padding: 1px;
+flux-button-group {
+    align-self: center;
+    height: 40px;
+    margin-right: auto;
+    width: 200px;
 }
 
 .user,

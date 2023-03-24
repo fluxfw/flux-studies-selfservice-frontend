@@ -8,6 +8,7 @@ import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMP
 /** @typedef {import("./ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
 /** @typedef {import("./ChoiceSubject/ChoiceSubjectElement.mjs").ChoiceSubjectElement} ChoiceSubjectElement */
 /** @typedef {import("./Completed/CompletedElement.mjs").CompletedElement} CompletedElement */
+/** @typedef {import("./Libs/flux-button-group/src/FluxButtonGroupElement.mjs").FluxButtonGroupElement} FluxButtonGroupElement */
 /** @typedef {import("./Libs/flux-color-scheme/src/FluxColorScheme.mjs").FluxColorScheme} FluxColorScheme */
 /** @typedef {import("./Libs/flux-http-api/src/FluxHttpApi.mjs").FluxHttpApi} FluxHttpApi */
 /** @typedef {import("./Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
@@ -36,7 +37,6 @@ import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMP
 /** @typedef {import("./PreviousStudies/PreviousStudiesElement.mjs").PreviousStudiesElement} PreviousStudiesElement */
 /** @typedef {import("./Post/postFunction.mjs").postFunction} postFunction */
 /** @typedef {import("./Request/RequestService.mjs").RequestService} RequestService */
-/** @typedef {import("./Libs/flux-localization-api/src/SelectLanguage/SelectLanguageElement.mjs").SelectLanguageElement} SelectLanguageElement */
 /** @typedef {import("./Start/Start.mjs").Start} Start */
 /** @typedef {import("./Start/StartElement.mjs").StartElement} StartElement */
 /** @typedef {import("./UniversityEntranceQualification/UniversityEntranceQualification.mjs").UniversityEntranceQualification} UniversityEntranceQualification */
@@ -135,7 +135,7 @@ export class FluxStudisSelfserviceFrontend {
     }
 
     /**
-     * @returns {Promise<SelectLanguageElement>}
+     * @returns {Promise<FluxButtonGroupElement>}
      */
     async getSelectLanguageElement() {
         return (await this.#getFluxLocalizationApi()).getSelectLanguageElement(
