@@ -41,6 +41,7 @@
 .menu {
     background-color: var(--flux-color-scheme-background);
     color: var(--flux-color-scheme-foreground);
+    cursor: default;
     font-size: 13px;
     padding: 18px 30px;
 }
@@ -86,7 +87,7 @@ flux-select-color-scheme {
     flex-wrap: nowrap;
 }
 
-flux-button-group {
+.select_language {
     align-self: center;
     height: 40px;
     margin-right: auto;

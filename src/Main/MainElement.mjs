@@ -224,7 +224,9 @@ export class MainElement extends HTMLElement {
         this.#header_element = document.createElement("div");
         this.#header_element.classList.add("header");
 
-        this.#header_element.appendChild(await this.#flux_studis_selfservice_frontend.getSelectLanguageElement());
+        const select_language_element = await this.#flux_studis_selfservice_frontend.getSelectLanguageElement();
+        select_language_element.classList.add("select_language");
+        this.#header_element.appendChild(select_language_element);
 
         const print_button_element = FormButtonElement.new(
             await this.#flux_localization_api.translate(
