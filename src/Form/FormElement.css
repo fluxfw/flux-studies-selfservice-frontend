@@ -50,9 +50,9 @@ label {
     border-color: var(--mandatory-color);
 }
 
-.input:focus,
-.input_select:focus,
-.input_textarea:focus {
+.input:focus-visible,
+.input_select:focus-visible,
+.input_textarea:focus-visible {
     border-color: var(--flux-color-scheme-foreground);
 }
 

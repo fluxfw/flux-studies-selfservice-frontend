@@ -312,8 +312,7 @@ export class PortraitElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #setPhoto(final = false) {
-        const flux_fullscreen_loading_spinner_element = (await import("../Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
-        document.body.appendChild(flux_fullscreen_loading_spinner_element);
+        const flux_overlay_element = await (await import("../Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
 
         try {
             const photo = await this.#photo_service.fromInputElement(
@@ -378,7 +377,7 @@ export class PortraitElement extends HTMLElement {
                 )
             );
         } finally {
-            flux_fullscreen_loading_spinner_element.remove();
+            flux_overlay_element.remove();
         }
     }
 }

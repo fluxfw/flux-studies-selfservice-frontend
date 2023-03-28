@@ -663,8 +663,7 @@ export class FluxStudisSelfserviceFrontend {
     async #next(previous_get_result = null) {
         scroll(0, 0);
 
-        const get_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
-        document.body.appendChild(get_flux_fullscreen_loading_spinner_element);
+        const get_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
 
         try {
             if (!(previous_get_result ?? false) || this.#previous_get_result === null) {
@@ -689,15 +688,14 @@ export class FluxStudisSelfserviceFrontend {
 
             return;
         } finally {
-            get_flux_fullscreen_loading_spinner_element.remove();
+            get_flux_overlay_element.remove();
         }
 
         await this.#main_element.replaceContent(
             await this.#getPage(
                 this.#previous_get_result,
                 async post => {
-                    const post_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
-                    document.body.appendChild(post_flux_fullscreen_loading_spinner_element);
+                    const post_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
 
                     let post_result;
                     try {
@@ -725,7 +723,7 @@ export class FluxStudisSelfserviceFrontend {
                             ]
                         };
                     } finally {
-                        post_flux_fullscreen_loading_spinner_element.remove();
+                        post_flux_overlay_element.remove();
                     }
 
                     if (!post_result.ok) {
@@ -739,8 +737,7 @@ export class FluxStudisSelfserviceFrontend {
                 async () => {
                     this.#previous_get_result = null;
 
-                    const back_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
-                    document.body.appendChild(back_flux_fullscreen_loading_spinner_element);
+                    const back_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
 
                     try {
                         await (await this.#getRequestService()).back();
@@ -757,7 +754,7 @@ export class FluxStudisSelfserviceFrontend {
 
                         return;
                     } finally {
-                        back_flux_fullscreen_loading_spinner_element.remove();
+                        back_flux_overlay_element.remove();
                     }
 
                     this.#next();
@@ -767,8 +764,7 @@ export class FluxStudisSelfserviceFrontend {
             async id => {
                 this.#previous_get_result = null;
 
-                const menu_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
-                document.body.appendChild(menu_flux_fullscreen_loading_spinner_element);
+                const menu_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
 
                 try {
                     await (await this.#getRequestService()).menu(
@@ -787,7 +783,7 @@ export class FluxStudisSelfserviceFrontend {
 
                     return;
                 } finally {
-                    menu_flux_fullscreen_loading_spinner_element.remove();
+                    menu_flux_overlay_element.remove();
                 }
 
                 this.#next();
@@ -796,8 +792,7 @@ export class FluxStudisSelfserviceFrontend {
             this.#previous_get_result["can-logout"] ? async () => {
                 this.#previous_get_result = null;
 
-                const logout_flux_fullscreen_loading_spinner_element = (await import("./Libs/flux-loading-spinner/src/FluxFullscreenLoadingSpinnerElement.mjs")).FluxFullscreenLoadingSpinnerElement.new();
-                document.body.appendChild(logout_flux_fullscreen_loading_spinner_element);
+                const logout_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
 
                 try {
                     await (await this.#getRequestService()).logout();
@@ -814,7 +809,7 @@ export class FluxStudisSelfserviceFrontend {
 
                     return;
                 } finally {
-                    logout_flux_fullscreen_loading_spinner_element.remove();
+                    logout_flux_overlay_element.remove();
                 }
 
                 this.#next();
