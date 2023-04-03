@@ -127,9 +127,7 @@ export class PersonalDataElement extends HTMLElement {
                 salutation: this.#address_form_element.inputs.salutation.value,
                 "first-name": this.#address_form_element.inputs["first-name"].value,
                 "second-first-name": this.#address_form_element.inputs["second-first-name"].value,
-                "additional-first-names": this.#address_form_element.getTextareaValue(
-                    "additional-first-names"
-                ).split("\n").filter(name => name !== ""),
+                "additional-first-names": this.#address_form_element.inputs["additional-first-names"].value.split("\n").filter(name => name !== ""),
                 "last-name": this.#address_form_element.inputs["last-name"].value,
                 "registration-number": this.#address_form_element.inputs["registration-number"].value,
                 country: this.#address_form_element.inputs.country.value,
@@ -154,9 +152,7 @@ export class PersonalDataElement extends HTMLElement {
                 "parents-address": this.#parents_address_form_element.inputs["parents-address"].checked,
                 ...this.#parents_address_form_element.inputs["parents-address"].checked ? {
                     "parents-address-salutation": this.#parents_address_form_element.inputs["parents-address-salutation"].value,
-                    "parents-address-first-names": this.#parents_address_form_element.getTextareaValue(
-                        "parents-address-first-names"
-                    ).split("\n").filter(name => name !== ""),
+                    "parents-address-first-names": this.#parents_address_form_element.inputs["parents-address-first-names"].value.split("\n").filter(name => name !== ""),
                     "parents-address-last-name": this.#parents_address_form_element.inputs["parents-address-last-name"].value,
                     "parents-address-same-address": this.#parents_address_form_element.inputs["parents-address-same-address"].checked,
                     ...!this.#parents_address_form_element.inputs["parents-address-same-address"].checked ? {
@@ -233,9 +229,7 @@ export class PersonalDataElement extends HTMLElement {
         this.#address_form_element = FormElement.new(
             this.#flux_localization_api,
             async () => {
-                const additional_first_names = this.#address_form_element.getTextareaValue(
-                    "additional-first-names"
-                );
+                const additional_first_names = this.#address_form_element.inputs["additional-first-names"].value;
                 if (additional_first_names !== "" && additional_first_names.split("\n").some(name => name === "")) {
                     this.#address_form_element.setCustomValidationMessage(
                         this.#address_form_element.inputs["additional-first-names"],
@@ -676,9 +670,7 @@ export class PersonalDataElement extends HTMLElement {
             this.#flux_localization_api,
             async () => {
                 if (this.#parents_address_form_element.inputs["parents-address"].checked) {
-                    const parents_address_first_names = this.#parents_address_form_element.getTextareaValue(
-                        "parents-address-first-names"
-                    );
+                    const parents_address_first_names = this.#parents_address_form_element.inputs["parents-address-first-names"].value;
                     if (parents_address_first_names !== "" && parents_address_first_names.split("\n").some(name => name === "")) {
                         this.#parents_address_form_element.setCustomValidationMessage(
                             this.#parents_address_form_element.inputs["parents-address-first-names"],

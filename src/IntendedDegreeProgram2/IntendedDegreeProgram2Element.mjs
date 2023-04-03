@@ -119,9 +119,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                         id,
                         Array.from(input_element.selectedOptions).map(option_element => option_element.value)
                     ])) : null,
-                "further-information": this.#form_element.getTextareaValue(
-                    "further-information"
-                )
+                "further-information": this.#form_element.inputs["further-information"].value
             }
         );
 

@@ -279,14 +279,6 @@ export class FormElement extends HTMLElement {
     }
 
     /**
-     * @param {string} name
-     * @returns {string}
-     */
-    getTextareaValue(name) {
-        return this.inputs[name].value.replaceAll("\r\n", "\n").replaceAll("\r", "\n");
-    }
-
-    /**
      * @returns {{[key: string]: InputElement}}
      */
     get inputs() {

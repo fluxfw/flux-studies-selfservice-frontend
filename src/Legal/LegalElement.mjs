@@ -120,9 +120,7 @@ export class LegalElement extends HTMLElement {
                 "not-disqualified": this.#disqualification_form_element.inputs["not-disqualified"].checked,
                 agb: this.#agb_form_element.inputs.agb.checked,
                 complete: this.#complete_form_element.inputs.complete.checked,
-                comments: this.#comments_form_element.getTextareaValue(
-                    "comments"
-                )
+                comments: this.#comments_form_element.inputs.comments.value
             }
         );
 
