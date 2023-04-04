@@ -19,7 +19,7 @@ installLibrary() {
 
 checkAlreadyInstalled
 
-installLibrary flux-button-group https://github.com/fluxfw/flux-button-group/archive/refs/tags/v2023-04-03-1.tar.gz
+installLibrary flux-button-group https://github.com/fluxfw/flux-button-group/archive/refs/tags/v2023-04-04-1.tar.gz
 
 installLibrary flux-color-scheme https://github.com/fluxfw/flux-color-scheme/archive/refs/tags/v2023-03-27-1.tar.gz
 
@@ -31,9 +31,9 @@ installLibrary flux-loading-spinner https://github.com/fluxfw/flux-loading-spinn
 
 installLibrary flux-localization-api https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2023-03-24-1.tar.gz
 
-installLibrary flux-overlay https://github.com/fluxfw/flux-overlay/archive/refs/tags/v2023-04-03-1.tar.gz
+installLibrary flux-overlay https://github.com/fluxfw/flux-overlay/archive/refs/tags/v2023-04-04-1.tar.gz
 
-installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2023-04-03-1.tar.gz
+installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2023-04-04-1.tar.gz
 
 installLibrary flux-pwa-generator https://github.com/fluxfw/flux-pwa-generator/archive/refs/tags/v2023-03-22-1.tar.gz
 

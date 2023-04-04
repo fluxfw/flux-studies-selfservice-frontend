@@ -78,7 +78,7 @@ label {
     width: calc(60% - 4px);
 }
 
-.input_container :where(
+.input_container :is(
     .input_field,
     .input_readonly,
     .input_select,
@@ -88,7 +88,7 @@ label {
     order: unset;
 }
 
-.input_container :where(
+.input_container :is(
     .input_field,
     .input_readonly,
     .input_select:not([data-small]),
@@ -110,7 +110,7 @@ button:not(:disabled) {
     width: 40%;
 }
 
-:where(
+:is(
     .input:required,
     .input_container:has(.input:required),
     .input_select:required,
@@ -132,7 +132,7 @@ label[data-seperate] {
     flex-direction: column;
 }
 
-label[data-seperate] :where(
+label[data-seperate] :is(
     .input_field,
     .input_readonly,
     .input_select:not([data-small]),
@@ -147,7 +147,7 @@ label[data-seperate] .input_container {
 }
 
 @media (max-width: 1000px) {
-    label:where(
+    label:is(
         :has(.input_field),
         :has(.input_readonly),
         :has(.input_select),
