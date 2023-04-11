@@ -339,7 +339,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                 ] of Object.entries(this.#form_element.getInputsByNameStartsWith(
                     "single-choice-"
                 ))) {
-                    if (id in this.#intended_degree_program_2.values["single-choice"]) {
+                    if (Object.hasOwn(this.#intended_degree_program_2.values["single-choice"], id)) {
                         input_element.value = this.#intended_degree_program_2.values["single-choice"][id];
                     }
                 }
@@ -352,7 +352,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                 ] of Object.entries(this.#form_element.getInputsByNameStartsWith(
                     "multiple-choice-"
                 ))) {
-                    if (id in this.#intended_degree_program_2.values["multiple-choice"]) {
+                    if (Object.hasOwn(this.#intended_degree_program_2.values["multiple-choice"], id)) {
                         for (const option_element of input_element.options) {
                             if (this.#intended_degree_program_2.values["multiple-choice"][id].includes(option_element.value)) {
                                 option_element.selected = true;

@@ -118,7 +118,7 @@ export class PreviousStudiesElement extends HTMLElement {
 
         this.#previous_study_elements.push(previous_study_element);
 
-        this.#form_element.insertAdjacentElement("beforebegin", previous_study_element);
+        this.#form_element.before(previous_study_element);
 
         return previous_study_element;
     }
@@ -213,7 +213,7 @@ export class PreviousStudiesElement extends HTMLElement {
         add_previous_study_element.button.addEventListener("click", () => {
             this.#addPreviousStudy();
         });
-        subtitle_element.insertAdjacentElement("beforebegin", add_previous_study_element);
+        subtitle_element.before(add_previous_study_element);
 
         await this.#form_element.addButtons(
             () => {

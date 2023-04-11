@@ -521,7 +521,7 @@ export class PersonalDataElement extends HTMLElement {
             number_element.required = this.#personal_data[`required-phone-${phone_type}`];
 
             number_element.parentElement.remove();
-            area_code_element.insertAdjacentElement("afterend", number_element);
+            area_code_element.after(number_element);
 
             area_code_element.addEventListener("input", async () => {
                 this.#renderPhoneNumberFormat(
@@ -934,7 +934,7 @@ export class PersonalDataElement extends HTMLElement {
             this.#back_function
         );
 
-        this.#parents_address_form_element.insertAdjacentElement("afterend", this.#postal_address_form_element);
+        this.#parents_address_form_element.after(this.#postal_address_form_element);
     }
 
     /**

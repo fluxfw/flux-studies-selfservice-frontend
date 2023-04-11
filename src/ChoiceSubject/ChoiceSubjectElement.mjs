@@ -218,7 +218,7 @@ export class ChoiceSubjectElement extends HTMLElement {
             for (const input_element of Object.values(this.#qualifications_form_element.getInputsByNameStartsWith(
                 "qualification-"
             ))) {
-                if (input_element.value in this.#choice_subject.values.qualifications) {
+                if (Object.hasOwn(this.#choice_subject.values.qualifications, input_element.value)) {
                     input_element.checked = this.#choice_subject.values.qualifications[input_element.value];
                 }
             }

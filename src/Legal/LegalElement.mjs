@@ -349,7 +349,7 @@ export class LegalElement extends HTMLElement {
         comments_element.maxLength = this.#legal["max-comments-length"];
 
         const comments_left_element = document.createElement("div");
-        comments_element.parentElement.insertAdjacentElement("afterend", comments_left_element);
+        comments_element.parentElement.after(comments_left_element);
 
         comments_element.addEventListener("input", async () => {
             comments_left_element.innerText = await this.#flux_localization_api.translate(
