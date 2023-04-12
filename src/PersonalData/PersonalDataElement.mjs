@@ -475,7 +475,19 @@ export class PersonalDataElement extends HTMLElement {
                         this.#contact_form_element.setCustomValidationMessage(
                             this.#contact_form_element.inputs[`${PHONE_TYPES[0]}-phone-area-code`],
                             await this.#flux_localization_api.translate(
-                                "Please enter at least one phone!"
+                                this.#personal_data["only-one-phone"] ? "Please enter a phone!" : "Please enter at least one phone!"
+                            )
+                        );
+                        return false;
+                    }
+                }
+
+                if (this.#personal_data["only-one-phone"]) {
+                    if (PHONE_TYPES.filter(phone_type => this.#contact_form_element.inputs[`${phone_type}-phone-area-code`].value !== "").length > 1) {
+                        this.#contact_form_element.setCustomValidationMessage(
+                            this.#contact_form_element.inputs[`${PHONE_TYPES[0]}-phone-area-code`],
+                            await this.#flux_localization_api.translate(
+                                "Please enter only one phone!"
                             )
                         );
                         return false;
@@ -549,12 +561,12 @@ export class PersonalDataElement extends HTMLElement {
         );
         mother_language_element.required = true;
 
-        for (const language of this.#personal_data.languages) {
+        for (const mother_language of this.#personal_data["mother-languages"]) {
             const option_element = document.createElement("option");
-            option_element.text = await this.#label_service.getLanguageLabel(
-                language
+            option_element.text = await this.#label_service.getMotherLanguageLabel(
+                mother_language
             );
-            option_element.value = language.id;
+            option_element.value = mother_language.id;
             mother_language_element.appendChild(option_element);
         }
 
@@ -567,12 +579,12 @@ export class PersonalDataElement extends HTMLElement {
         );
         correspondence_language_element.required = true;
 
-        for (const language of this.#personal_data.languages) {
+        for (const correspondence_language of this.#personal_data["correspondence-languages"]) {
             const option_element = document.createElement("option");
-            option_element.text = await this.#label_service.getLanguageLabel(
-                language
+            option_element.text = await this.#label_service.getCorrespondenceLanguageLabel(
+                correspondence_language
             );
-            option_element.value = language.id;
+            option_element.value = correspondence_language.id;
             correspondence_language_element.appendChild(option_element);
         }
 
@@ -625,12 +637,12 @@ export class PersonalDataElement extends HTMLElement {
         );
         nationally_element.required = true;
 
-        for (const country of this.#personal_data.countries) {
+        for (const nationally of this.#personal_data.nationalities) {
             const option_element = document.createElement("option");
-            option_element.text = await this.#label_service.getCountryLabel(
-                country
+            option_element.text = await this.#label_service.getNationallyLabel(
+                nationally
             );
-            option_element.value = country.id;
+            option_element.value = nationally.id;
             nationally_element.appendChild(option_element);
         }
 
@@ -655,12 +667,12 @@ export class PersonalDataElement extends HTMLElement {
         );
         origin_place_element.required = true;
 
-        for (const place of this.#personal_data.places) {
+        for (const origin_place of this.#personal_data["origin-places"]) {
             const option_element = document.createElement("option");
-            option_element.text = await this.#label_service.getPlaceLabel(
-                place
+            option_element.text = await this.#label_service.getOriginPlaceLabel(
+                origin_place
             );
-            option_element.value = place.id;
+            option_element.value = origin_place.id;
             origin_place_element.appendChild(option_element);
         }
 

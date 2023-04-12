@@ -4,6 +4,7 @@
 /** @typedef {import("../CertificateType/CertificateType.mjs").CertificateType} CertificateType */
 /** @typedef {import("../Combination/Choice.mjs").Choice} Choice */
 /** @typedef {import("../Combination/Combination.mjs").Combination} Combination */
+/** @typedef {import("../CorrespondenceLanguage/CorrespondenceLanguage.mjs").CorrespondenceLanguage} CorrespondenceLanguage */
 /** @typedef {import("../Country/Country.mjs").Country} Country */
 /** @typedef {import("../DegreeProgram/DegreeProgram.mjs").DegreeProgram} DegreeProgram */
 /** @typedef {import("../DegreeTitle/DegreeTitle.mjs").DegreeTitle} DegreeTitle */
@@ -13,7 +14,10 @@
 /** @typedef {import("../Language/Language.mjs").Language} Language */
 /** @typedef {import("../Legal/Legal.mjs").Legal} Legal */
 /** @typedef {import("../Combination/Mandatory.mjs").Mandatory} Mandatory */
+/** @typedef {import("../MotherLanguage/MotherLanguage.mjs").MotherLanguage} MotherLanguage */
 /** @typedef {import("../Combination/MultipleChoice.mjs").MultipleChoice} MultipleChoice */
+/** @typedef {import("../Nationally/Nationally.mjs").Nationally} Nationally */
+/** @typedef {import("../OriginPlace/OriginPlace.mjs").OriginPlace} OriginPlace */
 /** @typedef {import("../Place/Place.mjs").Place} Place */
 /** @typedef {import("../Portrait/Portrait.mjs").Portrait} Portrait */
 /** @typedef {import("../Qualification/Qualification.mjs").Qualification} Qualification */
@@ -151,6 +155,16 @@ export class LabelService {
     }
 
     /**
+     * @param {CorrespondenceLanguage} correspondence_language
+     * @returns {Promise<string>}
+     */
+    async getCorrespondenceLanguageLabel(correspondence_language) {
+        return this.getLanguageLabel(
+            correspondence_language
+        );
+    }
+
+    /**
      * @param {Country} country
      * @returns {Promise<string>}
      */
@@ -248,6 +262,16 @@ export class LabelService {
     }
 
     /**
+     * @param {MotherLanguage} mother_language
+     * @returns {Promise<string>}
+     */
+    async getMotherLanguageLabel(mother_language) {
+        return this.getLanguageLabel(
+            mother_language
+        );
+    }
+
+    /**
      * @param {MultipleChoice} multiple_choice
      * @returns {Promise<string>}
      */
@@ -269,6 +293,26 @@ export class LabelService {
         return (await Promise.all(combination.mandatory.map(async mandatory => this.getMandatoryLabel(
             mandatory
         )))).join("\n");
+    }
+
+    /**
+     * @param {Nationally} nationally
+     * @returns {Promise<string>}
+     */
+    async getNationallyLabel(nationally) {
+        return await this.getLabel(
+            nationally.label
+        ) ?? nationally.id ?? "";
+    }
+
+    /**
+     * @param {OriginPlace} origin_place
+     * @returns {Promise<string>}
+     */
+    async getOriginPlaceLabel(origin_place) {
+        return this.getPlaceLabel(
+            origin_place
+        );
     }
 
     /**
