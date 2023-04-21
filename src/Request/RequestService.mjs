@@ -1,5 +1,3 @@
-import { CONTENT_TYPE_JSON } from "../Libs/flux-http-api/src/ContentType/CONTENT_TYPE.mjs";
-import { HEADER_ACCEPT } from "../Libs/flux-http-api/src/Header/HEADER.mjs";
 import { HttpClientRequest } from "../Libs/flux-http-api/src/Client/HttpClientRequest.mjs";
 import { METHOD_POST } from "../Libs/flux-http-api/src/Method/METHOD.mjs";
 
@@ -58,9 +56,7 @@ export class RequestService {
                 new URL(`${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/../api/get`),
                 null,
                 null,
-                {
-                    [HEADER_ACCEPT]: CONTENT_TYPE_JSON
-                },
+                null,
                 true
             )
         )).body.json();
@@ -75,9 +71,7 @@ export class RequestService {
                 new URL(`${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/../api/layout`),
                 null,
                 null,
-                {
-                    [HEADER_ACCEPT]: CONTENT_TYPE_JSON
-                },
+                null,
                 true
             )
         )).body.json();
@@ -109,9 +103,7 @@ export class RequestService {
                 new URL(`${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/../api/menu`),
                 id,
                 METHOD_POST,
-                {
-                    [HEADER_ACCEPT]: CONTENT_TYPE_JSON
-                },
+                null,
                 true,
                 false
             )
@@ -128,9 +120,7 @@ export class RequestService {
                 new URL(`${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/../api/post`),
                 post,
                 METHOD_POST,
-                {
-                    [HEADER_ACCEPT]: CONTENT_TYPE_JSON
-                },
+                null,
                 true
             )
         )).body.json();

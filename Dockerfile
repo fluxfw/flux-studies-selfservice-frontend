@@ -1,4 +1,4 @@
-FROM node:19-alpine AS build
+FROM node:20-alpine AS build
 
 COPY bin/install-libraries.sh /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-frontend/bin/install-libraries.sh
 RUN /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-frontend/bin/install-libraries.sh
