@@ -21,7 +21,7 @@ checkAlreadyInstalled
 
 installLibrary flux-button-group https://github.com/fluxfw/flux-button-group/archive/refs/tags/v2023-04-04-1.tar.gz
 
-installLibrary flux-color-scheme https://github.com/fluxfw/flux-color-scheme/archive/refs/tags/v2023-03-27-1.tar.gz
+installLibrary flux-color-scheme https://github.com/fluxfw/flux-color-scheme/archive/refs/tags/v2023-04-24-1.tar.gz
 
 installLibrary flux-css-api https://github.com/fluxfw/flux-css-api/archive/refs/tags/v2023-04-11-1.tar.gz
 
