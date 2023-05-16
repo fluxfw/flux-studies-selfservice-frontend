@@ -31,7 +31,7 @@ installLibrary flux-loading-spinner https://github.com/fluxfw/flux-loading-spinn
 
 installLibrary flux-localization-api https://github.com/fluxfw/flux-localization-api/archive/refs/tags/v2023-05-04-1.tar.gz
 
-installLibrary flux-overlay https://github.com/fluxfw/flux-overlay/archive/refs/tags/v2023-05-16-1.tar.gz
+installLibrary flux-overlay https://github.com/fluxfw/flux-overlay/archive/refs/tags/v2023-05-16-2.tar.gz
 
 installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2023-05-01-1.tar.gz
 
