@@ -88,10 +88,26 @@ flux-select-color-scheme {
 }
 
 .select_language {
-    align-self: center;
-    height: 40px;
+    --flux-button-group-active-background-color: var(--flux-color-scheme-background);
+    --flux-button-group-active-font-size: var(--flux-button-group-font-size);
+    --flux-button-group-active-foreground-color: var(--flux-color-scheme-accent);
+    --flux-button-group-active-right-border-color: var(--flux-button-group-right-border-color);
+    --flux-button-group-active-right-border-width: var(--flux-button-group-right-border-width);
+    --flux-button-group-active-top-border-color: var(--flux-button-group-active-background-color);
+    --flux-button-group-active-top-border-width: var(--flux-button-group-top-border-width);
+    --flux-button-group-font-size: 12px;
+    --flux-button-group-right-border-color: var(--flux-color-scheme-container-border-color);
+    --flux-button-group-right-border-width: 1px;
+    --flux-button-group-selected-background-color: var(--flux-color-scheme-background);
+    --flux-button-group-selected-font-size: var(--flux-button-group-font-size);
+    --flux-button-group-selected-foreground-color: var(--flux-color-scheme-foreground);
+    --flux-button-group-selected-right-border-color: var(--flux-button-group-right-border-color);
+    --flux-button-group-selected-right-border-width: var(--flux-button-group-right-border-width);
+    --flux-button-group-selected-top-border-width: var(--flux-button-group-top-border-width);
+    --flux-button-group-top-border-width: 3px;
     margin-right: auto;
-    width: 200px;
+    min-height: 40px;
+    width: 130px;
 }
 
 .user,
@@ -102,6 +118,7 @@ flux-studis-selfservice-form-button {
 }
 
 .user {
+    border-left: 1px solid var(--flux-color-scheme-container-border-color);
     text-align: center;
 }
 
