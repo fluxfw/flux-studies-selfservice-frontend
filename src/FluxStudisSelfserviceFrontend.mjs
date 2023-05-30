@@ -42,12 +42,11 @@ import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMP
 /** @typedef {import("./UniversityEntranceQualification/UniversityEntranceQualification.mjs").UniversityEntranceQualification} UniversityEntranceQualification */
 /** @typedef {import("./UniversityEntranceQualification/UniversityEntranceQualificationElement.mjs").UniversityEntranceQualificationElement} UniversityEntranceQualificationElement */
 
-flux_css_api.adopt(
-    document,
-    await flux_css_api.import(
-        `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Layout/style.css`
-    )
+const layout_css = await flux_css_api.import(
+    `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Layout/style.css`
 );
+
+document.adoptedStyleSheets.push(layout_css);
 
 export class FluxStudisSelfserviceFrontend {
     /**

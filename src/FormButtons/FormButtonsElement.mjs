@@ -49,10 +49,7 @@ export class FormButtonsElement extends HTMLElement {
             mode: "closed"
         });
 
-        flux_css_api.adopt(
-            this.#shadow,
-            css
-        );
+        this.#shadow.adoptedStyleSheets.push(css);
 
         this.#render();
     }
