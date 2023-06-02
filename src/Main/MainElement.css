@@ -88,26 +88,28 @@ flux-select-color-scheme {
 }
 
 .select_language {
-    --flux-button-group-active-background-color: var(--flux-color-scheme-background);
-    --flux-button-group-active-font-size: var(--flux-button-group-font-size);
-    --flux-button-group-active-foreground-color: var(--flux-color-scheme-accent);
-    --flux-button-group-active-right-border-color: var(--flux-button-group-right-border-color);
-    --flux-button-group-active-right-border-width: var(--flux-button-group-right-border-width);
-    --flux-button-group-active-top-border-color: var(--flux-button-group-active-background-color);
-    --flux-button-group-active-top-border-width: var(--flux-button-group-top-border-width);
-    --flux-button-group-font-size: 12px;
-    --flux-button-group-right-border-color: var(--flux-color-scheme-container-border-color);
-    --flux-button-group-right-border-width: 1px;
-    --flux-button-group-selected-background-color: var(--flux-color-scheme-background);
-    --flux-button-group-selected-font-size: var(--flux-button-group-font-size);
-    --flux-button-group-selected-foreground-color: var(--flux-color-scheme-foreground);
-    --flux-button-group-selected-right-border-color: var(--flux-button-group-right-border-color);
-    --flux-button-group-selected-right-border-width: var(--flux-button-group-right-border-width);
-    --flux-button-group-selected-top-border-width: var(--flux-button-group-top-border-width);
-    --flux-button-group-top-border-width: 3px;
+    --flux-button-group-active-button-background-color: var(--flux-color-scheme-background);
+    --flux-button-group-active-button-font-size: var(--flux-button-group-button-font-size);
+    --flux-button-group-active-button-foreground-color: var(--flux-color-scheme-accent);
+    --flux-button-group-active-button-right-border-color: var(--flux-button-group-button-right-border-color);
+    --flux-button-group-active-button-right-border-width: var(--flux-button-group-button-right-border-width);
+    --flux-button-group-active-button-top-border-color: var(--flux-button-group-active-button-background-color);
+    --flux-button-group-active-button-top-border-width: var(--flux-button-group-button-top-border-width);
+    --flux-button-group-button-font-size: 12px;
+    --flux-button-group-button-right-border-color: var(--flux-color-scheme-container-border-color);
+    --flux-button-group-button-right-border-width: 1px;
+    --flux-button-group-button-top-border-width: 3px;
+    --flux-button-group-button-width: 65px;
+    --flux-button-group-button-width-grow: 0;
+    --flux-button-group-button-width-shrink: 0;
+    --flux-button-group-selected-button-background-color: var(--flux-color-scheme-background);
+    --flux-button-group-selected-button-font-size: var(--flux-button-group-button-font-size);
+    --flux-button-group-selected-button-foreground-color: var(--flux-color-scheme-foreground);
+    --flux-button-group-selected-button-right-border-color: var(--flux-button-group-button-right-border-color);
+    --flux-button-group-selected-button-right-border-width: var(--flux-button-group-button-right-border-width);
+    --flux-button-group-selected-button-top-border-width: var(--flux-button-group-button-top-border-width);
     margin-right: auto;
     min-height: 40px;
-    width: 130px;
 }
 
 .user,
