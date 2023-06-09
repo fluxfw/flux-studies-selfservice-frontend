@@ -3,9 +3,9 @@ import { FormElement } from "../Form/FormElement.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_PERSONAL_DATA } from "../Page/PAGE.mjs";
 import { PHONE_TYPES } from "./PHONE_TYPES.mjs";
-import { regExpStringToRegExp } from "./regExpStringToRegExp.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
+import { valueToRegExp } from "../Libs/flux-form/src/DEFAULT_ADDITIONAL_VALIDATION_TYPES.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./filledPersonalDataFunction.mjs").filledPersonalDataFunction} filledPersonalDataFunction */
@@ -320,9 +320,10 @@ export class PersonalDataElement extends HTMLElement {
             "text",
             "registration-number"
         );
-        registration_number_element.pattern = regExpStringToRegExp(
-            this.#personal_data["registration-number-format"]
-        ).source;
+        registration_number_element.pattern = (await valueToRegExp(
+            this.#personal_data["registration-number-format"],
+            true
+        )).source;
 
         const country_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
@@ -621,9 +622,10 @@ export class PersonalDataElement extends HTMLElement {
             "text",
             "old-age-survivar-insurance-number"
         );
-        old_age_survivar_insurance_number_element.pattern = regExpStringToRegExp(
-            this.#personal_data["old-age-survivar-insurance-number-format"]
-        ).source;
+        old_age_survivar_insurance_number_element.pattern = (await valueToRegExp(
+            this.#personal_data["old-age-survivar-insurance-number-format"],
+            true
+        )).source;
 
         const nationally_element = this.#personal_information_form_element.addInput(
             await this.#flux_localization_api.translate(
@@ -1091,9 +1093,10 @@ export class PersonalDataElement extends HTMLElement {
             return;
         }
 
-        this.#contact_form_element.inputs[`${phone_type}-phone-number`].pattern = regExpStringToRegExp(
-            area_code["phone-number-format"]
-        ).source;
+        this.#contact_form_element.inputs[`${phone_type}-phone-number`].pattern = (await valueToRegExp(
+            area_code["phone-number-format"],
+            true
+        )).source;
         this.#contact_form_element.inputs[`${phone_type}-phone-number`].parentElement.nextElementSibling.innerText = await this.#flux_localization_api.translate(
             "{phone-title} ({phone-number-format})",
             null,
