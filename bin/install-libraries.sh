@@ -35,9 +35,9 @@ installLibrary flux-localization-api https://github.com/fluxfw/flux-localization
 
 installLibrary flux-overlay https://github.com/fluxfw/flux-overlay/archive/refs/tags/v2023-06-19-1.tar.gz
 
-installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2023-05-30-1.tar.gz
+installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/tags/v2023-06-20-1.tar.gz
 
-installLibrary flux-pwa-generator https://github.com/fluxfw/flux-pwa-generator/archive/refs/tags/v2023-04-24-1.tar.gz
+installLibrary flux-pwa-generator https://github.com/fluxfw/flux-pwa-generator/archive/refs/tags/v2023-06-20-1.tar.gz
 
 installLibrary flux-settings-api https://github.com/fluxfw/flux-settings-api/archive/refs/tags/v2023-04-11-1.tar.gz
 

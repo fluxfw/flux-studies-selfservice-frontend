@@ -3,5 +3,6 @@
 !bin/install-libraries.sh
 !src
 !src/**
-src/index.html
-src/Pwa/manifest-*.json
+src/index*.html
+src/Pwa/manifest*.json
+!src/Pwa/manifest-template.json
