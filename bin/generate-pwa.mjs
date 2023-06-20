@@ -21,10 +21,9 @@ try {
     );
 
     await flux_pwa_generator.generateIndexHtmls(
-        manifest_json_file,
+        join(web_root, "index-template.html"),
         join(web_root, "index.html"),
-        "Pwa/manifest.json",
-        "index.mjs"
+        manifest_json_file
     );
 } catch (error) {
     console.error(error);

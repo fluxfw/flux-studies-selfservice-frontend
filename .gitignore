@@ -11,4 +11,5 @@
 !README.md
 src/index*.html
 src/Pwa/manifest*.json
+!src/index-template.html
 !src/Pwa/manifest-template.json
