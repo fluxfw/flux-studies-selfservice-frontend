@@ -152,7 +152,7 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #afterSelectLanguage(ui = null) {
         await (await this.#getFluxPwaApi()).initPwa(
-            `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Pwa/manifest.json`
+            `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Manifest/manifest.json`
         );
 
         if (!(ui ?? false)) {
