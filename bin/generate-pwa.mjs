@@ -20,6 +20,11 @@ try {
         join(web_root, "Localization")
     );
 
+    await flux_pwa_generator.generateIcons(
+        join(web_root, "Icon", "icon-template.svg"),
+        manifest_json_file
+    );
+
     await flux_pwa_generator.generateIndexHtmls(
         join(web_root, "index-template.html"),
         join(web_root, "index.html"),

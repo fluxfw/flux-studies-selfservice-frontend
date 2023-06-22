@@ -1,5 +1,7 @@
 FROM node:20-alpine AS build
 
+RUN apk add --no-cache imagemagick
+
 COPY bin/install-libraries.sh /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-frontend/bin/install-libraries.sh
 RUN /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-frontend/bin/install-libraries.sh
 
