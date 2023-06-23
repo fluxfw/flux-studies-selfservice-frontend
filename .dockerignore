@@ -1,5 +1,5 @@
 *
-!bin/generate-pwa.mjs
+!bin/build.mjs
 !bin/install-libraries.sh
 !src
 !src/**

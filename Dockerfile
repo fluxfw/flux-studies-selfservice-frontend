@@ -7,7 +7,7 @@ RUN /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-f
 
 COPY . /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-frontend
 
-RUN /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-frontend/bin/generate-pwa.mjs
+RUN /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-frontend/bin/build.mjs prod
 
 RUN cp -L -R /build/flux-studis-selfservice-frontend-build/libs/flux-studis-selfservice-frontend/src /build/flux-studis-selfservice-frontend && rm -rf /build/flux-studis-selfservice-frontend-build
 
