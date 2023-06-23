@@ -27,13 +27,10 @@ try {
     const icon_template_file = join(icon_folder, "icon-template.svg");
     const manifest_template_json_file = join(manifest_folder, "manifest-template.json");
     const manifest_json_file = join(manifest_folder, "manifest.json");
-    const base_filter = file => (file.includes("/bin/") || file.includes("/src/")) && ![
+    const libs_file_filter = file => file.startsWith("flux-") ? (file.includes("/bin/") || file.includes("/src/")) && !file.startsWith("flux-pwa-generator/") && !file.endsWith("/bin/build.mjs") && ![
         ".md",
         ".sh"
-    ].includes(extname(file)) && !basename(file).includes("-template");
-    const libs_file_filter = file => file.startsWith("flux-") ? !file.startsWith("flux-pwa-generator/") && !file.endsWith("/bin/build.mjs") && base_filter(
-        file
-    ) : true;
+    ].includes(extname(file)) && !basename(file).includes("-template") : true;
 
     await flux_pwa_generator.generateManifestJsons(
         manifest_template_json_file,
