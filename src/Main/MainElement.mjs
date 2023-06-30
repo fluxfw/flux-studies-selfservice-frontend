@@ -200,7 +200,9 @@ export class MainElement extends HTMLElement {
         this.#menu_element = document.createElement("div");
         left_element.appendChild(this.#menu_element);
 
-        left_element.appendChild(await this.#flux_color_scheme.getSelectColorSchemeElement());
+        const select_color_scheme_element = await this.#flux_color_scheme.getSelectColorSchemeElement();
+        select_color_scheme_element.classList.add("select_color_scheme");
+        left_element.appendChild(select_color_scheme_element); 
 
         const logo_link_element = document.createElement("a");
         logo_link_element.classList.add("logo");

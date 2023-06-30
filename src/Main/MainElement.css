@@ -55,9 +55,10 @@
     color: var(--flux-color-scheme-accent-foreground);
 }
 
-flux-select-color-scheme {
-    padding: 30px;
-    width: fit-content;
+.select_color_scheme {
+    --flux-select-color-scheme-background-color: transparent;
+    margin: 30px;
+    width: auto;
 }
 
 .logo {
