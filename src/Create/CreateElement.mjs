@@ -171,7 +171,7 @@ export class CreateElement extends HTMLElement {
                 semester
             );
             option_element.value = semester.id;
-            semester_element.appendChild(option_element);
+            semester_element.append(option_element);
         }
 
         this.#form_element.addSubtitle(
@@ -210,7 +210,7 @@ export class CreateElement extends HTMLElement {
             }
         );
 
-        this.#shadow.appendChild(this.#form_element);
+        this.#shadow.append(this.#form_element);
     }
 }
 

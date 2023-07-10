@@ -211,13 +211,13 @@ export class PersonalDataElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "Personal data"
             )
         ));
 
-        this.#shadow.appendChild(SubtitleElement.new(
+        this.#shadow.append(SubtitleElement.new(
             await this.#flux_localization_api.translate(
                 "Please pay attention to use the correct spelling (Upper and lower case letters)"
             )
@@ -272,7 +272,7 @@ export class PersonalDataElement extends HTMLElement {
                 salutation
             );
             option_element.value = salutation.id;
-            salutation_element.appendChild(option_element);
+            salutation_element.append(option_element);
         }
 
         const first_name_element = this.#address_form_element.addInput(
@@ -340,7 +340,7 @@ export class PersonalDataElement extends HTMLElement {
                 country
             );
             option_element.value = country.id;
-            country_element.appendChild(option_element);
+            country_element.append(option_element);
         }
 
         const extra_address_line_element = this.#address_form_element.addInput(
@@ -413,7 +413,7 @@ export class PersonalDataElement extends HTMLElement {
                 place
             );
             option_element.value = place.id;
-            place_element.appendChild(option_element);
+            place_element.append(option_element);
         }
 
         postal_code_element.addEventListener("input", () => {
@@ -441,7 +441,7 @@ export class PersonalDataElement extends HTMLElement {
             postal_code_element.valueAsNumber = place["postal-code"];
         });
 
-        this.#shadow.appendChild(this.#address_form_element);
+        this.#shadow.append(this.#address_form_element);
 
         this.#contact_form_element = FormElement.new(
             this.#flux_localization_api,
@@ -519,7 +519,7 @@ export class PersonalDataElement extends HTMLElement {
                     area_code
                 );
                 option_element.value = area_code.id;
-                area_code_element.appendChild(option_element);
+                area_code_element.append(option_element);
             }
 
             const number_element = this.#contact_form_element.addInput(
@@ -565,7 +565,7 @@ export class PersonalDataElement extends HTMLElement {
                 mother_language
             );
             option_element.value = mother_language.id;
-            mother_language_element.appendChild(option_element);
+            mother_language_element.append(option_element);
         }
 
         const correspondence_language_element = this.#contact_form_element.addInput(
@@ -583,10 +583,10 @@ export class PersonalDataElement extends HTMLElement {
                 correspondence_language
             );
             option_element.value = correspondence_language.id;
-            correspondence_language_element.appendChild(option_element);
+            correspondence_language_element.append(option_element);
         }
 
-        this.#shadow.appendChild(this.#contact_form_element);
+        this.#shadow.append(this.#contact_form_element);
 
         this.#personal_information_form_element = FormElement.new(
             this.#flux_localization_api
@@ -642,10 +642,10 @@ export class PersonalDataElement extends HTMLElement {
                 nationally
             );
             option_element.value = nationally.id;
-            nationally_element.appendChild(option_element);
+            nationally_element.append(option_element);
         }
 
-        this.#shadow.appendChild(this.#personal_information_form_element);
+        this.#shadow.append(this.#personal_information_form_element);
 
         this.#origin_place_form_element = FormElement.new(
             this.#flux_localization_api
@@ -672,10 +672,10 @@ export class PersonalDataElement extends HTMLElement {
                 origin_place
             );
             option_element.value = origin_place.id;
-            origin_place_element.appendChild(option_element);
+            origin_place_element.append(option_element);
         }
 
-        this.#shadow.appendChild(this.#origin_place_form_element);
+        this.#shadow.append(this.#origin_place_form_element);
 
         this.#parents_address_form_element = FormElement.new(
             this.#flux_localization_api,
@@ -733,9 +733,9 @@ export class PersonalDataElement extends HTMLElement {
             this.#back_function
         );
 
-        this.#shadow.appendChild(this.#parents_address_form_element);
+        this.#shadow.append(this.#parents_address_form_element);
 
-        this.#shadow.appendChild(MandatoryElement.new(
+        this.#shadow.append(MandatoryElement.new(
             this.#flux_localization_api
         ));
 
@@ -878,7 +878,7 @@ export class PersonalDataElement extends HTMLElement {
                 salutation
             );
             option_element.value = salutation.id;
-            parents_address_salutation_element.appendChild(option_element);
+            parents_address_salutation_element.append(option_element);
         }
 
         const parents_address_first_names_element = this.#parents_address_form_element.addInput(
@@ -980,7 +980,7 @@ export class PersonalDataElement extends HTMLElement {
                     country
                 );
                 option_element.value = country.id;
-                parents_address_country_element.appendChild(option_element);
+                parents_address_country_element.append(option_element);
             }
 
             this.#parents_address_form_element.addInput(
@@ -1045,7 +1045,7 @@ export class PersonalDataElement extends HTMLElement {
                     place
                 );
                 option_element.value = place.id;
-                parents_address_place_element.appendChild(option_element);
+                parents_address_place_element.append(option_element);
             }
 
             parents_address_postal_code_element.addEventListener("input", () => {

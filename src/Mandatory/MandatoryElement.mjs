@@ -52,7 +52,7 @@ export class MandatoryElement extends HTMLElement {
         mandatory_element.innerText = await this.#flux_localization_api.translate(
             "Mandatory"
         );
-        this.#shadow.appendChild(mandatory_element);
+        this.#shadow.append(mandatory_element);
     }
 }
 

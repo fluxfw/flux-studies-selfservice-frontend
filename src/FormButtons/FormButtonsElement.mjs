@@ -59,7 +59,7 @@ export class FormButtonsElement extends HTMLElement {
      */
     #render() {
         if (this.#subtitle !== null) {
-            this.#shadow.appendChild(FormSubtitleElement.new(
+            this.#shadow.append(FormSubtitleElement.new(
                 this.#subtitle
             ));
         }
@@ -77,10 +77,10 @@ export class FormButtonsElement extends HTMLElement {
             button_element.button.addEventListener("click", () => {
                 button.action();
             });
-            buttons_element.appendChild(button_element);
+            buttons_element.append(button_element);
         }
 
-        this.#shadow.appendChild(buttons_element);
+        this.#shadow.append(buttons_element);
     }
 }
 

@@ -293,7 +293,7 @@ export class PhotoElement extends HTMLElement {
         this.#container_element = document.createElement("div");
         this.#container_element.classList.add("container");
 
-        this.#container_element.appendChild(this.#image_element = new Image());
+        this.#container_element.append(this.#image_element = new Image());
 
         this.#container_element.addEventListener("mousedown", this);
         this.#container_element.addEventListener("touchcancel", this);
@@ -306,11 +306,11 @@ export class PhotoElement extends HTMLElement {
         this.#container_element.addEventListener("touchstart", this, {
             passive: false
         });
-        this.#shadow.appendChild(this.#container_element);
+        this.#shadow.append(this.#container_element);
 
         this.#size_element = document.createElement("div");
         this.#size_element.classList.add("size");
-        this.#shadow.appendChild(this.#size_element);
+        this.#shadow.append(this.#size_element);
 
         this.#subtitle_element = FormSubtitleElement.new(
             await this.#flux_localization_api.translate(
@@ -318,7 +318,7 @@ export class PhotoElement extends HTMLElement {
             )
         );
         this.#subtitle_element.hidden = true;
-        this.#shadow.appendChild(this.#subtitle_element);
+        this.#shadow.append(this.#subtitle_element);
 
         this.#remove_crop_element = FormButtonElement.new(
             await this.#flux_localization_api.translate(
@@ -330,7 +330,7 @@ export class PhotoElement extends HTMLElement {
         this.#remove_crop_element.button.addEventListener("click", () => {
             this.#removeRectangle();
         });
-        this.#shadow.appendChild(this.#remove_crop_element);
+        this.#shadow.append(this.#remove_crop_element);
     }
 
     /**
@@ -437,7 +437,7 @@ export class PhotoElement extends HTMLElement {
         if (this.#rectangle_element === null) {
             this.#rectangle_element = document.createElement("div");
             this.#rectangle_element.classList.add("rectangle");
-            this.#container_element.appendChild(this.#rectangle_element);
+            this.#container_element.append(this.#rectangle_element);
             this.#remove_crop_element.button.disabled = false;
         }
 

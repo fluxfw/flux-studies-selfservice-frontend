@@ -141,7 +141,7 @@ export class ResumeElement extends HTMLElement {
             this.#back_function
         );
 
-        this.#shadow.appendChild(this.#form_element);
+        this.#shadow.append(this.#form_element);
     }
 
     /**

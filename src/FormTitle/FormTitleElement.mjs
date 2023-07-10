@@ -47,7 +47,7 @@ export class FormTitleElement extends HTMLElement {
      * @returns {void}
      */
     addElement(element) {
-        this.#shadow.appendChild(element);
+        this.#shadow.append(element);
     }
 
     /**
@@ -56,7 +56,7 @@ export class FormTitleElement extends HTMLElement {
     #render() {
         const title_element = document.createElement("span");
         title_element.innerText = this.#title;
-        this.#shadow.appendChild(title_element);
+        this.#shadow.append(title_element);
     }
 }
 

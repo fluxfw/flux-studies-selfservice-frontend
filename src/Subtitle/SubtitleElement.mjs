@@ -48,7 +48,7 @@ export class SubtitleElement extends HTMLElement {
     #render() {
         const subtitle_element = document.createElement("span");
         subtitle_element.innerText = this.#subtitle;
-        this.#shadow.appendChild(subtitle_element);
+        this.#shadow.append(subtitle_element);
     }
 }
 

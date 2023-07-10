@@ -176,7 +176,7 @@ export class PortraitElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "Portrait"
             )
@@ -257,7 +257,7 @@ export class PortraitElement extends HTMLElement {
         });
         input_element.required = this.#portrait["required-photo"];
 
-        input_element.parentElement.parentElement.parentElement.appendChild(this.#photo_element = PhotoElement.new(
+        input_element.parentElement.parentElement.parentElement.append(this.#photo_element = PhotoElement.new(
             this.#flux_localization_api,
             this.#photo_service
         ));
@@ -286,9 +286,9 @@ export class PortraitElement extends HTMLElement {
             this.#back_function
         );
 
-        this.#shadow.appendChild(this.#form_element);
+        this.#shadow.append(this.#form_element);
 
-        this.#shadow.appendChild(MandatoryElement.new(
+        this.#shadow.append(MandatoryElement.new(
             this.#flux_localization_api
         ));
 

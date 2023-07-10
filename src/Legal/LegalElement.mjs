@@ -146,7 +146,7 @@ export class LegalElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "Legal"
             )
@@ -241,7 +241,7 @@ export class LegalElement extends HTMLElement {
             }
         }
 
-        this.#shadow.appendChild(this.#degree_program_form_element);
+        this.#shadow.append(this.#degree_program_form_element);
 
         this.#disqualification_form_element = FormElement.new(
             this.#flux_localization_api
@@ -262,7 +262,7 @@ export class LegalElement extends HTMLElement {
         );
         not_disqualified_element.required = true;
 
-        this.#shadow.appendChild(this.#disqualification_form_element);
+        this.#shadow.append(this.#disqualification_form_element);
 
         this.#agb_form_element = FormElement.new(
             this.#flux_localization_api
@@ -296,9 +296,9 @@ export class LegalElement extends HTMLElement {
         agb_link_element.rel = "noopener noreferrer";
         agb_link_element.target = "__blank";
         agb_element.nextElementSibling.append(" ");
-        agb_element.nextElementSibling.appendChild(agb_link_element);
+        agb_element.nextElementSibling.append(agb_link_element);
 
-        this.#shadow.appendChild(this.#agb_form_element);
+        this.#shadow.append(this.#agb_form_element);
 
         this.#complete_form_element = FormElement.new(
             this.#flux_localization_api
@@ -319,7 +319,7 @@ export class LegalElement extends HTMLElement {
         );
         complete_element.required = true;
 
-        this.#shadow.appendChild(this.#complete_form_element);
+        this.#shadow.append(this.#complete_form_element);
 
         this.#comments_form_element = FormElement.new(
             this.#flux_localization_api
@@ -365,9 +365,9 @@ export class LegalElement extends HTMLElement {
             this.#back_function
         );
 
-        this.#shadow.appendChild(this.#comments_form_element);
+        this.#shadow.append(this.#comments_form_element);
 
-        this.#shadow.appendChild(MandatoryElement.new(
+        this.#shadow.append(MandatoryElement.new(
             this.#flux_localization_api
         ));
 

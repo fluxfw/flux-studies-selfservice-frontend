@@ -188,7 +188,7 @@ export class PreviousStudiesElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "Your previous studies"
             )
@@ -219,9 +219,9 @@ export class PreviousStudiesElement extends HTMLElement {
             this.#back_function
         );
 
-        this.#shadow.appendChild(this.#form_element);
+        this.#shadow.append(this.#form_element);
 
-        this.#shadow.appendChild(MandatoryElement.new(
+        this.#shadow.append(MandatoryElement.new(
             this.#flux_localization_api
         ));
 

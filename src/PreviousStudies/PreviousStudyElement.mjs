@@ -163,7 +163,7 @@ export class PreviousStudyElement extends HTMLElement {
                 certificate_type
             );
             option_element.value = certificate_type.id;
-            certificate_type_element.appendChild(option_element);
+            certificate_type_element.append(option_element);
         }
 
         const start_date_element = this.#form_element.addInput(
@@ -207,7 +207,7 @@ export class PreviousStudyElement extends HTMLElement {
                 school
             );
             option_element.value = school.id;
-            university_element.appendChild(option_element);
+            university_element.append(option_element);
         }
 
         const subject_element = this.#form_element.addInput(
@@ -247,7 +247,7 @@ export class PreviousStudyElement extends HTMLElement {
                 degree_title
             );
             option_element.value = degree_title.id;
-            degree_title_element.appendChild(option_element);
+            degree_title_element.append(option_element);
         }
 
         const certificate_country_element = this.#form_element.addInput(
@@ -265,7 +265,7 @@ export class PreviousStudyElement extends HTMLElement {
                 country
             );
             option_element.value = country.id;
-            certificate_country_element.appendChild(option_element);
+            certificate_country_element.append(option_element);
         }
 
         const certificate_canton_element = this.#form_element.addInput(
@@ -283,7 +283,7 @@ export class PreviousStudyElement extends HTMLElement {
                 canton
             );
             option_element.value = canton.id;
-            certificate_canton_element.appendChild(option_element);
+            certificate_canton_element.append(option_element);
         }
 
         const certificate_place_element = this.#form_element.addInput(
@@ -301,10 +301,10 @@ export class PreviousStudyElement extends HTMLElement {
                 place
             );
             option_element.value = place.id;
-            certificate_place_element.appendChild(option_element);
+            certificate_place_element.append(option_element);
         }
 
-        this.#shadow.appendChild(this.#form_element);
+        this.#shadow.append(this.#form_element);
 
         if (this.#values !== null) {
             certificate_type_element.value = this.#values["certificate-type"];

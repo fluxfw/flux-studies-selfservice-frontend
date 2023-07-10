@@ -60,7 +60,7 @@ export class FormButtonElement extends HTMLElement {
         this.#button_element = document.createElement("button");
         this.#button_element.innerText = this.#label;
         this.#button_element.type = "button";
-        this.#shadow.appendChild(this.#button_element);
+        this.#shadow.append(this.#button_element);
     }
 }
 

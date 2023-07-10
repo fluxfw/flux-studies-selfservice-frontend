@@ -140,7 +140,7 @@ export class ChoiceSubjectElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "Choice of subject"
             )
@@ -174,7 +174,7 @@ export class ChoiceSubjectElement extends HTMLElement {
             });
         }
 
-        this.#shadow.appendChild(this.#degree_program_form_element);
+        this.#shadow.append(this.#degree_program_form_element);
 
         this.#qualifications_form_element = FormElement.new(
             this.#flux_localization_api
@@ -193,9 +193,9 @@ export class ChoiceSubjectElement extends HTMLElement {
             this.#back_function
         );
 
-        this.#shadow.appendChild(this.#qualifications_form_element);
+        this.#shadow.append(this.#qualifications_form_element);
 
-        this.#shadow.appendChild(MandatoryElement.new(
+        this.#shadow.append(MandatoryElement.new(
             this.#flux_localization_api
         ));
 

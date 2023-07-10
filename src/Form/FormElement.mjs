@@ -108,7 +108,7 @@ export class FormElement extends HTMLElement {
             ],
             subtitle
         );
-        this.#shadow.appendChild(this.#buttons_element);
+        this.#shadow.append(this.#buttons_element);
         return this.#buttons_element;
     }
 
@@ -150,14 +150,14 @@ export class FormElement extends HTMLElement {
             const option_element = document.createElement("option");
             option_element.text = "--";
             option_element.value = "";
-            input_element.appendChild(option_element);
+            input_element.append(option_element);
         }
 
         if (container) {
             const container_element = document.createElement("div");
             container_element.classList.add("input_container");
 
-            container_element.appendChild(input_element);
+            container_element.append(input_element);
 
             if (type === "file") {
                 const remove_element = FormButtonElement.new(
@@ -173,20 +173,20 @@ export class FormElement extends HTMLElement {
                     remove_element.button.disabled = input_element.files.length < 1;
                 });
 
-                container_element.appendChild(remove_element);
+                container_element.append(remove_element);
             }
 
-            label_element.appendChild(container_element);
+            label_element.append(container_element);
         } else {
-            label_element.appendChild(input_element);
+            label_element.append(input_element);
         }
 
         const text_element = document.createElement("div");
         text_element.classList.add("text");
         text_element.innerText = label;
-        label_element.appendChild(text_element);
+        label_element.append(text_element);
 
-        this.#form_element.appendChild(label_element);
+        this.#form_element.append(label_element);
 
         return input_element;
     }
@@ -221,7 +221,7 @@ export class FormElement extends HTMLElement {
         const subtitle_element = FormSubtitleElement.new(
             subtitle
         );
-        this.#form_element.appendChild(subtitle_element);
+        this.#form_element.append(subtitle_element);
         return subtitle_element;
     }
 
@@ -357,7 +357,7 @@ export class FormElement extends HTMLElement {
      * @returns {void}
      */
     #render() {
-        this.#shadow.appendChild(this.#form_element = document.createElement("form"));
+        this.#shadow.append(this.#form_element = document.createElement("form"));
         this.#form_element.addEventListener("input", () => {
             this.#removeCustomValidationMessages();
         });

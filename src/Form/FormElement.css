@@ -37,10 +37,10 @@ label {
 .input_field,
 .input_select,
 .input_textarea {
-    background-color: var(--flux-color-scheme-background);
+    background-color: var(--flux-color-scheme-background-color);
     border: 1px solid var(--flux-color-scheme-input-border-color);
     border-radius: 3px;
-    color: var(--flux-color-scheme-foreground);
+    color: var(--flux-color-scheme-foreground-color);
     outline: none;
 }
 
@@ -53,7 +53,7 @@ label {
 .input:focus-visible,
 .input_select:focus-visible,
 .input_textarea:focus-visible {
-    border-color: var(--flux-color-scheme-foreground);
+    border-color: var(--flux-color-scheme-foreground-color);
 }
 
 .input_select[data-small] {

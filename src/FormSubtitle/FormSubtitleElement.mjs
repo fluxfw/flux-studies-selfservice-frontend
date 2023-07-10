@@ -47,7 +47,7 @@ export class FormSubtitleElement extends HTMLElement {
      * @returns {void}
      */
     addElement(element) {
-        this.#shadow.appendChild(element);
+        this.#shadow.append(element);
     }
 
     /**
@@ -56,7 +56,7 @@ export class FormSubtitleElement extends HTMLElement {
     #render() {
         const subtitle_element = document.createElement("span");
         subtitle_element.innerText = this.#subtitle;
-        this.#shadow.appendChild(subtitle_element);
+        this.#shadow.append(subtitle_element);
     }
 }
 

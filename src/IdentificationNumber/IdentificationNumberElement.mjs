@@ -125,13 +125,13 @@ export class IdentificationNumberElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "Your personal identification number"
             )
         ));
 
-        this.#shadow.appendChild(SubtitleElement.new(
+        this.#shadow.append(SubtitleElement.new(
             await this.#flux_localization_api.translate(
                 "Your data will be saved under the following number"
             )
@@ -145,15 +145,15 @@ export class IdentificationNumberElement extends HTMLElement {
             this.#identification_number["identification-number"]
         );
         identification_number_element.classList.add("identification-number");
-        this.#shadow.appendChild(identification_number_element);
+        this.#shadow.append(identification_number_element);
 
-        this.#shadow.appendChild(SubtitleElement.new(
+        this.#shadow.append(SubtitleElement.new(
             await this.#flux_localization_api.translate(
                 "Please keep your identification number safe so that you can access your data at a later stage"
             )
         ));
 
-        this.#shadow.appendChild(await this.#form_element.addButtons(
+        this.#shadow.append(await this.#form_element.addButtons(
             () => {
                 this.#confirmedIdentificationNumber();
             },

@@ -108,19 +108,19 @@ export class StartElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "Login"
             )
         ));
 
-        this.#shadow.appendChild(SubtitleElement.new(
+        this.#shadow.append(SubtitleElement.new(
             await this.#flux_localization_api.translate(
                 "Create a new application by entering a password of you choice, or continue with your application by using your application identification number and your password"
             )
         ));
 
-        this.#shadow.appendChild(CreateElement.new(
+        this.#shadow.append(CreateElement.new(
             this.#flux_localization_api,
             this.#label_service,
             this.#password_service,
@@ -128,7 +128,7 @@ export class StartElement extends HTMLElement {
             this.#create_function
         ));
 
-        this.#shadow.appendChild(ResumeElement.new(
+        this.#shadow.append(ResumeElement.new(
             this.#flux_localization_api,
             this.#label_service,
             this.#password_service,
@@ -137,7 +137,7 @@ export class StartElement extends HTMLElement {
             this.#back_function
         ));
 
-        this.#shadow.appendChild(MandatoryElement.new(
+        this.#shadow.append(MandatoryElement.new(
             this.#flux_localization_api
         ));
     }

@@ -137,7 +137,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "Intended degree program"
             )
@@ -174,7 +174,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
                 subject
             );
             option_element.value = subject.id;
-            subject_element.appendChild(option_element);
+            subject_element.append(option_element);
         }
 
         subject_element.addEventListener("input", () => {
@@ -211,9 +211,9 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             )
         );
 
-        this.#shadow.appendChild(this.#form_element);
+        this.#shadow.append(this.#form_element);
 
-        this.#shadow.appendChild(MandatoryElement.new(
+        this.#shadow.append(MandatoryElement.new(
             this.#flux_localization_api
         ));
 
@@ -250,7 +250,7 @@ export class IntendedDegreeProgramElement extends HTMLElement {
                 combination
             );
             option_element.value = combination.id;
-            this.#form_element.inputs.combination.appendChild(option_element);
+            this.#form_element.inputs.combination.append(option_element);
         }
     }
 

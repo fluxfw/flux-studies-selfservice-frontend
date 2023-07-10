@@ -102,7 +102,7 @@ export class MainElement extends HTMLElement {
      */
     async replaceContent(content_element, menu = null, menu_function = null, user_name = null, logout_function = null) {
         this.#content_element.innerHTML = "";
-        this.#content_element.appendChild(content_element);
+        this.#content_element.append(content_element);
 
         this.#menu_element.innerHTML = "";
         if (menu !== null) {
@@ -143,7 +143,7 @@ export class MainElement extends HTMLElement {
                             id
                         );
                     });
-                    this.#menu_element.appendChild(menu_element);
+                    this.#menu_element.append(menu_element);
                 }
             }
         }
@@ -161,7 +161,7 @@ export class MainElement extends HTMLElement {
                 const user_name_element = document.createElement("div");
                 user_name_element.classList.add("user_name");
                 user_name_element.innerText = user_name;
-                this.#user_element.appendChild(user_name_element);
+                this.#user_element.append(user_name_element);
             }
 
             if (logout_function !== null) {
@@ -173,10 +173,10 @@ export class MainElement extends HTMLElement {
                 logout_button_element.button.addEventListener("click", () => {
                     logout_function();
                 });
-                this.#user_element.appendChild(logout_button_element);
+                this.#user_element.append(logout_button_element);
             }
 
-            this.#header_element.appendChild(this.#user_element);
+            this.#header_element.append(this.#user_element);
         }
     }
 
@@ -195,14 +195,14 @@ export class MainElement extends HTMLElement {
         title_element.innerText = await this.#flux_localization_api.translate(
             "Studis selfservice"
         );
-        left_element.appendChild(title_element);
+        left_element.append(title_element);
 
         this.#menu_element = document.createElement("div");
-        left_element.appendChild(this.#menu_element);
+        left_element.append(this.#menu_element);
 
         const select_color_scheme_element = await this.#flux_color_scheme.getSelectColorSchemeElement();
         select_color_scheme_element.classList.add("select_color_scheme");
-        left_element.appendChild(select_color_scheme_element); 
+        left_element.append(select_color_scheme_element); 
 
         const logo_link_element = document.createElement("a");
         logo_link_element.classList.add("logo");
@@ -213,9 +213,9 @@ export class MainElement extends HTMLElement {
             logo_link_element.title = this.#layout["logo-title"];
         }
 
-        left_element.appendChild(logo_link_element);
+        left_element.append(logo_link_element);
 
-        container_element.appendChild(left_element);
+        container_element.append(left_element);
 
         const right_element = document.createElement("div");
         right_element.classList.add("right");
@@ -225,7 +225,7 @@ export class MainElement extends HTMLElement {
 
         const select_language_element = await this.#flux_studis_selfservice_frontend.getSelectLanguageElement();
         select_language_element.classList.add("select_language");
-        this.#header_element.appendChild(select_language_element);
+        this.#header_element.append(select_language_element);
 
         const print_button_element = FormButtonElement.new(
             await this.#flux_localization_api.translate(
@@ -235,9 +235,9 @@ export class MainElement extends HTMLElement {
         print_button_element.button.addEventListener("click", () => {
             this.#print();
         });
-        this.#header_element.appendChild(print_button_element);
+        this.#header_element.append(print_button_element);
 
-        right_element.appendChild(this.#header_element);
+        right_element.append(this.#header_element);
 
         const header2_element = document.createElement("div");
         header2_element.classList.add("header2");
@@ -247,17 +247,17 @@ export class MainElement extends HTMLElement {
         arrow_element.innerText = await this.#flux_localization_api.translate(
             "Application / Login"
         );
-        header2_element.appendChild(arrow_element);
+        header2_element.append(arrow_element);
 
-        right_element.appendChild(header2_element);
+        right_element.append(header2_element);
 
         this.#content_element = document.createElement("div");
         this.#content_element.classList.add("content");
-        right_element.appendChild(this.#content_element);
+        right_element.append(this.#content_element);
 
-        container_element.appendChild(right_element);
+        container_element.append(right_element);
 
-        this.#shadow.appendChild(container_element);
+        this.#shadow.append(container_element);
     }
 
     /**

@@ -147,7 +147,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "University entrance qualification"
             )
@@ -180,9 +180,9 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
             this.#back_function
         );
 
-        this.#shadow.appendChild(this.#form_element);
+        this.#shadow.append(this.#form_element);
 
-        this.#shadow.appendChild(MandatoryElement.new(
+        this.#shadow.append(MandatoryElement.new(
             this.#flux_localization_api
         ));
 
@@ -298,7 +298,7 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
                 data[option_id]
             );
             option_element.value = option_id;
-            select_element.appendChild(option_element);
+            select_element.append(option_element);
         }
 
         select_element.addEventListener("input", () => {

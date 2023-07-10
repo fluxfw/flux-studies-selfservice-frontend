@@ -61,19 +61,19 @@ export class CompletedElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "Registration completed"
             )
         ));
 
-        this.#shadow.appendChild(SubtitleElement.new(
+        this.#shadow.append(SubtitleElement.new(
             await this.#flux_localization_api.translate(
                 "Thank you for your registration"
             )
         ));
 
-        this.#shadow.appendChild(await FormElement.new(
+        this.#shadow.append(await FormElement.new(
             this.#flux_localization_api
         )
             .addButtons(

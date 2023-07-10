@@ -48,7 +48,7 @@ export class TitleElement extends HTMLElement {
     #render() {
         const title_element = document.createElement("span");
         title_element.innerText = this.#title;
-        this.#shadow.appendChild(title_element);
+        this.#shadow.append(title_element);
     }
 }
 

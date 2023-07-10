@@ -1,14 +1,13 @@
 :root {
-    --flux-color-scheme-dark-accent: #e3003d;
-    --flux-color-scheme-dark-accent-rgb: 227, 0, 61;
+    --accent-color-rgb: 227, 0, 61;
+    --flux-color-scheme-dark-accent-color-rgb: var(--accent-color-rgb);
     --flux-color-scheme-dark-container-border-color: #333333;
     --flux-color-scheme-dark-form-background-color: #080808;
     --flux-color-scheme-dark-form-buttons-background-color: #151515;
     --flux-color-scheme-dark-input-border-color: #191919;
     --flux-color-scheme-dark-left-background-color: #251C1C;
     --flux-color-scheme-dark-left-border-color: #0D0D0D;
-    --flux-color-scheme-light-accent: #e3003d;
-    --flux-color-scheme-light-accent-rgb: 227, 0, 61;
+    --flux-color-scheme-light-accent-color-rgb: var(--accent-color-rgb);
     --flux-color-scheme-light-container-border-color: #cccccc;
     --flux-color-scheme-light-form-background-color: #f7f7f7;
     --flux-color-scheme-light-form-buttons-background-color: #eaeaea;

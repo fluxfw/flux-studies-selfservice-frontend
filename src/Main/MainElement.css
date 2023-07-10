@@ -39,8 +39,8 @@
 }
 
 .menu {
-    background-color: var(--flux-color-scheme-background);
-    color: var(--flux-color-scheme-foreground);
+    background-color: var(--flux-color-scheme-background-color);
+    color: var(--flux-color-scheme-foreground-color);
     cursor: default;
     font-size: 13px;
     padding: 18px 30px;
@@ -51,8 +51,8 @@
 }
 
 .menu[data-active] {
-    background-color: var(--flux-color-scheme-accent);
-    color: var(--flux-color-scheme-accent-foreground);
+    background-color: var(--flux-color-scheme-accent-color);
+    color: var(--flux-color-scheme-accent-color-foreground-color);
 }
 
 .select_color_scheme {
@@ -89,9 +89,9 @@
 }
 
 .select_language {
-    --flux-button-group-active-button-background-color: var(--flux-color-scheme-background);
+    --flux-button-group-active-button-background-color: var(--flux-color-scheme-background-color);
     --flux-button-group-active-button-font-size: var(--flux-button-group-button-font-size);
-    --flux-button-group-active-button-foreground-color: var(--flux-color-scheme-accent);
+    --flux-button-group-active-button-foreground-color: var(--flux-color-scheme-accent-color);
     --flux-button-group-active-button-right-border-color: var(--flux-button-group-button-right-border-color);
     --flux-button-group-active-button-right-border-width: var(--flux-button-group-button-right-border-width);
     --flux-button-group-active-button-top-border-color: var(--flux-button-group-active-button-background-color);
@@ -103,9 +103,9 @@
     --flux-button-group-button-width: 65px;
     --flux-button-group-button-width-grow: 0;
     --flux-button-group-button-width-shrink: 0;
-    --flux-button-group-selected-button-background-color: var(--flux-color-scheme-background);
+    --flux-button-group-selected-button-background-color: var(--flux-color-scheme-background-color);
     --flux-button-group-selected-button-font-size: var(--flux-button-group-button-font-size);
-    --flux-button-group-selected-button-foreground-color: var(--flux-color-scheme-foreground);
+    --flux-button-group-selected-button-foreground-color: var(--flux-color-scheme-foreground-color);
     --flux-button-group-selected-button-right-border-color: var(--flux-button-group-button-right-border-color);
     --flux-button-group-selected-button-right-border-width: var(--flux-button-group-button-right-border-width);
     --flux-button-group-selected-button-top-border-width: var(--flux-button-group-button-top-border-width);
@@ -136,8 +136,8 @@ flux-studis-selfservice-form-button {
 }
 
 flux-studis-selfservice-form-button {
-    --form-button-background-color: var(--flux-color-scheme-background);
-    --form-button-text-color: var(--flux-color-scheme-foreground);
+    --form-button-background-color: var(--flux-color-scheme-background-color);
+    --form-button-text-color: var(--flux-color-scheme-foreground-color);
 }
 
 .header2 {

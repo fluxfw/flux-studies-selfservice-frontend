@@ -48,7 +48,7 @@ export class FormInvalidElement extends HTMLElement {
     #render() {
         const invalid_element = document.createElement("span");
         invalid_element.innerText = this.#message;
-        this.#shadow.appendChild(invalid_element);
+        this.#shadow.append(invalid_element);
     }
 }
 

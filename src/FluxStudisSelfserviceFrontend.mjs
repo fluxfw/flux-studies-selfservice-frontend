@@ -120,7 +120,7 @@ export class FluxStudisSelfserviceFrontend {
             await this.#init();
         }
 
-        document.body.appendChild(this.#main_element = (await import("./Main/MainElement.mjs")).MainElement.new(
+        document.body.append(this.#main_element = (await import("./Main/MainElement.mjs")).MainElement.new(
             await this.#getFluxColorScheme(),
             await this.#getFluxLocalizationApi(),
             this,
@@ -205,7 +205,9 @@ export class FluxStudisSelfserviceFrontend {
         this.#flux_color_scheme ??= await (await import("./Libs/flux-color-scheme/src/FluxColorScheme.mjs")).FluxColorScheme.new(
             null,
             null,
+            null,
             [
+                ...(await import("./Libs/flux-color-scheme/src/ColorScheme/COLOR_SCHEME_VARIABLE.mjs")).DEFAULT_COLOR_SCHEME_VARIABLES,
                 "container-border-color",
                 "form-background-color",
                 "form-buttons-background-color",

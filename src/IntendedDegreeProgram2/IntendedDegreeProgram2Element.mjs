@@ -145,7 +145,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #render() {
-        this.#shadow.appendChild(TitleElement.new(
+        this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
                 "Intended degree program"
             )
@@ -268,7 +268,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                             choice
                         );
                         option_element.value = choice.id;
-                        single_choice_element.appendChild(option_element);
+                        single_choice_element.append(option_element);
                     }
                 }
             }
@@ -294,7 +294,7 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                             choice
                         );
                         option_element.value = choice.id;
-                        multiple_choice_element.appendChild(option_element);
+                        multiple_choice_element.append(option_element);
                     }
                 }
 
@@ -322,9 +322,9 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
             this.#back_function
         );
 
-        this.#shadow.appendChild(this.#form_element);
+        this.#shadow.append(this.#form_element);
 
-        this.#shadow.appendChild(MandatoryElement.new(
+        this.#shadow.append(MandatoryElement.new(
             this.#flux_localization_api
         ));
 
