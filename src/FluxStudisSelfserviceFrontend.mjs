@@ -1,7 +1,6 @@
 import { flux_css_api } from "./Libs/flux-css-api/src/FluxCssApi.mjs";
 import { HttpClientResponse } from "./Libs/flux-http-api/src/Client/HttpClientResponse.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_PREVIOUS_STUDIES, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "./Page/PAGE.mjs";
-import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMPLEMENTATION_STORE_NAME } from "./Settings/SETTINGS_IMPLEMENTATION.mjs";
 
 /** @typedef {import("./Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./ChoiceSubject/ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
@@ -12,7 +11,7 @@ import { SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME, SETTINGS_INDEXEDDB_IMP
 /** @typedef {import("./Libs/flux-http-api/src/FluxHttpApi.mjs").FluxHttpApi} FluxHttpApi */
 /** @typedef {import("./Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("./Libs/flux-pwa-api/src/FluxPwaApi.mjs").FluxPwaApi} FluxPwaApi */
-/** @typedef {import("./Libs/flux-settings-api/src/FluxSettingsApi.mjs").FluxSettingsApi} FluxSettingsApi */
+/** @typedef {import("./Libs/flux-settings-storage/src/FluxSettingsStorage.mjs").FluxSettingsStorage} FluxSettingsStorage */
 /** @typedef {import("./FormInvalid/FormInvalidElement.mjs").FormInvalidElement} FormInvalidElement */
 /** @typedef {import("./Get/GetResult.mjs").GetResult} GetResult */
 /** @typedef {import("./IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
@@ -65,9 +64,9 @@ export class FluxStudisSelfserviceFrontend {
      */
     #flux_pwa_api = null;
     /**
-     * @type {FluxSettingsApi | null}
+     * @type {FluxSettingsStorage | null}
      */
-    #flux_settings_api = null;
+    #flux_settings_storage = null;
     /**
      * @type {LabelService | null}
      */
@@ -219,7 +218,7 @@ export class FluxStudisSelfserviceFrontend {
             null,
             null,
             await this.#getFluxLocalizationApi(),
-            await this.#getFluxSettingsApi()
+            await this.#getFluxSettingsStorage()
         );
 
         return this.#flux_color_scheme;
@@ -240,7 +239,7 @@ export class FluxStudisSelfserviceFrontend {
     async #getFluxLocalizationApi() {
         this.#flux_localization_api ??= (await import("./Libs/flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new(
             await this.#getFluxHttpApi(),
-            await this.#getFluxSettingsApi()
+            await this.#getFluxSettingsStorage()
         );
 
         return this.#flux_localization_api;
@@ -250,27 +249,32 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<FluxPwaApi>}
      */
     async #getFluxPwaApi() {
-        this.#flux_pwa_api ??= (await import("./Libs/flux-pwa-api/src/FluxPwaApi.mjs")).FluxPwaApi.new(
+        this.#flux_pwa_api ??= await (await import("./Libs/flux-pwa-api/src/FluxPwaApi.mjs")).FluxPwaApi.new(
             await this.#getFluxHttpApi(),
             await this.#getFluxLocalizationApi(),
-            await this.#getFluxSettingsApi()
+            await this.#getFluxSettingsStorage()
         );
 
         return this.#flux_pwa_api;
     }
 
     /**
-     * @returns {Promise<FluxSettingsApi>}
+     * @returns {Promise<FluxSettingsStorage>}
      */
-    async #getFluxSettingsApi() {
-        this.#flux_settings_api ??= (await import("./Libs/flux-settings-api/src/FluxSettingsApi.mjs")).FluxSettingsApi.new(
-            await (await import("./Libs/flux-settings-api/src/StorageImplementation/Browser/getBrowserStorageImplementation.mjs")).getBrowserStorageImplementation(
-                SETTINGS_INDEXEDDB_IMPLEMENTATION_DATABASE_NAME,
-                SETTINGS_INDEXEDDB_IMPLEMENTATION_STORE_NAME
-            )
-        );
+    async #getFluxSettingsStorage() {
+        if (this.#flux_settings_storage === null) {
+            const {
+                SETTINGS_STORAGE_INDEXEDDB_DATABASE_NAME,
+                SETTINGS_STORAGE_INDEXEDDB_STORE_NAME
+            } = await import("./SettingsStorage/SETTINGS_STORAGE.mjs");
 
-        return this.#flux_settings_api;
+            this.#flux_settings_storage ??= await (await import("./Libs/flux-settings-storage/src/Browser/getFluxBrowserSettingsStorage.mjs")).getFluxBrowserSettingsStorage(
+                SETTINGS_STORAGE_INDEXEDDB_DATABASE_NAME,
+                SETTINGS_STORAGE_INDEXEDDB_STORE_NAME
+            );
+        }
+
+        return this.#flux_settings_storage;
     }
 
     /**
@@ -640,7 +644,7 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #init() {
         const flux_localization_api = await this.#getFluxLocalizationApi();
-        flux_localization_api.addModule(
+        await flux_localization_api.addModule(
             `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Localization`
         );
         await flux_localization_api.selectDefaultLanguage();
