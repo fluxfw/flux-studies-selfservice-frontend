@@ -268,7 +268,7 @@ export class FluxStudisSelfserviceFrontend {
                 SETTINGS_STORAGE_INDEXEDDB_STORE_NAME
             } = await import("./SettingsStorage/SETTINGS_STORAGE.mjs");
 
-            this.#flux_settings_storage ??= await (await import("./Libs/flux-settings-storage/src/Browser/getFluxBrowserSettingsStorage.mjs")).getFluxBrowserSettingsStorage(
+            this.#flux_settings_storage ??= await (await import("./Libs/flux-settings-storage/src/Browser/getBrowserFluxSettingsStorage.mjs")).getBrowserFluxSettingsStorage(
                 SETTINGS_STORAGE_INDEXEDDB_DATABASE_NAME,
                 SETTINGS_STORAGE_INDEXEDDB_STORE_NAME
             );

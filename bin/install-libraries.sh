@@ -21,7 +21,7 @@ checkAlreadyInstalled
 
 installLibrary flux-button-group https://github.com/fluxfw/flux-button-group/archive/refs/tags/v2023-07-10-1.tar.gz
 
-installLibrary flux-color-scheme https://github.com/fluxfw/flux-color-scheme/archive/refs/tags/v2023-07-17-1.tar.gz
+installLibrary flux-color-scheme https://github.com/fluxfw/flux-color-scheme/archive/refs/tags/v2023-07-18-1.tar.gz
 
 installLibrary flux-css-api https://github.com/fluxfw/flux-css-api/archive/refs/tags/v2023-05-30-1.tar.gz
 
@@ -39,6 +39,6 @@ installLibrary flux-pwa-api https://github.com/fluxfw/flux-pwa-api/archive/refs/
 
 installLibrary flux-pwa-generator https://github.com/fluxfw/flux-pwa-generator/archive/refs/tags/v2023-07-17-1.tar.gz
 
-installLibrary flux-settings-storage https://github.com/fluxfw/flux-settings-storage/archive/refs/tags/v2023-07-17-1.tar.gz
+installLibrary flux-settings-storage https://github.com/fluxfw/flux-settings-storage/archive/refs/tags/v2023-07-18-1.tar.gz
 
 installLibrary flux-shutdown-handler https://github.com/fluxfw/flux-shutdown-handler/archive/refs/tags/v2023-03-16-1.tar.gz
