@@ -1,8 +1,10 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "../Page/PAGE.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
+import { LOCALIZATION_KEY_CERTIFICATE, LOCALIZATION_KEY_LEGAL_PLACE_OF_RESIDENCE_WHEN_THE_CERTIFICATE_WAS_AWARDED, LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA, LOCALIZATION_KEY_PLEASE_ENTER_YOUR_EDUCATIONAL_QUALIFICATIONS_THAT_QUALIFY_YOU_TO_APPLY_FOR_ADMISSION_TO_A_DEGREE_PROGRAM, LOCALIZATION_KEY_THE_CANTON_IN_WHICH_THE_SCHOOL_IS_LOCATED_WHERE_YOU_WERE_AWARDED_YOUR_MATURA, LOCALIZATION_KEY_THE_CANTON_OF_YOUR_POLITICAL_COMMUNE_WHERE_YOU_WERE_REGISTERED_AT_THE_TIME_YOU_WERE_AWARDED_YOUR_CERTIFICATE, LOCALIZATION_KEY_THE_COUNTRY_WHERE_YOU_WERE_REGISTERED_AT_THE_TIME_YOU_WERE_AWARDED_YOUR_CERTIFICATE, LOCALIZATION_KEY_TYPE_OF_CERTIFICATE, LOCALIZATION_KEY_UNIVERSITY_ENTRANCE_QUALIFICATION, LOCALIZATION_KEY_UPPER_SECONDARY_SCHOOL, LOCALIZATION_KEY_UPPER_SECONDARY_SCHOOL_LEAVING_CERTIFICATE, LOCALIZATION_KEY_YEAR_OF_ISSUE } from "../Localization/LOCALIZATION_KEY.mjs";
 import { UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE, UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE_CANTON, UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE_COUNTRY, UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE_PLACE, UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE_TYPE, UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_ISSUE_YEAR, UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_MATURA_CANTON, UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_UPPER_SECONDARY_SCHOOL } from "./UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
@@ -137,7 +139,8 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
         } else {
             this.#form_element.addInvalidMessage(
                 await this.#flux_localization_api.translate(
-                    "Please check your data!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA
                 )
             );
         }
@@ -149,7 +152,8 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
     async #render() {
         this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
-                "University entrance qualification"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_UNIVERSITY_ENTRANCE_QUALIFICATION
             )
         ));
 
@@ -159,13 +163,15 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         this.#form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Upper secondary school-leaving certificate"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_UPPER_SECONDARY_SCHOOL_LEAVING_CERTIFICATE
             )
         );
 
         this.#form_element.addSubtitle(
             await this.#flux_localization_api.translate(
-                "Please enter your educational qualifications that qualify you to apply for admission to a degree program"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PLEASE_ENTER_YOUR_EDUCATIONAL_QUALIFICATIONS_THAT_QUALIFY_YOU_TO_APPLY_FOR_ADMISSION_TO_A_DEGREE_PROGRAM
             )
         );
 
@@ -235,45 +241,45 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         const data = this.#university_entrance_qualification.data[data_index];
 
-        let label, get_option_label;
+        let label_key, get_option_label;
         switch (select_type) {
             case UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE:
-                label = "Certificate";
+                label_key = LOCALIZATION_KEY_CERTIFICATE;
                 get_option_label = "getCertificateLabel";
                 break;
 
             case UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE_CANTON:
-                label = "The canton of your political commune where you were registered at the time you were awarded your certificate";
+                label_key = LOCALIZATION_KEY_THE_CANTON_OF_YOUR_POLITICAL_COMMUNE_WHERE_YOU_WERE_REGISTERED_AT_THE_TIME_YOU_WERE_AWARDED_YOUR_CERTIFICATE;
                 get_option_label = "getCantonLabel";
                 break;
 
             case UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE_COUNTRY:
-                label = "The country where you were registered at the time you were awarded your certificate";
+                label_key = LOCALIZATION_KEY_THE_COUNTRY_WHERE_YOU_WERE_REGISTERED_AT_THE_TIME_YOU_WERE_AWARDED_YOUR_CERTIFICATE;
                 get_option_label = "getCountryLabel";
                 break;
 
             case UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE_PLACE:
-                label = "Legal place of residence when the certificate was awarded";
+                label_key = LOCALIZATION_KEY_LEGAL_PLACE_OF_RESIDENCE_WHEN_THE_CERTIFICATE_WAS_AWARDED;
                 get_option_label = "getPlaceLabel";
                 break;
 
             case UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_CERTIFICATE_TYPE:
-                label = "Type of certificate";
+                label_key = LOCALIZATION_KEY_TYPE_OF_CERTIFICATE;
                 get_option_label = "getCertificateTypeLabel";
                 break;
 
             case UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_ISSUE_YEAR:
-                label = "Year of issue";
+                label_key = LOCALIZATION_KEY_YEAR_OF_ISSUE;
                 get_option_label = "getIssueYearLabel";
                 break;
 
             case UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_MATURA_CANTON:
-                label = "The canton, in which the school is located where you were awarded your matura";
+                label_key = LOCALIZATION_KEY_THE_CANTON_IN_WHICH_THE_SCHOOL_IS_LOCATED_WHERE_YOU_WERE_AWARDED_YOUR_MATURA;
                 get_option_label = "getCantonLabel";
                 break;
 
             case UNIVERSITY_ENTRANCE_QUALIFICATION_SELECT_TYPE_UPPER_SECONDARY_SCHOOL:
-                label = "Upper secondary school";
+                label_key = LOCALIZATION_KEY_UPPER_SECONDARY_SCHOOL;
                 get_option_label = "getSchoolLabel";
                 break;
 
@@ -283,7 +289,8 @@ export class UniversityEntranceQualificationElement extends HTMLElement {
 
         const select_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                label
+                LOCALIZATION_MODULE,
+                label_key
             ),
             "select",
             select_type

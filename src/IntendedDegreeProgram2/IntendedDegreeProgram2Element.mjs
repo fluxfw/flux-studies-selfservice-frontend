@@ -1,8 +1,10 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_INTENDED_DEGREE_PROGRAM_2 } from "../Page/PAGE.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
+import { LOCALIZATION_KEY_CHOICE_OF_SUBJECTS, LOCALIZATION_KEY_COMBINATION_OF_SUBJECTS, LOCALIZATION_KEY_IF_YOU_HAVE_ALREADY_STUDIED_THE_CHOOSEN_SUBJECT_AND_WOULD_LIKE_TO_CONTINUE_IN_AN_ADVANCED_SEMESTER_PLEASE_ENTER_IT_HERE, LOCALIZATION_KEY_INTENDED_DEGREE_PROGRAM, LOCALIZATION_KEY_MANDATORY_SUBJECTS, LOCALIZATION_KEY_ON_DESKTOP_OPERATING_SYSTEMS_BROWSERS_MAY_USE_CTRL_CLICK_FOR_SELECT_MULTIPLE_OPTIONS, LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA, LOCALIZATION_KEY_PLEASE_CHOOSE_YOUR_COMBINATION_OF_SUBJECTS_FROM_THE_GIVEN_SELECTION_BELOW, LOCALIZATION_KEY_PLEASE_SELECT_LESS_ECT, LOCALIZATION_KEY_PLEASE_SELECT_MORE_ECT, LOCALIZATION_KEY_SUBJECT } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenIntendedDegreeProgram2Function.mjs").chosenIntendedDegreeProgram2Function} chosenIntendedDegreeProgram2Function */
@@ -135,7 +137,8 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         } else {
             this.#form_element.addInvalidMessage(
                 await this.#flux_localization_api.translate(
-                    "Please check your data!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA
                 )
             );
         }
@@ -147,7 +150,8 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
     async #render() {
         this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
-                "Intended degree program"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_INTENDED_DEGREE_PROGRAM
             )
         ));
 
@@ -174,8 +178,8 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                         this.#form_element.setCustomValidationMessage(
                             input_element,
                             await this.#flux_localization_api.translate(
-                                "Please select more {ect}!",
-                                null,
+                                LOCALIZATION_MODULE,
+                                LOCALIZATION_KEY_PLEASE_SELECT_MORE_ECT,
                                 {
                                     ect: await this.#label_service.getEctLabel(
                                         multiple_choice.ect - ect
@@ -190,8 +194,8 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
                         this.#form_element.setCustomValidationMessage(
                             input_element,
                             await this.#flux_localization_api.translate(
-                                "Please select less {ect}!",
-                                null,
+                                LOCALIZATION_MODULE,
+                                LOCALIZATION_KEY_PLEASE_SELECT_LESS_ECT,
                                 {
                                     ect: await this.#label_service.getEctLabel(
                                         ect - multiple_choice.ect
@@ -209,13 +213,15 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         this.#form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Choice of subjects"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_CHOICE_OF_SUBJECTS
             )
         );
 
         const subject_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Subject"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_SUBJECT
             ),
             "readonly"
         );
@@ -225,7 +231,8 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         const combination_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Combination of subjects"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_COMBINATION_OF_SUBJECTS
             ),
             "readonly"
         );
@@ -235,7 +242,8 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         const mandatory_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Mandatory subjects"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_MANDATORY_SUBJECTS
             ),
             "readonly"
         );
@@ -246,7 +254,8 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
         if (this.#intended_degree_program_2.combination["single-choice"] !== null || this.#intended_degree_program_2.combination["multiple-choice"] !== null) {
             this.#form_element.addSubtitle(
                 await this.#flux_localization_api.translate(
-                    "Please choose your combination of subjects from the given selection below"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLEASE_CHOOSE_YOUR_COMBINATION_OF_SUBJECTS_FROM_THE_GIVEN_SELECTION_BELOW
                 )
             );
 
@@ -300,7 +309,8 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
                 this.#form_element.addSubtitle(
                     await this.#flux_localization_api.translate(
-                        "On desktop operating systems/browsers may use Ctrl + Click for select multiple options"
+                        LOCALIZATION_MODULE,
+                        LOCALIZATION_KEY_ON_DESKTOP_OPERATING_SYSTEMS_BROWSERS_MAY_USE_CTRL_CLICK_FOR_SELECT_MULTIPLE_OPTIONS
                     )
                 );
             }
@@ -308,7 +318,8 @@ export class IntendedDegreeProgram2Element extends HTMLElement {
 
         const further_information_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "If you have already studied the choosen subject and would like to continue in an advanced semester, please enter it here"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_IF_YOU_HAVE_ALREADY_STUDIED_THE_CHOOSEN_SUBJECT_AND_WOULD_LIKE_TO_CONTINUE_IN_AN_ADVANCED_SEMESTER_PLEASE_ENTER_IT_HERE
             ),
             "textarea",
             "further-information",

@@ -1,9 +1,11 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_PORTRAIT } from "../Page/PAGE.mjs";
 import { PhotoElement } from "../Photo/PhotoElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
+import { LOCALIZATION_KEY_PHOTO, LOCALIZATION_KEY_PHOTO_CRITERIA, LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA, LOCALIZATION_KEY_PORTRAIT, LOCALIZATION_KEY_THE_PHOTO_COULD_NOT_BEEN_LOADED, LOCALIZATION_KEY_THE_PHOTO_COULD_NOT_BEEN_OPTIMIZED, LOCALIZATION_KEY_THE_PHOTO_HAS_A_WRONG_ASPECT_RATIO_NEEDED_NEEDED_ASPECT_RATIO_CURRENT_CURRENT_ASPECT_RATIO, LOCALIZATION_KEY_THE_PHOTO_IS_TOO_BIG_MAXIMAL_MAX_DATA_SIZE_CURRENT_CURRENT_DATA_SIZE, LOCALIZATION_KEY_THE_PHOTO_IS_TOO_BIG_MAXIMAL_MAX_SIZE, LOCALIZATION_KEY_THE_PHOTO_IS_TOO_SMALL_MINIMAL_MIN_SIZE } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenPortraitFunction.mjs").chosenPortraitFunction} chosenPortraitFunction */
@@ -124,8 +126,8 @@ export class PortraitElement extends HTMLElement {
                 this.#form_element.setCustomValidationMessage(
                     this.#form_element.inputs.photo,
                     await this.#flux_localization_api.translate(
-                        "The photo is too big! (Maximal: {max-data-size}, current: {current-data-size})",
-                        null,
+                        LOCALIZATION_MODULE,
+                        LOCALIZATION_KEY_THE_PHOTO_IS_TOO_BIG_MAXIMAL_MAX_DATA_SIZE_CURRENT_CURRENT_DATA_SIZE,
                         {
                             "max-data-size": `${this.#portrait["photo-max-data-size"]}bytes`,
                             "current-data-size": `${this.#photo.length}bytes`
@@ -157,7 +159,8 @@ export class PortraitElement extends HTMLElement {
         } else {
             this.#form_element.addInvalidMessage(
                 await this.#flux_localization_api.translate(
-                    "Please check your data!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA
                 )
             );
         }
@@ -178,7 +181,8 @@ export class PortraitElement extends HTMLElement {
     async #render() {
         this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
-                "Portrait"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PORTRAIT
             )
         ));
 
@@ -191,8 +195,8 @@ export class PortraitElement extends HTMLElement {
                         this.#form_element.setCustomValidationMessage(
                             this.#form_element.inputs.photo,
                             await this.#flux_localization_api.translate(
-                                "The photo is too small! (Minimal: {min-size})",
-                                null,
+                                LOCALIZATION_MODULE,
+                                LOCALIZATION_KEY_THE_PHOTO_IS_TOO_SMALL_MINIMAL_MIN_SIZE,
                                 {
                                     "min-size": `${this.#portrait["photo-min-width"]}px x ${this.#portrait["photo-min-height"]}px`
                                 }
@@ -205,8 +209,8 @@ export class PortraitElement extends HTMLElement {
                         this.#form_element.setCustomValidationMessage(
                             this.#form_element.inputs.photo,
                             await this.#flux_localization_api.translate(
-                                "The photo is too big! (Maximal: {max-size})",
-                                null,
+                                LOCALIZATION_MODULE,
+                                LOCALIZATION_KEY_THE_PHOTO_IS_TOO_BIG_MAXIMAL_MAX_SIZE,
                                 {
                                     "max-size": `${this.#portrait["photo-max-width"]}px x ${this.#portrait["photo-max-height"]}px`
                                 }
@@ -220,8 +224,8 @@ export class PortraitElement extends HTMLElement {
                         this.#form_element.setCustomValidationMessage(
                             this.#form_element.inputs.photo,
                             await this.#flux_localization_api.translate(
-                                "The photo has a wrong aspect ratio! (Needed: {needed-aspect-ratio}, current: {current-aspect-ratio})",
-                                null,
+                                LOCALIZATION_MODULE,
+                                LOCALIZATION_KEY_THE_PHOTO_HAS_A_WRONG_ASPECT_RATIO_NEEDED_NEEDED_ASPECT_RATIO_CURRENT_CURRENT_ASPECT_RATIO,
                                 {
                                     "needed-aspect-ratio": `${this.#portrait["photo-min-aspect-ratio"]} - ${this.#portrait["photo-max-aspect-ratio"]}`,
                                     "current-aspect-ratio": aspect_ratio
@@ -238,13 +242,15 @@ export class PortraitElement extends HTMLElement {
 
         this.#form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Portrait"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PORTRAIT
             )
         );
 
         const input_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Photo"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PHOTO
             ),
             "file",
             "photo",
@@ -273,7 +279,8 @@ export class PortraitElement extends HTMLElement {
             criteria_link_element.href = link;
         }
         criteria_link_element.innerText = await this.#flux_localization_api.translate(
-            "Photo criteria"
+            LOCALIZATION_MODULE,
+            LOCALIZATION_KEY_PHOTO_CRITERIA
         );
         criteria_link_element.rel = "noopener noreferrer";
         criteria_link_element.target = "__blank";
@@ -355,7 +362,8 @@ export class PortraitElement extends HTMLElement {
                 this.#form_element.setCustomValidationMessage(
                     this.#form_element.inputs.photo,
                     await this.#flux_localization_api.translate(
-                        "The photo could not been optimized!"
+                        LOCALIZATION_MODULE,
+                        LOCALIZATION_KEY_THE_PHOTO_COULD_NOT_BEEN_OPTIMIZED
                     )
                 );
 
@@ -370,7 +378,8 @@ export class PortraitElement extends HTMLElement {
             this.#form_element.setCustomValidationMessage(
                 this.#form_element.inputs.photo,
                 await this.#flux_localization_api.translate(
-                    "The photo could not been loaded!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_THE_PHOTO_COULD_NOT_BEEN_LOADED
                 )
             );
         } finally {

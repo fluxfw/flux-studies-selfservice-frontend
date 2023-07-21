@@ -4,6 +4,8 @@ import { FormButtonsElement } from "../FormButtons/FormButtonsElement.mjs";
 import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
 import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 import { FormTitleElement } from "../FormTitle/FormTitleElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
+import { LOCALIZATION_KEY_BACK, LOCALIZATION_KEY_CONTINUE } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("./customValidationFunction.mjs").customValidationFunction} customValidationFunction */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
@@ -91,7 +93,8 @@ export class FormElement extends HTMLElement {
                 ...continue_function !== null ? [
                     {
                         label: await this.#flux_localization_api.translate(
-                            "Continue"
+                            LOCALIZATION_MODULE,
+                            LOCALIZATION_KEY_CONTINUE
                         ),
                         action: continue_function,
                         right: true
@@ -100,7 +103,8 @@ export class FormElement extends HTMLElement {
                 ...back_function !== null ? [
                     {
                         label: await this.#flux_localization_api.translate(
-                            "Back"
+                            LOCALIZATION_MODULE,
+                            LOCALIZATION_KEY_BACK
                         ),
                         action: back_function
                     }

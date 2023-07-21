@@ -1,8 +1,10 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_LEGAL } from "../Page/PAGE.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
+import { LOCALIZATION_KEY_AGB, LOCALIZATION_KEY_CHARACTERS_LEFT_CHARACTERS, LOCALIZATION_KEY_CHOICE_OF_SUBJECT, LOCALIZATION_KEY_COMBINATION_OF_SUBJECTS, LOCALIZATION_KEY_COMMENTS, LOCALIZATION_KEY_COMPLETE, LOCALIZATION_KEY_DID_ANY_PROBLEMS_DURING_THE_APPLICATION_PROCCESS_OCCUR_OR_WOULD_YOU_LIKE_TO_SHARE_ANY_COMMENTS_OR_SUGGESTIONS_WITH_US_SO_PLEASE_USE_THE_COMMENT_BOX_BELOW_MAX_MAX_COMMENTS_LENGTH_CHARACTERS, LOCALIZATION_KEY_DISQUALIFICATION, LOCALIZATION_KEY_I_ACCEPT_THE_TERMS_AND_CONDITIONS_OF, LOCALIZATION_KEY_I_AM_NOT_DISQUALIFIED_FROM_CONTINUING_MY_STUDIES_IN_THE_ABOVE_MENTIONED_MAIN_SUBJECT_BECAUSE_OF_EXAM_FAILURE_OR_AM_NOT_EXAMS_AT_ANOTHER_INSTITUTION_OF_HIGHER_EDUCATION_PLANNED_BEFORE_THE_INTENDED_TRANSFER_WHICH_WOULD_RESULT_IN_DISQUALIFICATION_FROM_THE_ABOVE_MENTIONED_MAIN_SUBJECT_IN_CASE_OF_FAILURE_OR_NON_ATTENDANCE, LOCALIZATION_KEY_I_CONFIRM_THAT_ALL_PROVIDED_DATA_IS_COMPLETE_AND_TRUTHFUL_THE_APPLICATION_IS_LEGALLY_BINDING, LOCALIZATION_KEY_INTENDED_DEGREE_PROGRAM, LOCALIZATION_KEY_LEGAL, LOCALIZATION_KEY_MANDATORY_SUBJECTS, LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA, LOCALIZATION_KEY_SUBJECT } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("./acceptedLegalFunction.mjs").acceptedLegalFunction} acceptedLegalFunction */
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
@@ -136,7 +138,8 @@ export class LegalElement extends HTMLElement {
         } else {
             this.#comments_form_element.addInvalidMessage(
                 await this.#flux_localization_api.translate(
-                    "Please check your data!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA
                 )
             );
         }
@@ -148,7 +151,8 @@ export class LegalElement extends HTMLElement {
     async #render() {
         this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
-                "Legal"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_LEGAL
             )
         ));
 
@@ -158,13 +162,15 @@ export class LegalElement extends HTMLElement {
 
         this.#degree_program_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Intended degree program"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_INTENDED_DEGREE_PROGRAM
             )
         );
 
         const degree_program_element = this.#degree_program_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Choice of subject"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_CHOICE_OF_SUBJECT
             ),
             "readonly"
         );
@@ -174,7 +180,8 @@ export class LegalElement extends HTMLElement {
 
         const subject_element = this.#degree_program_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Subject"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_SUBJECT
             ),
             "readonly"
         );
@@ -184,7 +191,8 @@ export class LegalElement extends HTMLElement {
 
         const combination_element = this.#degree_program_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Combination of subjects"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_COMBINATION_OF_SUBJECTS
             ),
             "readonly"
         );
@@ -194,7 +202,8 @@ export class LegalElement extends HTMLElement {
 
         const mandatory_element = this.#degree_program_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Mandatory subjects"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_MANDATORY_SUBJECTS
             ),
             "readonly"
         );
@@ -249,13 +258,15 @@ export class LegalElement extends HTMLElement {
 
         this.#disqualification_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Disqualification"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_DISQUALIFICATION
             )
         );
 
         const not_disqualified_element = this.#disqualification_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "I am not disqualified from continuing my studies in the above-mentioned main subject because of exam failure or am not exams at another institution of higher education planned before the intended transfer, which would result in disqualification from the above-mentioned main subject in case of failure or non-attendance"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_I_AM_NOT_DISQUALIFIED_FROM_CONTINUING_MY_STUDIES_IN_THE_ABOVE_MENTIONED_MAIN_SUBJECT_BECAUSE_OF_EXAM_FAILURE_OR_AM_NOT_EXAMS_AT_ANOTHER_INSTITUTION_OF_HIGHER_EDUCATION_PLANNED_BEFORE_THE_INTENDED_TRANSFER_WHICH_WOULD_RESULT_IN_DISQUALIFICATION_FROM_THE_ABOVE_MENTIONED_MAIN_SUBJECT_IN_CASE_OF_FAILURE_OR_NON_ATTENDANCE
             ),
             "checkbox",
             "not-disqualified"
@@ -270,13 +281,15 @@ export class LegalElement extends HTMLElement {
 
         this.#agb_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "AGB"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_AGB
             )
         );
 
         const agb_element = this.#agb_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "I accept the terms and conditions of"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_I_ACCEPT_THE_TERMS_AND_CONDITIONS_OF
             ),
             "checkbox",
             "agb"
@@ -306,13 +319,15 @@ export class LegalElement extends HTMLElement {
 
         this.#complete_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Complete"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_COMPLETE
             )
         );
 
         const complete_element = this.#complete_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "I confirm that all provided data is complete and truthful. The application is legally binding"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_I_CONFIRM_THAT_ALL_PROVIDED_DATA_IS_COMPLETE_AND_TRUTHFUL_THE_APPLICATION_IS_LEGALLY_BINDING
             ),
             "checkbox",
             "complete"
@@ -327,14 +342,15 @@ export class LegalElement extends HTMLElement {
 
         this.#comments_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Comments"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_COMMENTS
             )
         );
 
         const comments_element = this.#comments_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Did any problems during the application proccess occur or would you like to share any comments or suggestions with us, so please use the comment box below (Max {max-comments-length} characters)",
-                null,
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_DID_ANY_PROBLEMS_DURING_THE_APPLICATION_PROCCESS_OCCUR_OR_WOULD_YOU_LIKE_TO_SHARE_ANY_COMMENTS_OR_SUGGESTIONS_WITH_US_SO_PLEASE_USE_THE_COMMENT_BOX_BELOW_MAX_MAX_COMMENTS_LENGTH_CHARACTERS,
                 {
                     "max-comments-length": this.#legal["max-comments-length"]
                 }
@@ -350,8 +366,8 @@ export class LegalElement extends HTMLElement {
 
         comments_element.addEventListener("input", async () => {
             comments_left_element.innerText = await this.#flux_localization_api.translate(
-                "Characters left: {characters}",
-                null,
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_CHARACTERS_LEFT_CHARACTERS,
                 {
                     characters: this.#legal["max-comments-length"] - comments_element.value.length
                 }

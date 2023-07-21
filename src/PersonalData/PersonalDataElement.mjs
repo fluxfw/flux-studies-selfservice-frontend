@@ -1,11 +1,13 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_PERSONAL_DATA } from "../Page/PAGE.mjs";
 import { PHONE_TYPES } from "./PHONE_TYPES.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
 import { valueToRegExp } from "../Libs/flux-form/src/DEFAULT_ADDITIONAL_VALIDATION_TYPES.mjs";
+import { LOCALIZATION_KEY_ADDITIONAL_FIRST_NAMES_ONE_PER_LINE, LOCALIZATION_KEY_ADDRESS, LOCALIZATION_KEY_APPARTEMENT_HOUSE_NUMBER, LOCALIZATION_KEY_BIRTH_DATE, LOCALIZATION_KEY_CONTACT, LOCALIZATION_KEY_CORRESPONDENCE_LANGUAGE, LOCALIZATION_KEY_COUNTRY, LOCALIZATION_KEY_E_MAIL, LOCALIZATION_KEY_ENTER_PARENTS_ADDRESS, LOCALIZATION_KEY_EXTRA_ADDRESS_LINE_E_G_EXAMPLE, LOCALIZATION_KEY_FIRST_NAME, LOCALIZATION_KEY_FIRST_NAMES_ONE_PER_LINE, LOCALIZATION_KEY_FORMAT_EXAMPLE, LOCALIZATION_KEY_GENERAL_POST_TO_PARENTS, LOCALIZATION_KEY_INVOICES_TO_PARENTS, LOCALIZATION_KEY_LAST_NAME, LOCALIZATION_KEY_MOTHER_LANGUAGE, LOCALIZATION_KEY_NATIONALLY, LOCALIZATION_KEY_ORIGIN_PLACE, LOCALIZATION_KEY_PARENTS_ADDRESS, LOCALIZATION_KEY_PERSONAL_DATA, LOCALIZATION_KEY_PERSONAL_INFORMATION, LOCALIZATION_KEY_PHONE_BUSINESS, LOCALIZATION_KEY_PHONE_HOME, LOCALIZATION_KEY_PHONE_MOBILE, LOCALIZATION_KEY_PHONE_TITLE_PHONE_NUMBER_FORMAT, LOCALIZATION_KEY_PLACE, LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA, LOCALIZATION_KEY_PLEASE_EITHER_ENTER_BOTH_AREA_CODE_NUMBER_OR_NEITHER_OF_THEM, LOCALIZATION_KEY_PLEASE_ENTER_A_PHONE, LOCALIZATION_KEY_PLEASE_ENTER_AT_LEAST_ONE_PHONE, LOCALIZATION_KEY_PLEASE_ENTER_ONLY_ONE_PHONE, LOCALIZATION_KEY_PLEASE_PAY_ATTENTION_TO_USE_THE_CORRECT_SPELLING_UPPER_AND_LOWER_CASE_LETTERS, LOCALIZATION_KEY_POSTAL_ADDRESS, LOCALIZATION_KEY_POSTAL_CODE, LOCALIZATION_KEY_POSTAL_CODE_AND_PLACE_DOES_NOT_MATCH, LOCALIZATION_KEY_POSTAL_OFFICE_BOX, LOCALIZATION_KEY_REGISTRATION_NUMBER_FORMAT_EXAMPLE, LOCALIZATION_KEY_SALUTATION, LOCALIZATION_KEY_SECOND_FIRST_NAME, LOCALIZATION_KEY_SOME_LINE_CONTAINS_NO_NAME, LOCALIZATION_KEY_STREET, LOCALIZATION_KEY_SWISS_OLD_AGE_AND_SURVIVAR_INSURANCE_NUMBER_AHV_OASI_FORMAT_EXAMPLE, LOCALIZATION_KEY_YOUR_PARENTS_HAVE_THE_SAME_ADDRESS_AS_YOU } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./filledPersonalDataFunction.mjs").filledPersonalDataFunction} filledPersonalDataFunction */
@@ -201,7 +203,8 @@ export class PersonalDataElement extends HTMLElement {
         } else {
             (this.#postal_address_form_element !== null ? this.#postal_address_form_element : this.#parents_address_form_element).addInvalidMessage(
                 await this.#flux_localization_api.translate(
-                    "Please check your data!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA
                 )
             );
         }
@@ -213,13 +216,15 @@ export class PersonalDataElement extends HTMLElement {
     async #render() {
         this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
-                "Personal data"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PERSONAL_DATA
             )
         ));
 
         this.#shadow.append(SubtitleElement.new(
             await this.#flux_localization_api.translate(
-                "Please pay attention to use the correct spelling (Upper and lower case letters)"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PLEASE_PAY_ATTENTION_TO_USE_THE_CORRECT_SPELLING_UPPER_AND_LOWER_CASE_LETTERS
             )
         ));
 
@@ -231,7 +236,8 @@ export class PersonalDataElement extends HTMLElement {
                     this.#address_form_element.setCustomValidationMessage(
                         this.#address_form_element.inputs["additional-first-names"],
                         await this.#flux_localization_api.translate(
-                            "Some line contains no name!"
+                            LOCALIZATION_MODULE,
+                            LOCALIZATION_KEY_SOME_LINE_CONTAINS_NO_NAME
                         )
                     );
                     return false;
@@ -241,7 +247,8 @@ export class PersonalDataElement extends HTMLElement {
                     this.#address_form_element.setCustomValidationMessage(
                         this.#address_form_element.inputs["postal-code"],
                         await this.#flux_localization_api.translate(
-                            "Postal code and place does not match!"
+                            LOCALIZATION_MODULE,
+                            LOCALIZATION_KEY_POSTAL_CODE_AND_PLACE_DOES_NOT_MATCH
                         )
                     );
                     return false;
@@ -253,13 +260,15 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#address_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Address"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_ADDRESS
             )
         );
 
         const salutation_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Salutation"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_SALUTATION
             ),
             "select",
             "salutation"
@@ -277,7 +286,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const first_name_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "First name"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_FIRST_NAME
             ),
             "text",
             "first-name"
@@ -286,7 +296,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const second_first_name_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Second first name"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_SECOND_FIRST_NAME
             ),
             "text",
             "second-first-name"
@@ -294,7 +305,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const additional_first_names_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Additional first names (One per line)"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_ADDITIONAL_FIRST_NAMES_ONE_PER_LINE
             ),
             "textarea",
             "additional-first-names"
@@ -302,7 +314,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const last_name_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Last name"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_LAST_NAME
             ),
             "text",
             "last-name"
@@ -311,8 +324,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const registration_number_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Registration number (Format {example})",
-                null,
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_REGISTRATION_NUMBER_FORMAT_EXAMPLE,
                 {
                     example: this.#personal_data["registration-number-example"]
                 }
@@ -327,7 +340,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const country_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Country"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_COUNTRY
             ),
             "select",
             "country"
@@ -345,8 +359,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const extra_address_line_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Extra address line (E.g. {example})",
-                null,
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_EXTRA_ADDRESS_LINE_E_G_EXAMPLE,
                 {
                     example: this.#personal_data["extra-address-line-example"]
                 }
@@ -357,7 +371,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const street_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Street"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_STREET
             ),
             "text",
             "street"
@@ -366,7 +381,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const house_number_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Appartement/House number"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_APPARTEMENT_HOUSE_NUMBER
             ),
             "number",
             "house-number"
@@ -379,7 +395,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const postal_office_box_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Postal office box"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_POSTAL_OFFICE_BOX
             ),
             "text",
             "postal-office-box"
@@ -387,7 +404,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const postal_code_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Postal code"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_POSTAL_CODE
             ),
             "number",
             "postal-code"
@@ -400,7 +418,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const place_element = this.#address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Place"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PLACE
             ),
             "select",
             "place"
@@ -451,7 +470,8 @@ export class PersonalDataElement extends HTMLElement {
                         this.#contact_form_element.setCustomValidationMessage(
                             this.#contact_form_element.inputs[`${phone_type}-phone-area-code`],
                             await this.#flux_localization_api.translate(
-                                "Please either enter both area code/number or neither of them!"
+                                LOCALIZATION_MODULE,
+                                LOCALIZATION_KEY_PLEASE_EITHER_ENTER_BOTH_AREA_CODE_NUMBER_OR_NEITHER_OF_THEM
                             )
                         );
                         return false;
@@ -461,7 +481,8 @@ export class PersonalDataElement extends HTMLElement {
                         this.#contact_form_element.setCustomValidationMessage(
                             this.#contact_form_element.inputs[`${phone_type}-phone-number`],
                             await this.#flux_localization_api.translate(
-                                "Please either enter both area code/number or neither of them!"
+                                LOCALIZATION_MODULE,
+                                LOCALIZATION_KEY_PLEASE_EITHER_ENTER_BOTH_AREA_CODE_NUMBER_OR_NEITHER_OF_THEM
                             )
                         );
                         return false;
@@ -473,7 +494,8 @@ export class PersonalDataElement extends HTMLElement {
                         this.#contact_form_element.setCustomValidationMessage(
                             this.#contact_form_element.inputs[`${PHONE_TYPES[0]}-phone-area-code`],
                             await this.#flux_localization_api.translate(
-                                this.#personal_data["only-one-phone"] ? "Please enter a phone!" : "Please enter at least one phone!"
+                                LOCALIZATION_MODULE,
+                                this.#personal_data["only-one-phone"] ? LOCALIZATION_KEY_PLEASE_ENTER_A_PHONE : LOCALIZATION_KEY_PLEASE_ENTER_AT_LEAST_ONE_PHONE
                             )
                         );
                         return false;
@@ -485,7 +507,8 @@ export class PersonalDataElement extends HTMLElement {
                         this.#contact_form_element.setCustomValidationMessage(
                             this.#contact_form_element.inputs[`${PHONE_TYPES[0]}-phone-area-code`],
                             await this.#flux_localization_api.translate(
-                                "Please enter only one phone!"
+                                LOCALIZATION_MODULE,
+                                LOCALIZATION_KEY_PLEASE_ENTER_ONLY_ONE_PHONE
                             )
                         );
                         return false;
@@ -498,7 +521,8 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#contact_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Contact"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_CONTACT
             )
         );
 
@@ -542,7 +566,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const email_element = this.#contact_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "E-Mail"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_E_MAIL
             ),
             "email",
             "email"
@@ -552,7 +577,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const mother_language_element = this.#contact_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Mother language"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_MOTHER_LANGUAGE
             ),
             "select",
             "mother-language"
@@ -570,7 +596,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const correspondence_language_element = this.#contact_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Correspondence language"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_CORRESPONDENCE_LANGUAGE
             ),
             "select",
             "correspondence-language"
@@ -594,13 +621,15 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#personal_information_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Personal information"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PERSONAL_INFORMATION
             )
         );
 
         const birth_date_element = this.#personal_information_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Birth date"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_BIRTH_DATE
             ),
             "date",
             "birth-date"
@@ -611,8 +640,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const old_age_survivar_insurance_number_element = this.#personal_information_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Swiss old-age and survivar insurance number ({ahv}/{oasi}) (Format {example})",
-                null,
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_SWISS_OLD_AGE_AND_SURVIVAR_INSURANCE_NUMBER_AHV_OASI_FORMAT_EXAMPLE,
                 {
                     ahv: "AHV",
                     oasi: "OASI",
@@ -629,7 +658,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const nationally_element = this.#personal_information_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Nationally"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_NATIONALLY
             ),
             "select",
             "nationally"
@@ -653,13 +683,15 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#origin_place_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Origin place"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_ORIGIN_PLACE
             )
         );
 
         const origin_place_element = this.#origin_place_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Origin place"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_ORIGIN_PLACE
             ),
             "select",
             "origin-place"
@@ -686,7 +718,8 @@ export class PersonalDataElement extends HTMLElement {
                         this.#parents_address_form_element.setCustomValidationMessage(
                             this.#parents_address_form_element.inputs["parents-address-first-names"],
                             await this.#flux_localization_api.translate(
-                                "Some line contains no name!"
+                                LOCALIZATION_MODULE,
+                                LOCALIZATION_KEY_SOME_LINE_CONTAINS_NO_NAME
                             )
                         );
                         return false;
@@ -697,7 +730,8 @@ export class PersonalDataElement extends HTMLElement {
                             this.#parents_address_form_element.setCustomValidationMessage(
                                 this.#parents_address_form_element.inputs["parents-address-postal-code"],
                                 await this.#flux_localization_api.translate(
-                                    "Postal code and place does not match!"
+                                    LOCALIZATION_MODULE,
+                                    LOCALIZATION_KEY_POSTAL_CODE_AND_PLACE_DOES_NOT_MATCH
                                 )
                             );
                             return false;
@@ -711,13 +745,15 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#parents_address_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Parents address"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PARENTS_ADDRESS
             )
         );
 
         const parents_address_element = this.#parents_address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Enter parents address"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_ENTER_PARENTS_ADDRESS
             ),
             "checkbox",
             "parents-address"
@@ -865,7 +901,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const parents_address_salutation_element = this.#parents_address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Salutation"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_SALUTATION
             ),
             "select",
             "parents-address-salutation"
@@ -883,7 +920,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const parents_address_first_names_element = this.#parents_address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "First names (One per line)"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_FIRST_NAMES_ONE_PER_LINE
             ),
             "textarea",
             "parents-address-first-names"
@@ -892,7 +930,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const parents_address_last_name_element = this.#parents_address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Last name"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_LAST_NAME
             ),
             "text",
             "parents-address-last-name"
@@ -901,7 +940,8 @@ export class PersonalDataElement extends HTMLElement {
 
         const parents_address_same_address_element = this.#parents_address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Your parents have the same address as you"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_YOUR_PARENTS_HAVE_THE_SAME_ADDRESS_AS_YOU
             ),
             "checkbox",
             "parents-address-same-address"
@@ -918,13 +958,15 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#postal_address_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Postal address"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_POSTAL_ADDRESS
             )
         );
 
         this.#postal_address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "General post to parents"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_GENERAL_POST_TO_PARENTS
             ),
             "checkbox",
             "parents-address-general-post"
@@ -932,7 +974,8 @@ export class PersonalDataElement extends HTMLElement {
 
         this.#postal_address_form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Invoices to parents"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_INVOICES_TO_PARENTS
             ),
             "checkbox",
             "parents-address-invoices"
@@ -967,7 +1010,8 @@ export class PersonalDataElement extends HTMLElement {
         if (this.#parents_address_form_element.inputs["parents-address"].checked && !this.#parents_address_form_element.inputs["parents-address-same-address"].checked) {
             const parents_address_country_element = this.#parents_address_form_element.addInput(
                 await this.#flux_localization_api.translate(
-                    "Country"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_COUNTRY
                 ),
                 "select",
                 "parents-address-country"
@@ -985,8 +1029,8 @@ export class PersonalDataElement extends HTMLElement {
 
             this.#parents_address_form_element.addInput(
                 await this.#flux_localization_api.translate(
-                    "Extra address line (E.g. {example})",
-                    null,
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_EXTRA_ADDRESS_LINE_E_G_EXAMPLE,
                     {
                         example: this.#personal_data["extra-address-line-example"]
                     }
@@ -997,7 +1041,8 @@ export class PersonalDataElement extends HTMLElement {
 
             const parents_address_street_element = this.#parents_address_form_element.addInput(
                 await this.#flux_localization_api.translate(
-                    "Street"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_STREET
                 ),
                 "text",
                 "parents-address-street"
@@ -1006,7 +1051,8 @@ export class PersonalDataElement extends HTMLElement {
 
             const parents_address_house_number_element = this.#parents_address_form_element.addInput(
                 await this.#flux_localization_api.translate(
-                    "Appartement/House number"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_APPARTEMENT_HOUSE_NUMBER
                 ),
                 "number",
                 "parents-address-house-number"
@@ -1019,7 +1065,8 @@ export class PersonalDataElement extends HTMLElement {
 
             const parents_address_postal_code_element = this.#parents_address_form_element.addInput(
                 await this.#flux_localization_api.translate(
-                    "Postal code"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_POSTAL_CODE
                 ),
                 "number",
                 "parents-address-postal-code"
@@ -1032,7 +1079,8 @@ export class PersonalDataElement extends HTMLElement {
 
             const parents_address_place_element = this.#parents_address_form_element.addInput(
                 await this.#flux_localization_api.translate(
-                    "Place"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLACE
                 ),
                 "select",
                 "parents-address-place"
@@ -1080,8 +1128,27 @@ export class PersonalDataElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #renderPhoneNumberFormat(phone_type) {
+        let phone_title_key;
+        switch (phone_type) {
+            case "business":
+                phone_title_key = LOCALIZATION_KEY_PHONE_BUSINESS;
+                break;
+
+            case "home":
+                phone_title_key = LOCALIZATION_KEY_PHONE_HOME;
+                break;
+
+            case "mobile":
+                phone_title_key = LOCALIZATION_KEY_PHONE_MOBILE;
+                break;
+
+            default:
+                return;
+        }
+
         const phone_title = await this.#flux_localization_api.translate(
-            `Phone ${phone_type}`
+            LOCALIZATION_MODULE,
+            phone_title_key
         );
 
         this.#contact_form_element.inputs[`${phone_type}-phone-number`].removeAttribute("pattern");
@@ -1098,13 +1165,13 @@ export class PersonalDataElement extends HTMLElement {
             true
         )).source;
         this.#contact_form_element.inputs[`${phone_type}-phone-number`].parentElement.nextElementSibling.innerText = await this.#flux_localization_api.translate(
-            "{phone-title} ({phone-number-format})",
-            null,
+            LOCALIZATION_MODULE,
+            LOCALIZATION_KEY_PHONE_TITLE_PHONE_NUMBER_FORMAT,
             {
                 "phone-title": phone_title,
                 "phone-number-format": await this.#flux_localization_api.translate(
-                    "Format {example}",
-                    null,
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_FORMAT_EXAMPLE,
                     {
                         example: area_code["phone-number-example"]
                     }

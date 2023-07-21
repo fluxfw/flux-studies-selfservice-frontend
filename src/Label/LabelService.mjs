@@ -1,3 +1,6 @@
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
+import { LOCALIZATION_KEY_ECT_ECT, LOCALIZATION_KEY_LABEL_ECT } from "../Localization/LOCALIZATION_KEY.mjs";
+
 /** @typedef {import("../AreaCode/AreaCode.mjs").AreaCode} AreaCode */
 /** @typedef {import("../Canton/Canton.mjs").Canton} Canton */
 /** @typedef {import("../Certificate/Certificate.mjs").Certificate} Certificate */
@@ -137,8 +140,8 @@ export class LabelService {
      */
     async getCombinationLabel(combination) {
         return this.#flux_localization_api.translate(
-            "{label} ({ect})",
-            null,
+            LOCALIZATION_MODULE,
+            LOCALIZATION_KEY_LABEL_ECT,
             {
                 ect: await this.getEctLabel(
                     [
@@ -207,8 +210,8 @@ export class LabelService {
         }
 
         return this.#flux_localization_api.translate(
-            "{ect} ECT",
-            null,
+            LOCALIZATION_MODULE,
+            LOCALIZATION_KEY_ECT_ECT,
             {
                 ect: _ect
             }
@@ -238,7 +241,9 @@ export class LabelService {
      * @returns {Promise<string | null>}
      */
     async getLabel(label) {
-        return typeof label === "string" ? label : label[(await this.#flux_localization_api.getLanguage()).language] ?? label.en ?? Object.values(label)[0] ?? null;
+        return typeof label === "string" ? label : label[(await this.#flux_localization_api.getLanguage(
+            LOCALIZATION_MODULE
+        )).language] ?? label.en ?? Object.values(label)[0] ?? null;
     }
 
     /**
@@ -391,8 +396,8 @@ export class LabelService {
      */
     async getSubjectLabel(subject) {
         return this.#flux_localization_api.translate(
-            "{label} ({ect})",
-            null,
+            LOCALIZATION_MODULE,
+            LOCALIZATION_KEY_LABEL_ECT,
             {
                 ect: await this.getEctLabel(
                     subject.ect

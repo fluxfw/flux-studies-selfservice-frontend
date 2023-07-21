@@ -1,6 +1,8 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
+import { LOCALIZATION_KEY_REMOVE_CROP, LOCALIZATION_KEY_THE_PHOTO_CAN_CROP_BY_DRAGGING_A_RECTANGLE_WITH_HOLDING_PRIMARY_MOUSE_BUTTON_OR_TOUCHSCREEN } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("./PhotoCrop.mjs").PhotoCrop} PhotoCrop */
@@ -314,7 +316,8 @@ export class PhotoElement extends HTMLElement {
 
         this.#subtitle_element = FormSubtitleElement.new(
             await this.#flux_localization_api.translate(
-                "The photo can crop by dragging a rectangle with holding primary mouse button or touchscreen"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_THE_PHOTO_CAN_CROP_BY_DRAGGING_A_RECTANGLE_WITH_HOLDING_PRIMARY_MOUSE_BUTTON_OR_TOUCHSCREEN
             )
         );
         this.#subtitle_element.hidden = true;
@@ -322,7 +325,8 @@ export class PhotoElement extends HTMLElement {
 
         this.#remove_crop_element = FormButtonElement.new(
             await this.#flux_localization_api.translate(
-                "Remove crop"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_REMOVE_CROP
             )
         );
         this.#remove_crop_element.button.disabled = true;

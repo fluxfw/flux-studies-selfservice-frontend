@@ -1,8 +1,10 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_CHOICE_SUBJECT } from "../Page/PAGE.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
+import { LOCALIZATION_KEY_CHOICE_OF_SUBJECT, LOCALIZATION_KEY_CHOOSE_YOUR_DEGREE_PROGRAM, LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA, LOCALIZATION_KEY_QUALIFICATIONS_FOR_ADMISSION } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./ChoiceSubject.mjs").ChoiceSubject} ChoiceSubject */
@@ -130,7 +132,8 @@ export class ChoiceSubjectElement extends HTMLElement {
         } else {
             this.#qualifications_form_element.addInvalidMessage(
                 await this.#flux_localization_api.translate(
-                    "Please check your data!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA
                 )
             );
         }
@@ -142,7 +145,8 @@ export class ChoiceSubjectElement extends HTMLElement {
     async #render() {
         this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
-                "Choice of subject"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_CHOICE_OF_SUBJECT
             )
         ));
 
@@ -152,7 +156,8 @@ export class ChoiceSubjectElement extends HTMLElement {
 
         this.#degree_program_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Choose your degree program"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_CHOOSE_YOUR_DEGREE_PROGRAM
             )
         );
 
@@ -182,7 +187,8 @@ export class ChoiceSubjectElement extends HTMLElement {
 
         this.#qualifications_form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Qualifications for admission"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_QUALIFICATIONS_FOR_ADMISSION
             )
         );
 

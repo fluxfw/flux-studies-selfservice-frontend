@@ -1,6 +1,8 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MENU_ID_APPLICATION_LOGIN } from "../Menu/MENU_ID.mjs";
+import { LOCALIZATION_KEY_APPLICATION_LOGIN, LOCALIZATION_KEY_LOGOUT, LOCALIZATION_KEY_PRINT_PAGE, LOCALIZATION_KEY_STUDIS_SELFSERVICE } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("../Libs/flux-color-scheme/src/FluxColorScheme.mjs").FluxColorScheme} FluxColorScheme */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
@@ -107,10 +109,10 @@ export class MainElement extends HTMLElement {
         this.#menu_element.innerHTML = "";
         if (menu !== null) {
             for (const id of menu.ids) {
-                let label;
+                let label_key;
                 switch (id) {
                     case MENU_ID_APPLICATION_LOGIN:
-                        label = "Application / Login";
+                        label_key = LOCALIZATION_KEY_APPLICATION_LOGIN;
                         break;
 
                     default:
@@ -125,7 +127,8 @@ export class MainElement extends HTMLElement {
                 }
 
                 menu_element.innerText = await this.#flux_localization_api.translate(
-                    label
+                    LOCALIZATION_MODULE,
+                    label_key
                 );
                 if (menu_function !== null) {
                     menu_element.addEventListener("click", () => {
@@ -167,7 +170,8 @@ export class MainElement extends HTMLElement {
             if (logout_function !== null) {
                 const logout_button_element = FormButtonElement.new(
                     await this.#flux_localization_api.translate(
-                        "Logout"
+                        LOCALIZATION_MODULE,
+                        LOCALIZATION_KEY_LOGOUT
                     )
                 );
                 logout_button_element.button.addEventListener("click", () => {
@@ -193,7 +197,8 @@ export class MainElement extends HTMLElement {
         const title_element = document.createElement("div");
         title_element.classList.add("title");
         title_element.innerText = await this.#flux_localization_api.translate(
-            "Studis selfservice"
+            LOCALIZATION_MODULE,
+            LOCALIZATION_KEY_STUDIS_SELFSERVICE
         );
         left_element.append(title_element);
 
@@ -202,7 +207,7 @@ export class MainElement extends HTMLElement {
 
         const select_color_scheme_element = await this.#flux_color_scheme.getSelectColorSchemeElement();
         select_color_scheme_element.classList.add("select_color_scheme");
-        left_element.append(select_color_scheme_element); 
+        left_element.append(select_color_scheme_element);
 
         const logo_link_element = document.createElement("a");
         logo_link_element.classList.add("logo");
@@ -229,7 +234,8 @@ export class MainElement extends HTMLElement {
 
         const print_button_element = FormButtonElement.new(
             await this.#flux_localization_api.translate(
-                "Print page"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PRINT_PAGE
             )
         );
         print_button_element.button.addEventListener("click", () => {
@@ -245,7 +251,8 @@ export class MainElement extends HTMLElement {
         const arrow_element = document.createElement("div");
         arrow_element.classList.add("arrow");
         arrow_element.innerText = await this.#flux_localization_api.translate(
-            "Application / Login"
+            LOCALIZATION_MODULE,
+            LOCALIZATION_KEY_APPLICATION_LOGIN
         );
         header2_element.append(arrow_element);
 

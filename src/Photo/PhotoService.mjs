@@ -1,3 +1,6 @@
+import { LOCALIZATION_KEY_PHOTO } from "../Localization/LOCALIZATION_KEY.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
+
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("./Photo.mjs").Photo} Photo */
 /** @typedef {import("./PhotoCrop.mjs").PhotoCrop} PhotoCrop */
@@ -307,7 +310,8 @@ export class PhotoService {
         return new File([
             new Uint8Array(photo).buffer
         ], name ?? `${await this.#flux_localization_api.translate(
-            "Photo"
+            LOCALIZATION_MODULE,
+            LOCALIZATION_KEY_PHOTO
         )}.${type.split("/")[1]}`, {
             type
         });

@@ -1,6 +1,8 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
+import { LOCALIZATION_KEY_END_OF_YOUR_STUDIES_YEAR, LOCALIZATION_KEY_LEGAL_PLACE_OF_RESIDENCE_WHEN_THE_CERTIFICATE_WAS_AWARDED, LOCALIZATION_KEY_NAME_OF_UNIVERSITY, LOCALIZATION_KEY_NUMBER_OF_SEMESTERS, LOCALIZATION_KEY_PREVIOUS_STUDY, LOCALIZATION_KEY_START_OF_YOUR_STUDIES_YEAR, LOCALIZATION_KEY_SUBJECT_STUDIED, LOCALIZATION_KEY_THE_CANTON_OF_YOUR_POLITICAL_COMMUNE_WHERE_YOU_WERE_REGISTERED_AT_THE_TIME_YOU_WERE_AWARDED_YOUR_CERTIFICATE, LOCALIZATION_KEY_THE_COUNTRY_WHERE_YOU_WERE_REGISTERED_AT_THE_TIME_YOU_WERE_AWARDED_YOUR_CERTIFICATE, LOCALIZATION_KEY_THE_END_DATE_CAN_NOT_BE_BEFORE_THE_START_DATE, LOCALIZATION_KEY_TITLE_DEGREE, LOCALIZATION_KEY_TYPE_OF_CERTIFICATE } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("./ChosenPreviousStudy.mjs").ChosenPreviousStudy} ChosenPreviousStudy */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
@@ -122,7 +124,8 @@ export class PreviousStudyElement extends HTMLElement {
                     this.#form_element.setCustomValidationMessage(
                         this.#form_element.inputs["end-date"],
                         await this.#flux_localization_api.translate(
-                            "The end date can not be before the start date!"
+                            LOCALIZATION_MODULE,
+                            LOCALIZATION_KEY_THE_END_DATE_CAN_NOT_BE_BEFORE_THE_START_DATE
                         )
                     );
                     return false;
@@ -134,7 +137,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const title_element = this.#form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Previous study"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PREVIOUS_STUDY
             )
         );
 
@@ -150,7 +154,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const certificate_type_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Type of certificate"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_TYPE_OF_CERTIFICATE
             ),
             "select",
             "certificate-type"
@@ -168,7 +173,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const start_date_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Start of your studies (Year)"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_START_OF_YOUR_STUDIES_YEAR
             ),
             "number",
             "start-date"
@@ -181,7 +187,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const end_date_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "End of your studies (Year)"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_END_OF_YOUR_STUDIES_YEAR
             ),
             "number",
             "end-date"
@@ -194,7 +201,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const university_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Name of university"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_NAME_OF_UNIVERSITY
             ),
             "select",
             "university"
@@ -212,7 +220,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const subject_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Subject studied"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_SUBJECT_STUDIED
             ),
             "text",
             "subject"
@@ -221,7 +230,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const semesters_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Number of semesters"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_NUMBER_OF_SEMESTERS
             ),
             "number",
             "semesters"
@@ -234,7 +244,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const degree_title_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Title degree"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_TITLE_DEGREE
             ),
             "select",
             "degree-title"
@@ -252,7 +263,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const certificate_country_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "The country where you were registered at the time you were awarded your certificate"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_THE_COUNTRY_WHERE_YOU_WERE_REGISTERED_AT_THE_TIME_YOU_WERE_AWARDED_YOUR_CERTIFICATE
             ),
             "select",
             "certificate-country"
@@ -270,7 +282,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const certificate_canton_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "The canton of your political commune where you were registered at the time you were awarded your certificate"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_THE_CANTON_OF_YOUR_POLITICAL_COMMUNE_WHERE_YOU_WERE_REGISTERED_AT_THE_TIME_YOU_WERE_AWARDED_YOUR_CERTIFICATE
             ),
             "select",
             "certificate-canton"
@@ -288,7 +301,8 @@ export class PreviousStudyElement extends HTMLElement {
 
         const certificate_place_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Legal place of residence when the certificate was awarded"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_LEGAL_PLACE_OF_RESIDENCE_WHEN_THE_CERTIFICATE_WAS_AWARDED
             ),
             "select",
             "certificate-place"

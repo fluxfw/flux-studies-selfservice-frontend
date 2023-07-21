@@ -1,10 +1,12 @@
 import { CreateElement } from "../Create/CreateElement.mjs";
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_START } from "../Page/PAGE.mjs";
 import { ResumeElement } from "../Resume/ResumeElement.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
+import { LOCALIZATION_KEY_CREATE_A_NEW_APPLICATION_BY_ENTERING_A_PASSWORD_OF_YOU_CHOICE_OR_CONTINUE_WITH_YOUR_APPLICATION_BY_USING_YOUR_APPLICATION_IDENTIFICATION_NUMBER_AND_YOUR_PASSWORD, LOCALIZATION_KEY_LOGIN } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("../Create/createFunction.mjs").createFunction} createFunction */
@@ -110,13 +112,15 @@ export class StartElement extends HTMLElement {
     async #render() {
         this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
-                "Login"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_LOGIN
             )
         ));
 
         this.#shadow.append(SubtitleElement.new(
             await this.#flux_localization_api.translate(
-                "Create a new application by entering a password of you choice, or continue with your application by using your application identification number and your password"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_CREATE_A_NEW_APPLICATION_BY_ENTERING_A_PASSWORD_OF_YOU_CHOICE_OR_CONTINUE_WITH_YOUR_APPLICATION_BY_USING_YOUR_APPLICATION_IDENTIFICATION_NUMBER_AND_YOUR_PASSWORD
             )
         ));
 

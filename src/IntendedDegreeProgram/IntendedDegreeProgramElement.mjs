@@ -1,8 +1,10 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_INTENDED_DEGREE_PROGRAM } from "../Page/PAGE.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
+import { LOCALIZATION_KEY_COMBINATION_OF_SUBJECTS, LOCALIZATION_KEY_DEGREE_PROGRAM, LOCALIZATION_KEY_INTENDED_DEGREE_PROGRAM, LOCALIZATION_KEY_MANDATORY_SUBJECTS, LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA, LOCALIZATION_KEY_PLEASE_CHOOSE_YOUR_INTENDED_DEGREE_PROGRAM, LOCALIZATION_KEY_PLEASE_SAVE_YOUR_SELECTION_IN_CASE_YOU_NEED_TO_CHOOSE_ADDITIONAL_MANDATORY_SUBJECTS_FOR_YOUR_COURSE_THEY_WILL_BE_SHOWN_ON_THE_NEXT_PAGE, LOCALIZATION_KEY_SUBJECT } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenIntendedDegreeProgramFunction.mjs").chosenIntendedDegreeProgramFunction} chosenIntendedDegreeProgramFunction */
@@ -127,7 +129,8 @@ export class IntendedDegreeProgramElement extends HTMLElement {
         } else {
             this.#form_element.addInvalidMessage(
                 await this.#flux_localization_api.translate(
-                    "Please check your data!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA
                 )
             );
         }
@@ -139,7 +142,8 @@ export class IntendedDegreeProgramElement extends HTMLElement {
     async #render() {
         this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
-                "Intended degree program"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_INTENDED_DEGREE_PROGRAM
             )
         ));
 
@@ -149,19 +153,22 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         this.#form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Degree program"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_DEGREE_PROGRAM
             )
         );
 
         this.#form_element.addSubtitle(
             await this.#flux_localization_api.translate(
-                "Please choose your intended degree program"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PLEASE_CHOOSE_YOUR_INTENDED_DEGREE_PROGRAM
             )
         );
 
         const subject_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Subject"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_SUBJECT
             ),
             "select",
             "subject"
@@ -183,7 +190,8 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         const combination_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Combination of subjects"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_COMBINATION_OF_SUBJECTS
             ),
             "select",
             "combination"
@@ -196,7 +204,8 @@ export class IntendedDegreeProgramElement extends HTMLElement {
 
         this.#mandatory_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Mandatory subjects"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_MANDATORY_SUBJECTS
             ),
             "readonly"
         );
@@ -207,7 +216,8 @@ export class IntendedDegreeProgramElement extends HTMLElement {
             },
             this.#back_function,
             await this.#flux_localization_api.translate(
-                "Please save your selection. In case you need to choose additional mandatory subjects for your course, they will be shown on the next page"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PLEASE_SAVE_YOUR_SELECTION_IN_CASE_YOU_NEED_TO_CHOOSE_ADDITIONAL_MANDATORY_SUBJECTS_FOR_YOUR_COURSE_THEY_WILL_BE_SHOWN_ON_THE_NEXT_PAGE
             )
         );
 

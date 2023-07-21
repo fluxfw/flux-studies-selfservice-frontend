@@ -1,4 +1,6 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { LOCALIZATION_KEY_MANDATORY } from "../Localization/LOCALIZATION_KEY.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 
@@ -50,7 +52,8 @@ export class MandatoryElement extends HTMLElement {
     async #render() {
         const mandatory_element = document.createElement("span");
         mandatory_element.innerText = await this.#flux_localization_api.translate(
-            "Mandatory"
+            LOCALIZATION_MODULE,
+            LOCALIZATION_KEY_MANDATORY
         );
         this.#shadow.append(mandatory_element);
     }

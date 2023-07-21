@@ -1,6 +1,8 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { PAGE_CREATE } from "../Page/PAGE.mjs";
+import { LOCALIZATION_KEY_CONFIRM_PASSWORD, LOCALIZATION_KEY_CONFIRM_PASSWORD_DOES_NOT_MATCH, LOCALIZATION_KEY_CREATE_A_NEW_APPLICATION, LOCALIZATION_KEY_ENTER_A_PASSWORD_WITH_AT_LEAST_MIN_PASSWORD_LENGTH_CHARACTERS_WHICH_WILL_ALLOW_YOU_TO_ACCESS_YOUR_DATA_AT_A_LATER_STAGE, LOCALIZATION_KEY_PASSWORD, LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA, LOCALIZATION_KEY_SEMESTER } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("./createFunction.mjs").createFunction} createFunction */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
@@ -123,7 +125,8 @@ export class CreateElement extends HTMLElement {
         } else {
             this.#form_element.addInvalidMessage(
                 await this.#flux_localization_api.translate(
-                    "Please check your data!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA
                 )
             );
         }
@@ -140,7 +143,8 @@ export class CreateElement extends HTMLElement {
                     this.#form_element.setCustomValidationMessage(
                         this.#form_element.inputs["confirm-password"],
                         await this.#flux_localization_api.translate(
-                            "Confirm password does not match!"
+                            LOCALIZATION_MODULE,
+                            LOCALIZATION_KEY_CONFIRM_PASSWORD_DOES_NOT_MATCH
                         )
                     );
                     return false;
@@ -152,13 +156,15 @@ export class CreateElement extends HTMLElement {
 
         this.#form_element.addTitle(
             await this.#flux_localization_api.translate(
-                "Create a new application"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_CREATE_A_NEW_APPLICATION
             )
         );
 
         const semester_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Semester"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_SEMESTER
             ),
             "select",
             "semester"
@@ -176,8 +182,8 @@ export class CreateElement extends HTMLElement {
 
         this.#form_element.addSubtitle(
             await this.#flux_localization_api.translate(
-                "Enter a password with at least {min-password-length} characters which will allow you to access your data at a later stage",
-                null,
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_ENTER_A_PASSWORD_WITH_AT_LEAST_MIN_PASSWORD_LENGTH_CHARACTERS_WHICH_WILL_ALLOW_YOU_TO_ACCESS_YOUR_DATA_AT_A_LATER_STAGE,
                 {
                     "min-password-length": this.#start["min-password-length"]
                 }
@@ -186,7 +192,8 @@ export class CreateElement extends HTMLElement {
 
         const password_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Password"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PASSWORD
             ),
             "password",
             "password"
@@ -196,7 +203,8 @@ export class CreateElement extends HTMLElement {
 
         const confirm_password_element = this.#form_element.addInput(
             await this.#flux_localization_api.translate(
-                "Confirm password"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_CONFIRM_PASSWORD
             ),
             "password",
             "confirm-password"

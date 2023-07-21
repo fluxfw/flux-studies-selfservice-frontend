@@ -1,8 +1,10 @@
 import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
+import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { PAGE_IDENTIFICATION_NUMBER } from "../Page/PAGE.mjs";
 import { SubtitleElement } from "../Subtitle/SubtitleElement.mjs";
 import { TitleElement } from "../Title/TitleElement.mjs";
+import { LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA, LOCALIZATION_KEY_PLEASE_KEEP_YOUR_IDENTIFICATION_NUMBER_SAFE_SO_THAT_YOU_CAN_ACCESS_YOUR_DATA_AT_A_LATER_STAGE, LOCALIZATION_KEY_YOUR_DATA_WILL_BE_SAVED_UNDER_THE_FOLLOWING_NUMBER, LOCALIZATION_KEY_YOUR_PERSONAL_IDENTIFICATION_NUMBER } from "../Localization/LOCALIZATION_KEY.mjs";
 
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./confirmedIdentificationNumberFunction.mjs").confirmedIdentificationNumberFunction} confirmedIdentificationNumberFunction */
@@ -115,7 +117,8 @@ export class IdentificationNumberElement extends HTMLElement {
         } else {
             this.#shadow.prepend(this.#form_element.addInvalidMessage(
                 await this.#flux_localization_api.translate(
-                    "Please check your data!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA
                 )
             ));
         }
@@ -127,13 +130,15 @@ export class IdentificationNumberElement extends HTMLElement {
     async #render() {
         this.#shadow.append(TitleElement.new(
             await this.#flux_localization_api.translate(
-                "Your personal identification number"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_YOUR_PERSONAL_IDENTIFICATION_NUMBER
             )
         ));
 
         this.#shadow.append(SubtitleElement.new(
             await this.#flux_localization_api.translate(
-                "Your data will be saved under the following number"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_YOUR_DATA_WILL_BE_SAVED_UNDER_THE_FOLLOWING_NUMBER
             )
         ));
 
@@ -149,7 +154,8 @@ export class IdentificationNumberElement extends HTMLElement {
 
         this.#shadow.append(SubtitleElement.new(
             await this.#flux_localization_api.translate(
-                "Please keep your identification number safe so that you can access your data at a later stage"
+                LOCALIZATION_MODULE,
+                LOCALIZATION_KEY_PLEASE_KEEP_YOUR_IDENTIFICATION_NUMBER_SAFE_SO_THAT_YOU_CAN_ACCESS_YOUR_DATA_AT_A_LATER_STAGE
             )
         ));
 

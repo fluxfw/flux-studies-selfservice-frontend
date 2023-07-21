@@ -1,5 +1,8 @@
 import { flux_css_api } from "./Libs/flux-css-api/src/FluxCssApi.mjs";
 import { HttpClientResponse } from "./Libs/flux-http-api/src/Client/HttpClientResponse.mjs";
+import { LOCALIZATION_MODULE } from "./Localization/LOCALIZATION_MODULE.mjs";
+import { LOCALIZATIONS_STUDIS_SELFSERVICE_FRONTENDSTUDIS_SELFSERVICE_FRONTEND } from "./Localization/LOCALIZATIONS.mjs";
+import { LOCALIZATION_KEY_NETWORK_ERROR, LOCALIZATION_KEY_PAGE_ERROR, LOCALIZATION_KEY_SERVER_ERROR } from "./Localization/LOCALIZATION_KEY.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_PREVIOUS_STUDIES, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "./Page/PAGE.mjs";
 
 /** @typedef {import("./Back/backFunction.mjs").backFunction} backFunction */
@@ -136,6 +139,7 @@ export class FluxStudisSelfserviceFrontend {
      */
     async getSelectLanguageElement() {
         return (await this.#getFluxLocalizationApi()).getSelectLanguageElement(
+            LOCALIZATION_MODULE,
             async () => {
                 await this.#afterSelectLanguage(
                     true
@@ -150,7 +154,8 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #afterSelectLanguage(ui = null) {
         await (await this.#getFluxPwaApi()).initPwa(
-            `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Manifest/manifest.json`
+            `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Manifest/manifest.json`,
+            LOCALIZATION_MODULE
         );
 
         if (!(ui ?? false)) {
@@ -237,8 +242,7 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<FluxLocalizationApi>}
      */
     async #getFluxLocalizationApi() {
-        this.#flux_localization_api ??= (await import("./Libs/flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new(
-            await this.#getFluxHttpApi(),
+        this.#flux_localization_api ??= await (await import("./Libs/flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new(
             await this.#getFluxSettingsStorage()
         );
 
@@ -489,7 +493,8 @@ export class FluxStudisSelfserviceFrontend {
 
             return this.#getFormInvalidElement(
                 await (await this.#getFluxLocalizationApi()).translate(
-                    "Page error!"
+                    LOCALIZATION_MODULE,
+                    LOCALIZATION_KEY_PAGE_ERROR
                 )
             );
         }
@@ -644,10 +649,12 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #init() {
         const flux_localization_api = await this.#getFluxLocalizationApi();
+
         await flux_localization_api.addModule(
-            `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Localization`
+            LOCALIZATION_MODULE,
+            LOCALIZATIONS_STUDIS_SELFSERVICE_FRONTENDSTUDIS_SELFSERVICE_FRONTEND
         );
-        await flux_localization_api.selectDefaultLanguage();
+
         await this.#afterSelectLanguage();
     }
 
@@ -676,7 +683,8 @@ export class FluxStudisSelfserviceFrontend {
             await this.#main_element.replaceContent(
                 await this.#getFormInvalidElement(
                     await this.#flux_localization_api.translate(
-                        error instanceof HttpClientResponse ? "Server error!" : "Network error!"
+                        LOCALIZATION_MODULE,
+                        error instanceof HttpClientResponse ? LOCALIZATION_KEY_SERVER_ERROR : LOCALIZATION_KEY_NETWORK_ERROR
                     )
                 )
             );
@@ -703,13 +711,15 @@ export class FluxStudisSelfserviceFrontend {
                         return {
                             ok: false,
                             "error-messages": [
-                                Object.fromEntries(await Promise.all(Object.entries((await this.#flux_localization_api.getLanguages()).all).map(async ([
+                                Object.fromEntries(await Promise.all(Object.entries((await this.#flux_localization_api.getLanguages(
+                                    LOCALIZATION_MODULE
+                                )).all).map(async ([
                                     language
                                 ]) => [
                                         language,
                                         await this.#flux_localization_api.translate(
-                                            error instanceof HttpClientResponse ? "Server error!" : "Network error!",
-                                            null,
+                                            LOCALIZATION_MODULE,
+                                            error instanceof HttpClientResponse ? LOCALIZATION_KEY_SERVER_ERROR : LOCALIZATION_KEY_NETWORK_ERROR,
                                             null,
                                             language
                                         )
@@ -742,7 +752,8 @@ export class FluxStudisSelfserviceFrontend {
                         await this.#main_element.replaceContent(
                             await this.#getFormInvalidElement(
                                 await this.#flux_localization_api.translate(
-                                    error instanceof HttpClientResponse ? "Server error!" : "Network error!"
+                                    LOCALIZATION_MODULE,
+                                    error instanceof HttpClientResponse ? LOCALIZATION_KEY_SERVER_ERROR : LOCALIZATION_KEY_NETWORK_ERROR
                                 )
                             )
                         );
@@ -771,7 +782,8 @@ export class FluxStudisSelfserviceFrontend {
                     await this.#main_element.replaceContent(
                         await this.#getFormInvalidElement(
                             await this.#flux_localization_api.translate(
-                                error instanceof HttpClientResponse ? "Server error!" : "Network error!"
+                                LOCALIZATION_MODULE,
+                                error instanceof HttpClientResponse ? LOCALIZATION_KEY_SERVER_ERROR : LOCALIZATION_KEY_NETWORK_ERROR
                             )
                         )
                     );
@@ -797,7 +809,8 @@ export class FluxStudisSelfserviceFrontend {
                     await this.#main_element.replaceContent(
                         await this.#getFormInvalidElement(
                             await this.#flux_localization_api.translate(
-                                error instanceof HttpClientResponse ? "Server error!" : "Network error!"
+                                LOCALIZATION_MODULE,
+                                error instanceof HttpClientResponse ? LOCALIZATION_KEY_SERVER_ERROR : LOCALIZATION_KEY_NETWORK_ERROR
                             )
                         )
                     );
