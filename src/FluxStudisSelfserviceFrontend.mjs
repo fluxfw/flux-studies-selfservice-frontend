@@ -1,7 +1,7 @@
 import { flux_css_api } from "./Libs/flux-css-api/src/FluxCssApi.mjs";
 import { HttpClientResponse } from "./Libs/flux-http-api/src/Client/HttpClientResponse.mjs";
 import { LOCALIZATION_MODULE } from "./Localization/LOCALIZATION_MODULE.mjs";
-import { LOCALIZATIONS_STUDIS_SELFSERVICE_FRONTENDSTUDIS_SELFSERVICE_FRONTEND } from "./Localization/LOCALIZATIONS.mjs";
+import { LOCALIZATIONS } from "./Localization/LOCALIZATIONS.mjs";
 import { LOCALIZATION_KEY_NETWORK_ERROR, LOCALIZATION_KEY_PAGE_ERROR, LOCALIZATION_KEY_SERVER_ERROR } from "./Localization/LOCALIZATION_KEY.mjs";
 import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_NUMBER, PAGE_INTENDED_DEGREE_PROGRAM, PAGE_INTENDED_DEGREE_PROGRAM_2, PAGE_LEGAL, PAGE_PERSONAL_DATA, PAGE_PORTRAIT, PAGE_PREVIOUS_STUDIES, PAGE_RESUME, PAGE_START, PAGE_UNIVERSITY_ENTRANCE_QUALIFICATION } from "./Page/PAGE.mjs";
 
@@ -652,7 +652,7 @@ export class FluxStudisSelfserviceFrontend {
 
         await flux_localization_api.addModule(
             LOCALIZATION_MODULE,
-            LOCALIZATIONS_STUDIS_SELFSERVICE_FRONTENDSTUDIS_SELFSERVICE_FRONTEND
+            LOCALIZATIONS
         );
 
         await this.#afterSelectLanguage();

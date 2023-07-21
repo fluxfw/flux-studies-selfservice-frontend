@@ -1,4 +1,4 @@
-export const LOCALIZATIONS_STUDIS_SELFSERVICE_FRONTENDSTUDIS_SELFSERVICE_FRONTEND = Object.freeze([
+export const LOCALIZATIONS = Object.freeze([
     {
         "fallback-languages": Object.freeze([
             "de-AT",

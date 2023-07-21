@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { fileURLToPath } from "node:url";
 import { LOCALIZATION_MODULE } from "../src/Localization/LOCALIZATION_MODULE.mjs";
-import { LOCALIZATIONS_STUDIS_SELFSERVICE_FRONTENDSTUDIS_SELFSERVICE_FRONTEND } from "../src/Localization/LOCALIZATIONS.mjs";
+import { LOCALIZATIONS } from "../src/Localization/LOCALIZATIONS.mjs";
 import { MANIFEST_TEMPLATE } from "../src/Manifest/manifest-template.mjs";
 import { basename, dirname, extname, join } from "node:path/posix";
 
@@ -36,7 +36,7 @@ try {
 
     await flux_localization_api.addModule(
         LOCALIZATION_MODULE,
-        LOCALIZATIONS_STUDIS_SELFSERVICE_FRONTENDSTUDIS_SELFSERVICE_FRONTEND
+        LOCALIZATIONS
     );
 
     const flux_pwa_generator = (await import("../../flux-pwa-generator/src/FluxPwaGenerator.mjs")).FluxPwaGenerator.new(
