@@ -14,5 +14,4 @@ src/Manifest/manifest*.json
 src/favicon.ico
 src/index*.html
 !src/Icon/icon*-template.svg
-!src/Manifest/manifest-template.mjs
 !src/index-template.html

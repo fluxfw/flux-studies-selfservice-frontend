@@ -2,7 +2,7 @@
 import { fileURLToPath } from "node:url";
 import { LOCALIZATION_MODULE } from "../src/Localization/LOCALIZATION_MODULE.mjs";
 import { LOCALIZATIONS } from "../src/Localization/LOCALIZATIONS.mjs";
-import { MANIFEST_TEMPLATE } from "../src/Manifest/manifest-template.mjs";
+import { MANIFEST_TEMPLATE } from "../src/Manifest/MANIFEST_TEMPLATE";
 import { basename, dirname, extname, join } from "node:path/posix";
 
 let flux_shutdown_handler = null;
@@ -30,7 +30,7 @@ try {
     const libs_file_filter = root_file => root_file.startsWith("flux-") ? (root_file.includes("/bin/") || root_file.includes("/src/")) && !root_file.startsWith("flux-pwa-generator/") && !root_file.endsWith("/bin/build.mjs") && ![
         ".md",
         ".sh"
-    ].includes(extname(root_file)) && !basename(root_file).includes("-template") : true;
+    ].includes(extname(root_file)) && !basename(root_file).toLowerCase().includes("template") : true;
 
     const flux_localization_api = await (await import("../../flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new();
 
