@@ -1,4 +1,4 @@
-import { flux_css_api } from "./Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "./Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { HttpClientResponse } from "./Libs/flux-http-api/src/Client/HttpClientResponse.mjs";
 import { LOCALIZATION_MODULE } from "./Localization/LOCALIZATION_MODULE.mjs";
 import { LOCALIZATIONS } from "./Localization/LOCALIZATIONS.mjs";
@@ -15,6 +15,7 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("./Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 /** @typedef {import("./Libs/flux-pwa-api/src/FluxPwaApi.mjs").FluxPwaApi} FluxPwaApi */
 /** @typedef {import("./Libs/flux-settings-storage/src/FluxSettingsStorage.mjs").FluxSettingsStorage} FluxSettingsStorage */
+/** @typedef {import("./Libs/flux-style-sheet-manager/src/FluxStyleSheetManager.mjs").FluxStyleSheetManager} FluxStyleSheetManager */
 /** @typedef {import("./FormInvalid/FormInvalidElement.mjs").FormInvalidElement} FormInvalidElement */
 /** @typedef {import("./Get/GetResult.mjs").GetResult} GetResult */
 /** @typedef {import("./IdentificationNumber/IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
@@ -43,11 +44,9 @@ import { PAGE_CHOICE_SUBJECT, PAGE_COMPLETED, PAGE_CREATE, PAGE_IDENTIFICATION_N
 /** @typedef {import("./UniversityEntranceQualification/UniversityEntranceQualification.mjs").UniversityEntranceQualification} UniversityEntranceQualification */
 /** @typedef {import("./UniversityEntranceQualification/UniversityEntranceQualificationElement.mjs").UniversityEntranceQualificationElement} UniversityEntranceQualificationElement */
 
-const layout_css = await flux_css_api.import(
+const layout_css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/Layout/style.css`
 );
-
-document.adoptedStyleSheets.push(layout_css);
 
 export class FluxStudisSelfserviceFrontend {
     /**
@@ -70,6 +69,10 @@ export class FluxStudisSelfserviceFrontend {
      * @type {FluxSettingsStorage | null}
      */
     #flux_settings_storage = null;
+    /**
+     * @type {FluxStyleSheetManager | null}
+     */
+    #flux_style_sheet_manager = null;
     /**
      * @type {LabelService | null}
      */
@@ -223,7 +226,8 @@ export class FluxStudisSelfserviceFrontend {
             null,
             null,
             await this.#getFluxLocalizationApi(),
-            await this.#getFluxSettingsStorage()
+            await this.#getFluxSettingsStorage(),
+            await this.#getFluxStyleSheetManager()
         );
 
         return this.#flux_color_scheme;
@@ -243,7 +247,8 @@ export class FluxStudisSelfserviceFrontend {
      */
     async #getFluxLocalizationApi() {
         this.#flux_localization_api ??= await (await import("./Libs/flux-localization-api/src/FluxLocalizationApi.mjs")).FluxLocalizationApi.new(
-            await this.#getFluxSettingsStorage()
+            await this.#getFluxSettingsStorage(),
+            await this.#getFluxStyleSheetManager()
         );
 
         return this.#flux_localization_api;
@@ -256,7 +261,8 @@ export class FluxStudisSelfserviceFrontend {
         this.#flux_pwa_api ??= await (await import("./Libs/flux-pwa-api/src/FluxPwaApi.mjs")).FluxPwaApi.new(
             await this.#getFluxHttpApi(),
             await this.#getFluxLocalizationApi(),
-            await this.#getFluxSettingsStorage()
+            await this.#getFluxSettingsStorage(),
+            await this.#getFluxStyleSheetManager()
         );
 
         return this.#flux_pwa_api;
@@ -279,6 +285,17 @@ export class FluxStudisSelfserviceFrontend {
         }
 
         return this.#flux_settings_storage;
+    }
+
+    /**
+     * @returns {Promise<FluxStyleSheetManager>}
+     */
+    async #getFluxStyleSheetManager() {
+        this.#flux_style_sheet_manager ??= await (await import("./Libs/flux-style-sheet-manager/src/FluxStyleSheetManager.mjs")).FluxStyleSheetManager.new(
+            (await import("./Libs/flux-color-scheme/src/ColorScheme/COLOR_SCHEME_VARIABLE.mjs")).COLOR_SCHEME_VARIABLE_PREFIX
+        );
+
+        return this.#flux_style_sheet_manager;
     }
 
     /**
@@ -550,6 +567,7 @@ export class FluxStudisSelfserviceFrontend {
     async #getPortraitElement(portrait, post_function, back_function = null) {
         return (await import("./Portrait/PortraitElement.mjs")).PortraitElement.new(
             await this.#getFluxLocalizationApi(),
+            await this.#getFluxStyleSheetManager(),
             await this.#getLabelService(),
             await this.#getPhotoService(),
             portrait,
@@ -648,6 +666,10 @@ export class FluxStudisSelfserviceFrontend {
      * @returns {Promise<void>}
      */
     async #init() {
+        await (await this.#getFluxStyleSheetManager()).addStyleSheet(
+            layout_css
+        );
+
         const flux_localization_api = await this.#getFluxLocalizationApi();
 
         await flux_localization_api.addModule(
@@ -665,7 +687,9 @@ export class FluxStudisSelfserviceFrontend {
     async #next(previous_get_result = null) {
         scroll(0, 0);
 
-        const get_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
+        const get_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading(
+            await this.#getFluxStyleSheetManager()
+        );
 
         try {
             if (!(previous_get_result ?? false) || this.#previous_get_result === null) {
@@ -698,7 +722,9 @@ export class FluxStudisSelfserviceFrontend {
             await this.#getPage(
                 this.#previous_get_result,
                 async post => {
-                    const post_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
+                    const post_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading(
+                        await this.#getFluxStyleSheetManager()
+                    );
 
                     let post_result;
                     try {
@@ -742,7 +768,9 @@ export class FluxStudisSelfserviceFrontend {
                 async () => {
                     this.#previous_get_result = null;
 
-                    const back_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
+                    const back_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading(
+                        await this.#getFluxStyleSheetManager()
+                    );
 
                     try {
                         await (await this.#getRequestService()).back();
@@ -770,7 +798,9 @@ export class FluxStudisSelfserviceFrontend {
             async id => {
                 this.#previous_get_result = null;
 
-                const menu_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
+                const menu_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading(
+                    await this.#getFluxStyleSheetManager()
+                );
 
                 try {
                     await (await this.#getRequestService()).menu(
@@ -799,7 +829,9 @@ export class FluxStudisSelfserviceFrontend {
             this.#previous_get_result["can-logout"] ? async () => {
                 this.#previous_get_result = null;
 
-                const logout_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
+                const logout_flux_overlay_element = await (await import("./Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading(
+                    await this.#getFluxStyleSheetManager()
+                );
 
                 try {
                     await (await this.#getRequestService()).logout();

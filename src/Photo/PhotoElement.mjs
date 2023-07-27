@@ -1,4 +1,4 @@
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
@@ -9,7 +9,7 @@ import { LOCALIZATION_KEY_REMOVE_CROP, LOCALIZATION_KEY_THE_PHOTO_CAN_CROP_BY_DR
 /** @typedef {import("./PhotoService.mjs").PhotoService} PhotoService */
 /** @typedef {import("./PhotoSize.mjs").PhotoSize} PhotoSize */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/PhotoElement.css`
 );
 

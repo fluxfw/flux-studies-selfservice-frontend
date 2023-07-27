@@ -1,10 +1,10 @@
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { LOCALIZATION_KEY_MANDATORY } from "../Localization/LOCALIZATION_KEY.mjs";
 import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/MandatoryElement.css`
 );
 

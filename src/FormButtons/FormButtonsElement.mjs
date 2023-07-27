@@ -1,10 +1,10 @@
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormSubtitleElement } from "../FormSubtitle/FormSubtitleElement.mjs";
 
 /** @typedef {import("./FormButton.mjs").FormButton} FormButton */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/FormButtonsElement.css`
 );
 

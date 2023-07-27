@@ -1,4 +1,4 @@
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { PAGE_IDENTIFICATION_NUMBER } from "../Page/PAGE.mjs";
@@ -12,7 +12,7 @@ import { LOCALIZATION_KEY_PLEASE_CHECK_YOUR_DATA, LOCALIZATION_KEY_PLEASE_KEEP_Y
 /** @typedef {import("./IdentificationNumber.mjs").IdentificationNumber} IdentificationNumber */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/IdentificationNumberElement.css`
 );
 

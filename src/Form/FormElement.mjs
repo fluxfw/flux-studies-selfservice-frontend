@@ -1,4 +1,4 @@
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormButtonsElement } from "../FormButtons/FormButtonsElement.mjs";
 import { FormInvalidElement } from "../FormInvalid/FormInvalidElement.mjs";
@@ -12,7 +12,7 @@ import { LOCALIZATION_KEY_BACK, LOCALIZATION_KEY_CONTINUE } from "../Localizatio
 /** @typedef {import("../FormButtons/formButtonAction.mjs").formButtonAction} formButtonAction */
 /** @typedef {import("./InputElement.mjs").InputElement} InputElement */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/FormElement.css`
 );
 

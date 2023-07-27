@@ -1,4 +1,4 @@
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
@@ -15,7 +15,7 @@ import { LOCALIZATION_KEY_ADDITIONAL_FIRST_NAMES_ONE_PER_LINE, LOCALIZATION_KEY_
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./PersonalData.mjs").PersonalData} PersonalData */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/PersonalDataElement.css`
 );
 

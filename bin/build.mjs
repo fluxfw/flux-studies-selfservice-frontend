@@ -2,7 +2,7 @@
 import { fileURLToPath } from "node:url";
 import { LOCALIZATION_MODULE } from "../src/Localization/LOCALIZATION_MODULE.mjs";
 import { LOCALIZATIONS } from "../src/Localization/LOCALIZATIONS.mjs";
-import { MANIFEST_TEMPLATE } from "../src/Manifest/MANIFEST_TEMPLATE";
+import { MANIFEST_TEMPLATE } from "../src/Manifest/MANIFEST_TEMPLATE.mjs";
 import { basename, dirname, extname, join } from "node:path/posix";
 
 let flux_shutdown_handler = null;

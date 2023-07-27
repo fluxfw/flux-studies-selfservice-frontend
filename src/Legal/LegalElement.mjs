@@ -1,4 +1,4 @@
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
@@ -12,7 +12,7 @@ import { LOCALIZATION_KEY_AGB, LOCALIZATION_KEY_CHARACTERS_LEFT_CHARACTERS, LOCA
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("./Legal.mjs").Legal} Legal */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/LegalElement.css`
 );
 

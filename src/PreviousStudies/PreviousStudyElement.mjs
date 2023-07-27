@@ -1,4 +1,4 @@
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
@@ -10,7 +10,7 @@ import { LOCALIZATION_KEY_END_OF_YOUR_STUDIES_YEAR, LOCALIZATION_KEY_LEGAL_PLACE
 /** @typedef {import("./PreviousStudies.mjs").PreviousStudies} PreviousStudies */
 /** @typedef {import("./removePreviousStudyFunction.mjs").removePreviousStudyFunction} removePreviousStudyFunction */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/PreviousStudyElement.css`
 );
 

@@ -1,5 +1,5 @@
 import { CreateElement } from "../Create/CreateElement.mjs";
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
 import { PAGE_START } from "../Page/PAGE.mjs";
@@ -16,7 +16,7 @@ import { LOCALIZATION_KEY_CREATE_A_NEW_APPLICATION_BY_ENTERING_A_PASSWORD_OF_YOU
 /** @typedef {import("../Resume/resumeFunction.mjs").resumeFunction} resumeFunction */
 /** @typedef {import("./Start.mjs").Start} Start */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/StartElement.css`
 );
 

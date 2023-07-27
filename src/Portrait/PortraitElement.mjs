@@ -1,4 +1,4 @@
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { FormElement } from "../Form/FormElement.mjs";
 import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MandatoryElement } from "../Mandatory/MandatoryElement.mjs";
@@ -10,12 +10,13 @@ import { LOCALIZATION_KEY_PHOTO, LOCALIZATION_KEY_PHOTO_CRITERIA, LOCALIZATION_K
 /** @typedef {import("../Back/backFunction.mjs").backFunction} backFunction */
 /** @typedef {import("./chosenPortraitFunction.mjs").chosenPortraitFunction} chosenPortraitFunction */
 /** @typedef {import("../Libs/flux-localization-api/src/FluxLocalizationApi.mjs").FluxLocalizationApi} FluxLocalizationApi */
+/** @typedef {import("../Libs/flux-style-sheet-manager/src/FluxStyleSheetManager.mjs").FluxStyleSheetManager} FluxStyleSheetManager */
 /** @typedef {import("../Label/LabelService.mjs").LabelService} LabelService */
 /** @typedef {import("../Photo/Photo.mjs").Photo} Photo */
 /** @typedef {import("../Photo/PhotoService.mjs").PhotoService} PhotoService */
 /** @typedef {import("./Portrait.mjs").Portrait} Portrait */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/PortraitElement.css`
 );
 
@@ -32,6 +33,10 @@ export class PortraitElement extends HTMLElement {
      * @type {FluxLocalizationApi}
      */
     #flux_localization_api;
+    /**
+     * @type {FluxStyleSheetManager}
+     */
+    #flux_style_sheet_manager;
     /**
      * @type {FormElement}
      */
@@ -63,6 +68,7 @@ export class PortraitElement extends HTMLElement {
 
     /**
      * @param {FluxLocalizationApi} flux_localization_api
+     * @param {FluxStyleSheetManager} flux_style_sheet_manager
      * @param {LabelService} label_service
      * @param {PhotoService} photo_service
      * @param {Portrait} portrait
@@ -70,9 +76,10 @@ export class PortraitElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @returns {PortraitElement}
      */
-    static new(flux_localization_api, label_service, photo_service, portrait, chosen_portrait, back_function = null) {
+    static new(flux_localization_api, flux_style_sheet_manager, label_service, photo_service, portrait, chosen_portrait, back_function = null) {
         return new this(
             flux_localization_api,
+            flux_style_sheet_manager,
             label_service,
             photo_service,
             portrait,
@@ -83,6 +90,7 @@ export class PortraitElement extends HTMLElement {
 
     /**
      * @param {FluxLocalizationApi} flux_localization_api
+     * @param {FluxStyleSheetManager} flux_style_sheet_manager
      * @param {LabelService} label_service
      * @param {PhotoService} photo_service
      * @param {Portrait} portrait
@@ -90,10 +98,11 @@ export class PortraitElement extends HTMLElement {
      * @param {backFunction | null} back_function
      * @private
      */
-    constructor(flux_localization_api, label_service, photo_service, portrait, chosen_portrait, back_function) {
+    constructor(flux_localization_api, flux_style_sheet_manager, label_service, photo_service, portrait, chosen_portrait, back_function) {
         super();
 
         this.#flux_localization_api = flux_localization_api;
+        this.#flux_style_sheet_manager = flux_style_sheet_manager;
         this.#label_service = label_service;
         this.#photo_service = photo_service;
         this.#portrait = portrait;
@@ -316,7 +325,9 @@ export class PortraitElement extends HTMLElement {
      * @returns {Promise<void>}
      */
     async #setPhoto(final = false) {
-        const flux_overlay_element = await (await import("../Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading();
+        const flux_overlay_element = await (await import("../Libs/flux-overlay/src/FluxOverlayElement.mjs")).FluxOverlayElement.loading(
+            this.#flux_style_sheet_manager
+        );
 
         try {
             const photo = await this.#photo_service.fromInputElement(

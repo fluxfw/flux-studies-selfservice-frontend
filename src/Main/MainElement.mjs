@@ -1,4 +1,4 @@
-import { flux_css_api } from "../Libs/flux-css-api/src/FluxCssApi.mjs";
+import { flux_import_css } from "../Libs/flux-style-sheet-manager/src/FluxImportCss.mjs";
 import { FormButtonElement } from "../FormButton/FormButtonElement.mjs";
 import { LOCALIZATION_MODULE } from "../Localization/LOCALIZATION_MODULE.mjs";
 import { MENU_ID_APPLICATION_LOGIN } from "../Menu/MENU_ID.mjs";
@@ -12,7 +12,7 @@ import { LOCALIZATION_KEY_APPLICATION_LOGIN, LOCALIZATION_KEY_LOGOUT, LOCALIZATI
 /** @typedef {import("../Menu/Menu.mjs").Menu} Menu */
 /** @typedef {import("../Menu/menuFunction.mjs").menuFunction} menuFunction */
 
-const css = await flux_css_api.import(
+const css = await flux_import_css.import(
     `${import.meta.url.substring(0, import.meta.url.lastIndexOf("/"))}/MainElement.css`
 );
 
